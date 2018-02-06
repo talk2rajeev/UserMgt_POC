@@ -1,0 +1,402 @@
+@import './assets/css/reset.css';
+@import './assets/css/roboto.css';
+@import './assets/css/font-awesome.min.css';
+@import './assets/css/bootstrap-grid.min.css';
+
+$lightGrey: #f1f1f1;
+$fontRoboto: Roboto Slab;
+$fontRaleway : 'Raleway', sans-serif;
+$TxtFontSize: 12px;
+
+
+body{
+    font-family:  $fontRoboto;
+    font-size: $TxtFontSize;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+
+
+
+
+/*
+----------------------
+style
+----------------------
+*/
+.left-menu-container{
+    background: #003e52;
+    color: #bdc7ca;
+    min-height: 500px;
+    height: 100vh;
+}
+
+.top-header-container{
+    
+    border-bottom: 1px solid #dedede;
+    background: #fafafa;
+}
+
+.logo_n_title{
+    padding: 10px 6px;
+}
+
+.logo::before {
+    text-shadow: 1px 2px 2px #000;
+}
+
+.app-title{
+    line-height: 1;
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #bdc7ca;
+    text-shadow: 2px 3px 2px #02232d;
+}
+
+.icon-text-link-wrapper{
+    
+    padding: 12px 0 8px;
+    width: 100%;
+}
+
+.icon-text-link-wrapper:hover{
+    /*color: #042c3a;*/
+    color: #dedede;
+    cursor: pointer;
+    background: #367284;
+}
+
+.icon-text-link-wrapper i{
+    color: inherit;
+    font-size: 1.5em;
+}
+.sidebar-navLink{
+    width: 100%;
+    display: block;
+    text-decoration: none;
+    font-size: 18px;
+    color: #168db3;    
+}
+
+.sidebar-navLink.active{
+    color: #dedede;
+    cursor: pointer;
+    background: #367284;  
+}
+
+a.sidebar-navLink:active{
+    color: #fff;
+}
+
+.left-menu-link{
+    color: inherit;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.left-menu-link:hover{
+    color: inherit;
+    text-decoration: none;
+}
+
+.page-level-txt{
+    display: inline-block;
+    padding: 6px 10px;
+}
+
+.logout-dropdown{
+    display: inline-block;
+    padding: 8px 10px;
+    border-left: 1px solid #dedede;
+    font-size: 12px;
+    font-weight: bold;
+    color: #0c7394;
+    position: relative;
+}
+
+.logout-dropdown span{
+    margin-right: 5px;
+}
+
+.dropdown-bx{
+    display: none;
+    position: absolute;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    width: 85%;
+    color: #555;
+    box-shadow: 1px 1px 2px #ccc;
+    background: #fff;
+    font: normal normal normal 14px/1 FontAwesome;
+    margin-top: 1px;
+    cursor: pointer;
+}
+
+.dropdown-bx::before{
+    content: "\f106";
+    position: absolute;
+    top: -12px;
+    color: #cdcdcd;
+    right: 2px;
+    font-size: 1.2em;
+}
+
+.dropdown-txt{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-txt:hover > .dropdown-bx{
+    display: block;
+}
+.pull-left{
+    float: left;
+}
+.pull-right{
+    float: right;
+}
+hr{
+    border: 0;
+    border-top: 1px solid #0c5269;
+    margin: 5px 0 0;
+    width: 100%;
+}
+.hr{
+    border: 0;
+    border-top: 1px solid #cdcdcd;
+    margin: 18px 0;
+    width: 100%;
+}
+.modal-title{
+    font-size: 1.8em;
+}
+
+.page-content{
+    font-family: $fontRaleway;
+}
+
+.tablecell-sort-icon{
+    font-size: .95em;
+    margin-left: 1px;
+    color: #555;
+}
+.tablecell-sort-icon:hover{
+    color: #000;
+    cursor: pointer;
+}
+
+/*
+  Login Page
+*/
+.login-container{
+    width: 430px;
+    margin: 0px auto;
+}
+.loginpage-title{
+    margin: 50px auto;
+    color: #555;
+}
+
+.login-box{
+    padding: 20px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+}
+
+.search-input-container{
+    margin-top: 20px;
+}
+.search-input-container input{
+    height: 30px;
+}
+
+/*
+Modal
+*/
+.modal-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    
+    
+}
+.modal{
+    width: 540px;
+    padding: 20px;
+    margin: 45px auto;
+    background: #fff;
+    overflow: hidden;
+    outline: 0;
+    border: 1px solid #cdcdcd;
+    position: relative;
+}
+.modal-dialog{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+}
+.backdrop{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background: #02232d;
+    opacity: .4;
+    box-shadow: 1px 3px 8px #717171
+}
+.modal-container.show {
+    -webkit-transform: translate(0,0);
+    transform: translate(0,0);
+    display: block !important;
+}
+.modal-container.hide{
+    transition: -webkit-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    transition: transform .3s ease-out,-webkit-transform .3s ease-out;
+    -webkit-transform: translate(0,-25%);
+    transform: translate(0,-25%);
+    display: none !important;
+}
+.close-modal-icon{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+.table tr td i{
+    cursor: pointer;
+}
+
+/*
+  Bootstrap
+*/
+button, html [type=button], [type=reset], [type=submit] {
+    -webkit-appearance: button;
+}
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+button, select {
+    text-transform: none;
+}
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+.btn-success:hover {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #398439;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+table {
+    background-color: transparent;
+}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.table>caption+thead>tr:first-child>td, .table>caption+thead>tr:first-child>th, .table>colgroup+thead>tr:first-child>td, .table>colgroup+thead>tr:first-child>th, .table>thead:first-child>tr:first-child>td, .table>thead:first-child>tr:first-child>th {
+    border-top: 0;
+}
+.table>thead>tr>th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+    padding: 6px 8px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 6px 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+th {
+    text-align: left;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+td, th {
+    padding: 0;
+}
+.table thead th{
+    padding: 5px 0;
+    background: #bbb;
+}
+.table{
+    margin-top: 30px;
+}

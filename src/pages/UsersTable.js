@@ -58,8 +58,11 @@ class UsersTable extends Component {
             return(
                 
                 <div>
+                    <div className="pull-left search-input-container">
+					    <button className="btn btn-sm btn-success create-user-btn"><i className="fa fa-user-plus" /></button> 
+				    </div>
                     <div className="pull-right search-input-container">
-					<input id="searchTheKey" placeholder="Search by Name" className="form-control" ref="pattern" onKeyUp={this.searchUsers.bind(this)}  type="text" ></input> 
+					    <input id="searchTheKey" placeholder="Search by Name" className="form-control" ref="pattern" onKeyUp={this.searchUsers.bind(this)}  type="text" ></input> 
 				    </div>
                     <table className="table table-striped">
                         <thead>

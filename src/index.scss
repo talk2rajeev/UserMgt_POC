@@ -41,6 +41,15 @@ style
     background: #fafafa;
 }
 
+.top-header{
+    background: #02232d;
+    padding: 5px 0;
+}
+.top-header h3{
+    color: #168db3;
+    font-size: 1.5em;
+}
+
 .logo_n_title{
     padding: 10px 6px;
 }
@@ -56,6 +65,11 @@ style
     font-weight: bold;
     color: #bdc7ca;
     text-shadow: 2px 3px 2px #02232d;
+}
+
+.create-user-btn{
+    margin-top: 2px;
+    padding: 6px !important;
 }
 
 .icon-text-link-wrapper{
@@ -116,7 +130,7 @@ a.sidebar-navLink:active{
     border-left: 1px solid #dedede;
     font-size: 12px;
     font-weight: bold;
-    color: #0c7394;
+    color: #bec5c7;
     position: relative;
 }
 
@@ -211,7 +225,7 @@ hr{
 }
 
 .search-input-container{
-    margin-top: 20px;
+    margin-top: 0px;
 }
 .search-input-container input{
     height: 30px;
@@ -322,7 +336,36 @@ button, input, select, textarea {
     background-color: #449d44;
     border-color: #398439;
 }
-
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.btn-info {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+.btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
 .form-control {
     display: block;
     width: 100%;
@@ -341,6 +384,10 @@ button, input, select, textarea {
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+.form-control-inline {
+    width: 250px !important;
+    display: inline-block;
+}
 .form-group {
     margin-bottom: 15px;
 }
@@ -349,6 +396,50 @@ button, input, optgroup, select, textarea {
     margin: 0;
     font: inherit;
     color: inherit;
+}
+.input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child>.btn, .input-group-btn:first-child>.btn-group>.btn, .input-group-btn:first-child>.dropdown-toggle, .input-group-btn:last-child>.btn-group:not(:last-child)>.btn, .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.input-group .form-control, .input-group-addon, .input-group-btn {
+    display: table-cell;
+}
+.input-group .form-control {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+}
+.input-group-btn {
+    position: relative;
+    font-size: 0;
+    white-space: nowrap;
+}
+.input-group-addon, .input-group-btn {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.input-group .form-control, .input-group-addon, .input-group-btn {
+    display: table-cell;
+}
+.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+    z-index: 2;
+    margin-left: -1px;
+}
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 34px;
+}
+.input-group-btn>.btn {
+    position: relative;
 }
 
 .table {

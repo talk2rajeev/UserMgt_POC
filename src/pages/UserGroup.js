@@ -1,4 +1,5 @@
 import React, {Component}  from 'react';
+import TransferUserToGroup from '../components/TransferUserToGroup';
 
 class UserGroup extends Component {
 
@@ -38,6 +39,7 @@ class UserGroup extends Component {
                         </tbody>
                     </table>
 
+                    <TransferUserToGroup />
                 </div>
             )    
     }

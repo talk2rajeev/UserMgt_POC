@@ -5,7 +5,7 @@ const LoginPageTitle = () => {
     return (
         <div className="loginpage-title text-center">
             <div><i  className="fa fa-users fa-3x" /></div>
-            <div>User Management Application</div>
+            <div>User Management</div>
         </div>
     )
 }

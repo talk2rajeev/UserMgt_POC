@@ -1,0 +1,54 @@
+hr{
+    border: 0;
+    border-top: 1px solid #0c5269;
+    margin: 5px 0 0;
+    width: 100%;
+}
+.hr{
+    border: 0;
+    border-top: 1px solid #cdcdcd;
+    margin: 18px 0;
+    width: 100%;
+}
+.delete-perm-badge{
+    padding: 2px 8px;
+    display: inline-block;
+    margin-right: 7px;
+    font-size: 12px;
+    border-radius: 3px;
+    border: 1px solid #dadada;
+    
+    color: #777;
+    background: #eaeaea;
+
+    /*color: #1890ff;
+    background: #e6f7ff;
+    border-color: #91d5ff;*/
+}
+.delete-perm{
+    color: inherit;
+    font-size: 9px;
+    position: absolute;
+}
+.delete-perm:hover{
+    color: red;
+}
+.line-separator{
+    border-top: 1px solid #cdcdcd;
+    margin: 25px 0;
+}
+.bottom-bdr{
+    border-bottom: 1px dashed #dedede;
+}
+.top-margin25{
+    margin-top: 25px;
+}
+.clearfix{
+    clear: both;
+}
+div[class*='col-']{
+    float: left;
+}
+.hide{
+    display: none;
+}

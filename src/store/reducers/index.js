@@ -9,7 +9,11 @@ import {
     CLOSE_MODAL,
     SELECT_USER,
     SORT_USER,
-    SEARCH_USER
+    SEARCH_USER,
+    GET_ROLES,
+    CREATE_NEW_ROLES,
+    GET_PERMISSIONS,
+    CREATE_NEW_PERMISSION
 } from '../actions/index';
 
 
@@ -82,12 +86,42 @@ const modal = (state=initialModal, action) => {
     }
 }
 
+const initialRole = [];
+const getRoles = (state=initialRole, action) => {
+    switch(action.type){
+        case GET_ROLES:
+            return { roles: action.roles ,originalRoles: action.originalRoles}   
+        case CREATE_NEW_ROLES:
+            let roles = state.roles;
+            roles.push(action.role);
+            return {...state, roles: roles}             
+        default: 
+            return state;
+    }
+}
+
+const initialPermission = [];
+const getPermission = (state=initialRole, action) => {
+    switch(action.type){
+        case GET_PERMISSIONS:
+            return { permissions: action.permissions, originalPermissions: action.originalPermissions }   
+        case CREATE_NEW_PERMISSION:
+            let permissions = {...state.permissions};
+            permissions.push(action.permission);
+            return {...state, permissions: permissions}             
+        default: 
+            return state;
+    }
+}
+
 
 const allReducers = combineReducers({
     userlist: getUserList,
     authentication: userAuthentication,
     modal: modal,
-    selectedUser: selectUser
+    selectedUser: selectUser,
+    roles: getRoles,
+    permissions: getPermission
 });
 
 export default allReducers;

@@ -21,11 +21,28 @@ const TopHeader = () => {
   )
 }
 
-const Header = () => (
+function getPageTitle(path){
+  if(path === '/'){
+    return <span><b>Users</b> - All Users at glance</span>
+  }
+  if(path === '/usergroup'){
+    return <span><b>User Group</b> - All Usergroups at glance</span>
+  }
+  if(path === '/roles'){
+    return <span><b>Roles</b> - All Roles at glance</span>
+  }
+  if(path === '/permission'){
+    return <span><b>Permissions</b> - All permissions at glance</span>
+  }
+}
+
+const Header = (props) => (
   <div>
     <TopHeader />
     <div className="top-header-container row">
-      <div className="pull-left page-level-txt"><b>Users</b> - All Users at glance</div>
+      <div className="pull-left page-level-txt">
+          { getPageTitle(props.pageHeaderTitle) }
+      </div>
       <div className="clearfix"></div>
     </div>  
   </div>

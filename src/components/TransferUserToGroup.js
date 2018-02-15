@@ -2,18 +2,22 @@ import React, {Component}  from 'react';
 import { Transfer } from 'antd';
 
 const mockData = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 8; i++) {
   mockData.push({
     key: i.toString(),
-    title: `content${i + 1}`,
-    description: `description of content${i + 1}`,
-    disabled: i % 3 < 1,
+    title: `user-${i}`
   });
 }
 
-const targetKeys = mockData
+/*const targetKeys = mockData
         .filter(item => +item.key % 3 > 1)
-        .map(item => item.key);
+        .map(item => item.key);*/
+
+const targetKeys = [
+  '2',
+  '3'
+];
+
 
 class TransferUserToGroup extends React.Component {
    
@@ -27,6 +31,7 @@ class TransferUserToGroup extends React.Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleSelectChange = this.handleSelectChange.bind(this);
       this.handleScroll = this.handleScroll.bind(this);
+      this.submitAssignedUserList = this.submitAssignedUserList.bind(this);
       
   }  
 
@@ -50,12 +55,17 @@ class TransferUserToGroup extends React.Component {
     console.log('target:', e.target);
   }
 
+  submitAssignedUserList(){
+    console.log('targetKey: ', this.state.targetKeys);
+  }
+
   render() {
     const state = this.state;
     return (
+      <div>
       <Transfer
         dataSource={mockData}
-        titles={['Source', 'Target']}
+        titles={['UserList', 'UserGroup']}
         targetKeys={state.targetKeys}
         selectedKeys={state.selectedKeys}
         onChange={this.handleChange}
@@ -63,6 +73,8 @@ class TransferUserToGroup extends React.Component {
         onScroll={this.handleScroll}
         render={item => item.title}
       />
+      <button onClick={this.submitAssignedUserList}>assigned user list</button>
+      </div>
     );
   }
 }

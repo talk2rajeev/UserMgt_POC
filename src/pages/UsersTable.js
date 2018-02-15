@@ -1,9 +1,26 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getUsers ,removeUser, openModal,closeModal, selectUser, sortUser ,searchUsers} from '../store/actions';
+import { Popconfirm, message } from 'antd';
+
+import { getUsers, removeUser, openModal, closeModal, selectUser, sortUser, searchUsers, createUser } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
 import EditUserModal from '../components/EditUserModal';
+
+
+
+
+function confirm(e) {
+    debugger
+  console.dir(e.target.textContent);
+  message.success('You just deleted '+ e.target.textContent);
+}
+
+function cancel(e) {
+  console.dir(e.target.textContent);
+  message.error('You clicked no '+ e.target.textContent);
+}
+
 
 class UsersTable extends Component {
 
@@ -11,10 +28,13 @@ class UsersTable extends Component {
         super(props);
 
         this.editUser = this.editUser.bind(this);
-        this.removeUser = this.removeUser.bind(this);
         this.sortUser = this.sortUser.bind(this);
         this.searchUsers = this.searchUsers.bind(this);
-        
+        this.confirm = this.confirm.bind(this);
+        this.cancel = this.cancel.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
+
+        this.state = {userIdToDelete: 0}
     }
 
     componentDidMount(){
@@ -28,18 +48,8 @@ class UsersTable extends Component {
         
     }
 
-    removeUser(id,index){
-        //this.props.users.splice(index,1);
-        var c= confirm("Are you sure to delete the user?");
-        if(c)
-            this.props.removeUser(id);
-        let searchValue=this.refs.pattern.value;
-        if(searchValue!='')
-        this.props.searchUsers(searchValue);    
-
-    }
     sortUser(e, sortType){
-        debugger;
+        
         this.props.sortUser(e);
         this.forceUpdate();
         
@@ -49,6 +59,24 @@ class UsersTable extends Component {
         this.props.searchUsers(searchValue);
         //if(document.getElementById(sKey).innerHTML.toLowerCase().includes(document.getElementById("searchTheKey").value.toLowerCase())){
 
+    }
+
+    confirm(e){
+        e.preventDefault();
+        //console.log(e.target.textContent, id);
+        const userid = this.state.userIdToDelete;
+        this.props.removeUser(userid);
+        message.success('User deleted successfully');
+    }
+
+    cancel(e){
+        e.preventDefault();
+        console.dir(e.target.textContent);
+    }
+
+    deleteUser(event, id){
+        event.preventDefault();
+        this.setState({userIdToDelete: event.target.dataset.userid});
     }
 
     render() {
@@ -77,14 +105,16 @@ class UsersTable extends Component {
                                 </th>
                                 <th>Email</th>  
                                 <th>Phone</th>
-                                <th></th>                                                        
+                                <th>
+                                    Action    
+                                </th>                                                        
                             </tr>
                         </thead>
                         <tbody>
                         {
                             this.props.users.map((item, i)=>{
                                 return(
-                                    <UserTableRow user={item} key={i} index={i} editUser={this.editUser} removeUser={this.removeUser}/> 
+                                    <UserTableRow user={item} key={i} index={i} editUser={this.editUser} deleteUser={this.deleteUser} confirm={this.confirm} cancel={this.cancel} /> 
 
                                 )
                             })

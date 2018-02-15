@@ -22,8 +22,8 @@ class Login extends Component {
         let password = this.refs.password.value;
         // dispatch { username , password } to ACTION for user authentication
         // if user authenticated then navigate to success page
-        // else keep user to Login page with a error(login fail) message  
-        
+        // else keep user to Login page with a error(login fail) message
+
         //authenticateUser
         this.props.history.push('/')
     }

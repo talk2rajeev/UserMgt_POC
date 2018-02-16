@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getRoles, createNewRoles } from '../store/actions';
+import { getRoles, createNewRoles, deletePermFromRoles } from '../store/actions';
 
 import { Popconfirm, message } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
@@ -29,7 +29,7 @@ class Roles extends Component {
         this.selectRole = this.selectRole.bind(this);
         this.roleNameHandler = this.roleNameHandler.bind(this);
         this.removeFromPermissionList = this.removeFromPermissionList.bind(this);
-        this.submitRoleHandler = this.submitRoleHandler.bind(this);
+        this.createRoleHandler = this.createRoleHandler.bind(this);
 
         this.state = {pidToDelete: {}, newRole: {'name': '', 'pIds': []} }
     }
@@ -43,6 +43,8 @@ class Roles extends Component {
         console.dir(event.target.innerText);
         console.dir(this.state);
         
+        
+
         message.error('You clicked no '+ event.target.textContent);
     }
 
@@ -51,7 +53,20 @@ class Roles extends Component {
         console.dir(event.target.innerText);
         console.dir(this.state);
         
-        message.success('You just deleted '+ event.target.innerText);
+
+        let pidToDelete = {...this.state};
+
+        
+        let role = JSON.parse(  pidToDelete.pidToDelete.role);
+
+        let id = role.id;
+        let pid = pidToDelete.pidToDelete.pid;
+        
+        console.log('pid, id: ', pid,  role.id);
+        
+        this.props.deletePermFromRoles(id, pid);
+        //this.props.getRoles();
+        message.success('You just deleted permission');
     }
 
     setDataId(e){
@@ -89,7 +104,7 @@ class Roles extends Component {
         this.setState({newRole});
     }
 
-    submitRoleHandler(){
+    createRoleHandler(){
         this.props.createNewRoles(this.state.newRole);
         message.success('New Role added succesfully');
     }
@@ -104,6 +119,9 @@ class Roles extends Component {
                             <input type="text" placeholder="Type New Role" onChange={ this.roleNameHandler } ref="rolename" className="form-control"  />
                         </div>
                         <div className="col-md-4" style={{'position':'relative'}}>
+                            {
+                                this.props.roles.length === 33 ? <AutoSuggestion selectRole={this.selectRole}/> : null
+                            }
                             <AutoSuggestion selectRole={this.selectRole}/>
                         </div>
                     </div>
@@ -132,7 +150,7 @@ class Roles extends Component {
                             <div className="clearfix" />
                         </div>
                         <div className="createRoleBox-row" style={{'padding':'5px 10px'}}>
-                                <button onClick={this.submitRoleHandler} className="btn btn-xs btn-primary">
+                                <button onClick={this.createRoleHandler} className="btn btn-xs btn-primary">
                                     Create Role <i className="fa fa-plus" />
                                 </button>
                         </div>
@@ -161,9 +179,9 @@ class Roles extends Component {
                                                     item.pIds.map((val, j)=>{
                                                         return(
                                                             <Popconfirm key={'pid'+j} title="Are you sure delete this task?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
-                                                                <span data-id={val} href="#" id={val} className="delete-perm-badge">
-                                                                    {val} &nbsp;
-                                                                    <i title="remove permission" data-role={JSON.stringify(item)} data-permid={val} className="fa fa-close delete-perm" onClick={ (event)=>{this.setDataId(event)} }/>
+                                                                <span data-id={val} href="#" id={val.id} className="delete-perm-badge">
+                                                                    {val.name} &nbsp;
+                                                                    <i title="remove permission" data-role={JSON.stringify(item)} data-permid={val.id} className="fa fa-close delete-perm" onClick={ (event)=>{this.setDataId(event)} }/>
                                                                 </span>
                                                             </Popconfirm>        
                                                         )
@@ -188,8 +206,8 @@ class Roles extends Component {
 function mapDispatchToProps(dispatch){
     return {
         getRoles: bindActionCreators(getRoles, dispatch),
-        createNewRoles: bindActionCreators(createNewRoles, dispatch)
-       
+        createNewRoles: bindActionCreators(createNewRoles, dispatch),
+        deletePermFromRoles: bindActionCreators(deletePermFromRoles, dispatch)
     }
 }
   

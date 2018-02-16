@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 
 import { 
     GET_USERLIST, 
+    CREATE_USER,
     AUTHENTICATE_USER ,
     REMOVE_USER,
     OPEN_MODAL,
@@ -13,7 +14,8 @@ import {
     GET_ROLES,
     CREATE_NEW_ROLES,
     GET_PERMISSIONS,
-    CREATE_NEW_PERMISSION
+    CREATE_NEW_PERMISSION,
+    DELETE_ROLES_PERM
 } from '../actions/index';
 
 
@@ -25,6 +27,8 @@ const getUserList = (state=initialUser, action) => {
     switch(action.type){
         case GET_USERLIST:
             return { users: action.users ,originalUsers: action.originalUsers} 
+        case CREATE_USER:
+            return { users: action.users ,originalUsers: action.originalUsers}     
         case REMOVE_USER:
             return { users: action.users ,originalUsers: action.originalUsers}   
         case SORT_USER:
@@ -94,7 +98,9 @@ const getRoles = (state=initialRole, action) => {
         case CREATE_NEW_ROLES:
             let roles = state.roles;
             roles.push(action.role);
-            return {...state, roles: roles}             
+            return {...state, roles: roles} 
+        case DELETE_ROLES_PERM:  
+            return {...state}              
         default: 
             return state;
     }

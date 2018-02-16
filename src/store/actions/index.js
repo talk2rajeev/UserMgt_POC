@@ -2,6 +2,7 @@ import axios from 'axios';
 import { sortDesc, sortAsc } from '../../utility/helper';
 
 export const GET_USERLIST = "GET_USERLIST";
+export const CREATE_USER = "CREATE_USER";
 export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
 export const REMOVE_USER = 'REMOVE_USER';
 export const OPEN_MODAL = 'OPEN_MODAL';
@@ -13,13 +14,14 @@ export const GET_ROLES = 'GET_ROLES';
 export const CREATE_NEW_ROLES = 'CREATE_NEW_ROLES';
 export const GET_PERMISSIONS = 'GET_PERMISSIONS';
 export const CREATE_NEW_PERMISSION = 'CREATE_NEW_PERMISSION';
+export const DELETE_ROLES_PERM = 'DELETE_ROLES_PERM';
 
 /*
 Users
 */
 export const getUsers = () => dispatch => {
     
-    axios.get(`https://jsonplaceholder.typicode.com/users`)
+    axios.get(`http://localhost:3000/user/getall`)
       .then((response) => {
           console.log('################', response.data);
         dispatch( ({type: GET_USERLIST, users: response.data ,originalUsers:response.data}) )
@@ -32,7 +34,13 @@ export const getUsers = () => dispatch => {
 
 
 export const createUser = (user) => {
-    dispatch( ({type: CREATE_USER, user: user}) )
+    axios.get(`http://localhost:3000/user/create`)
+      .then((response) => {
+            dispatch( ({type: CREATE_USER, users: response.data ,originalUsers: response.data}) )
+      })
+      .catch((err) => {
+        console.error.bind(err);
+      })
 }
 
 
@@ -113,9 +121,29 @@ export const getRoles = () => dispatch => {
 };
 
 export const createNewRoles = (role) => dispatch => {
-    dispatch( ({type: CREATE_NEW_ROLES, role: role}) )
-};
+    
+    axios.post(`http://localhost:3000/role/create`, role)
+      .then((response) => {
+            dispatch( ({type: GET_ROLES, roles: response.data ,originalRoles:response.data}) )
+      })
+      .catch((err) => {
+        console.error.bind(err);
+      });
 
+}
+
+export const deletePermFromRoles = (id, pid) => (dispatch, getState)  => {
+    
+    let promise = axios.delete(`http://localhost:3000/role/perm/delete`, {data: { id: id, pid: pid }} )
+    promise.then((response) => {
+            dispatch( ({ type: DELETE_ROLES_PERM }) );
+            getRoles();
+      })
+      .catch((err) => {
+        console.error.bind(err);
+    });
+    
+};
 
 /*
 Permission
@@ -176,7 +204,7 @@ export const hideEditPermissionBtn = (id, name) => (dispatch, getState) => {
             item.edited=undefined;
         }
         return item;
-    }) 
+    }); 
     dispatch( ({type: GET_PERMISSIONS, permissions: newPermissions, originalPermissions: newPermissions}) );
 }
 

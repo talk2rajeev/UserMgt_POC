@@ -3,21 +3,11 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { getRoles, createNewRoles, deletePermFromRoles } from '../store/actions';
 
-import { Popconfirm, message } from 'antd';
+import { Popconfirm, message, Tooltip } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
 import LineSeparator from '../components/LineSeparator';
 
-function confirm(e) {
-    //debugger
-  console.dir(e.target.textContent);
-  message.success('You just deleted '+ e.target.textContent);
-}
 
-function cancel(e) {
-    //debugger
-  console.dir(e.target.textContent);
-  message.error('You clicked no '+ e.target.textContent);
-}
 
 class Roles extends Component {
 
@@ -39,13 +29,8 @@ class Roles extends Component {
     }
 
     cancel(event){
-
-        console.dir(event.target.innerText);
-        console.dir(this.state);
-        
-        
-
-        message.error('You clicked no '+ event.target.textContent);
+        //event.target.innerText;
+        message.error('Delete action cancelled ');
     }
 
     confirm(event){
@@ -178,12 +163,16 @@ class Roles extends Component {
                                                 {
                                                     item.pIds.map((val, j)=>{
                                                         return(
+                                                            
                                                             <Popconfirm key={'pid'+j} title="Are you sure delete this task?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
                                                                 <span data-id={val} href="#" id={val.id} className="delete-perm-badge">
                                                                     {val.name} &nbsp;
-                                                                    <i title="remove permission" data-role={JSON.stringify(item)} data-permid={val.id} className="fa fa-close delete-perm" onClick={ (event)=>{this.setDataId(event)} }/>
+                                                                    <Tooltip title="Delete Permission" placement="right">
+                                                                        <i title="remove permission" data-role={JSON.stringify(item)} data-permid={val.id} className="fa fa-close delete-perm" onClick={ (event)=>{this.setDataId(event)} }/>
+                                                                    </Tooltip>
                                                                 </span>
-                                                            </Popconfirm>        
+                                                            </Popconfirm>   
+                                                                 
                                                         )
                                                     })
                                                 }

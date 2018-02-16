@@ -209,5 +209,3 @@ function mapStateToProps(state){
 
 const _Roles = connect(mapStateToProps, mapDispatchToProps )(Roles);
 export default _Roles;
-
-//export default Roles;

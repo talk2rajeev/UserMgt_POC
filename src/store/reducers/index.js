@@ -15,7 +15,8 @@ import {
     CREATE_NEW_ROLES,
     GET_PERMISSIONS,
     CREATE_NEW_PERMISSION,
-    DELETE_ROLES_PERM
+    DELETE_ROLES_PERM,
+    DELETE_ROLE
 } from '../actions/index';
 
 
@@ -100,11 +101,15 @@ const getRoles = (state=initialRole, action) => {
             roles.push(action.role);
             return {...state, roles: roles} 
         case DELETE_ROLES_PERM:  
-            return {...state}              
+            return {...state} 
+        case DELETE_ROLE:
+            return {...state}                 
         default: 
             return state;
     }
 }
+
+
 
 const initialPermission = [];
 const getPermission = (state=initialRole, action) => {

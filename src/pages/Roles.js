@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getRoles, createNewRoles, deletePermFromRoles } from '../store/actions';
+import { getRoles, createNewRoles, deletePermFromRoles, deleteRole } from '../store/actions';
 
 import { Popconfirm, message, Tooltip } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
@@ -14,8 +14,11 @@ class Roles extends Component {
     constructor(props){
         super(props);
         this.setDataId = this.setDataId.bind(this);
+        this.removeRole = this.removeRole.bind(this);
         this.cancel = this.cancel.bind(this);
         this.confirm = this.confirm.bind(this);
+        this.confirmDeleteRole = this.confirmDeleteRole.bind(this);
+        this.cancelDeleteRole = this.cancelDeleteRole.bind(this);        
         this.selectRole = this.selectRole.bind(this);
         this.roleNameHandler = this.roleNameHandler.bind(this);
         this.removeFromPermissionList = this.removeFromPermissionList.bind(this);
@@ -52,6 +55,14 @@ class Roles extends Component {
         this.props.deletePermFromRoles(id, pid);
         //this.props.getRoles();
         message.success('You just deleted permission');
+    }
+
+    confirmDeleteRole(event){
+        message.success('You just deleted Role');
+    }
+
+    cancelDeleteRole(event){
+        message.error('Delete action cancelled ');
     }
 
     setDataId(e){
@@ -92,6 +103,12 @@ class Roles extends Component {
     createRoleHandler(){
         this.props.createNewRoles(this.state.newRole);
         message.success('New Role added succesfully');
+    }
+
+    removeRole(id){
+        console.log('deleterole: ',id);
+        this.props.deleteRole(id);
+
     }
 
     render() {
@@ -150,6 +167,7 @@ class Roles extends Component {
                             <tr>
                                 <td>Role</td>
                                 <td>Permissions</td>                              
+                                <td>Action</td>                              
                             </tr>
                         </thead>
                         <tbody>
@@ -164,7 +182,7 @@ class Roles extends Component {
                                                     item.pIds.map((val, j)=>{
                                                         return(
                                                             
-                                                            <Popconfirm key={'pid'+j} title="Are you sure delete this task?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
+                                                            <Popconfirm key={'pid'+j} title="Are you sure delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
                                                                 <span data-id={val} href="#" id={val.id} className="delete-perm-badge">
                                                                     {val.name} &nbsp;
                                                                     <Tooltip title="Delete Permission" placement="right">
@@ -178,6 +196,11 @@ class Roles extends Component {
                                                 }
                                                 
                                             </td>
+                                            <td>
+                                                <Popconfirm title="Are you sure delete this Role?" onConfirm={ (event)=>{this.confirmDeleteRole(event)} } onCancel={ (event)=>{this.cancelDeleteRole(event)} } okText="Yes" cancelText="No">   
+                                                    <i title="remove permission" className="fa fa-trash" onClick={ ()=>this.removeRole(item.id) }/>
+                                                </Popconfirm>     
+                                            </td>                                            
                                         </tr>            
                                     )
                                 }) : null
@@ -196,7 +219,8 @@ function mapDispatchToProps(dispatch){
     return {
         getRoles: bindActionCreators(getRoles, dispatch),
         createNewRoles: bindActionCreators(createNewRoles, dispatch),
-        deletePermFromRoles: bindActionCreators(deletePermFromRoles, dispatch)
+        deletePermFromRoles: bindActionCreators(deletePermFromRoles, dispatch),
+        deleteRole: bindActionCreators(deleteRole, dispatch)
     }
 }
   

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { getPermissions, createNewPermission, editPermissionName, deletePermission, hideEditPermissionBtn, saveEditedPermissionName } from '../store/actions';
 
-import { Popconfirm, message } from 'antd';
+import { Popconfirm, message, Tooltip } from 'antd';
 import LineSeparator from '../components/LineSeparator';
 import { dirname } from 'path';
 
@@ -100,8 +100,11 @@ class Permission extends Component {
                                         <tr key={i}>
                                             <td>{item.id}</td>
                                             <td>
+                                                <Tooltip title="Click to edit Permission name" placement="top">
                                                 <input onChange={this.permissionNameChangeHandler} type="text" data-permid={item.id} value={item.name} placeholder="Permission Name/Code" className="form-control form-control-inline no-input"  />
+                                                </Tooltip>
                                                 <i className={"fa fa-check edit-perm-btn "+(item.edited ? 'show': 'hide')} onClick={()=>this.savePermName(item.id, item.name)}/>
+                                                
                                             </td>
                                             <td>
                                                 <Popconfirm title="Are you sure to delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">

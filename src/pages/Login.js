@@ -25,7 +25,7 @@ class Login extends Component {
         // else keep user to Login page with a error(login fail) message
 
         //authenticateUser
-        this.props.history.push('/')
+        this.props.history.push('/dashboard')
     }
 
     render() {

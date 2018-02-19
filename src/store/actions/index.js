@@ -15,6 +15,7 @@ export const CREATE_NEW_ROLES = 'CREATE_NEW_ROLES';
 export const GET_PERMISSIONS = 'GET_PERMISSIONS';
 export const CREATE_NEW_PERMISSION = 'CREATE_NEW_PERMISSION';
 export const DELETE_ROLES_PERM = 'DELETE_ROLES_PERM';
+export const DELETE_ROLE = 'DELETE_ROLE';
 
 /*
 Users
@@ -23,8 +24,7 @@ export const getUsers = () => dispatch => {
     
     axios.get(`http://localhost:3000/user/getall`)
       .then((response) => {
-          console.log('################', response.data);
-        dispatch( ({type: GET_USERLIST, users: response.data ,originalUsers:response.data}) )
+            dispatch( ({type: GET_USERLIST, users: response.data ,originalUsers:response.data}) )
       })
       .catch((err) => {
         console.error.bind(err);
@@ -52,12 +52,22 @@ export const authenticateUser = (user) => dispatch => {
 
 
 export const removeUser = (id) => (dispatch, getState) => {
-    let users = getState().userlist.originalUsers;
     
+    /*
+    let users = getState().userlist.originalUsers;
     let newUsers = users.filter(function( obj ) {
         return obj.id !== parseInt(id);
     });
     dispatch( ({type: REMOVE_USER, users: newUsers, originalUsers:newUsers}) )
+    */
+    
+    axios.delete(`http://localhost:3000/user/delete`, {data: { id: id }} )
+    .then((response) => {
+        dispatch( ({type: REMOVE_USER, users: response.data, originalUsers: response.data}) )
+    }).catch((err) => {
+        console.error.bind(err);
+    });
+
 }
 
 
@@ -105,6 +115,9 @@ export const sortUser = (sortType) => (dispatch, getState) => {
 }
 
 
+
+
+
 /*
 Roles
 */
@@ -137,6 +150,19 @@ export const deletePermFromRoles = (id, pid) => (dispatch, getState)  => {
     let promise = axios.delete(`http://localhost:3000/role/perm/delete`, {data: { id: id, pid: pid }} )
     promise.then((response) => {
             dispatch( ({ type: DELETE_ROLES_PERM }) );
+            getRoles();
+      })
+      .catch((err) => {
+        console.error.bind(err);
+    });
+    
+};
+
+export const deleteRole = (id) => (dispatch, getState)  => {
+    
+    let promise = axios.delete(`http://localhost:3000/role/delete`, {data: { id: id }} )
+    promise.then((response) => {
+            dispatch( ({ type: DELETE_ROLE }) );
             getRoles();
       })
       .catch((err) => {

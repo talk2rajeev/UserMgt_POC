@@ -15,7 +15,7 @@ const SideBarMenu = (props) => (
             </div>
             <div className="row">
                 
-                <NavLinkItem path="/" componentClass="sidebar-navLink" icon="fa fa-address-card-o" linkTitle="Users"/>
+                <NavLinkItem path="/users" componentClass="sidebar-navLink" icon="fa fa-address-card-o" linkTitle="Users"/>
                 <NavLinkItem path="/usergroup" componentClass="sidebar-navLink" icon="fa fa-users" linkTitle="User Group"/>
                 <NavLinkItem path="/roles" componentClass="sidebar-navLink" icon="fa fa-tasks" linkTitle="Roles"/>
                 <NavLinkItem path="/permission" componentClass="sidebar-navLink" icon="fa fa-check-circle" linkTitle="Permissions"/>

@@ -11,9 +11,9 @@ import Login from './pages/Login';
 const Routes = () => (
   
     <Switch>
-      <Route exact path='/login' component={Login}/>
+      <Route exact path='/' component={Login}/>
       <Layout>
-        <Route exact path='/' component={UsersTable}/>
+        <Route exact path='/dashboard' component={UsersTable}/>
         <Route path='/users' component={UsersTable}/>      
         <Route path='/usergroup' component={UserGroup}/>
         <Route path='/roles' component={Roles}/>

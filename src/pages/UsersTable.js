@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Popconfirm, message } from 'antd';
+import { Popconfirm, message, Tooltip } from 'antd';
 
 import { getUsers, removeUser, openModal, closeModal, selectUser, sortUser, searchUsers, createUser } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
@@ -33,6 +33,9 @@ class UsersTable extends Component {
         this.confirm = this.confirm.bind(this);
         this.cancel = this.cancel.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
+        this.confirmRoleDelete = this.confirmRoleDelete.bind(this);
+        this.cancelRoleDelete = this.cancelRoleDelete.bind(this);
+        this.deleteRole = this.deleteRole.bind(this);
 
         this.state = {userIdToDelete: 0}
     }
@@ -74,9 +77,20 @@ class UsersTable extends Component {
         console.dir(e.target.textContent);
     }
 
+    confirmRoleDelete(e){
+        message.success('Role deleted successfully');
+    }
+    cancelRoleDelete(e){
+        message.error('Delete opration cancelled');
+    }
+
     deleteUser(event, id){
         event.preventDefault();
         this.setState({userIdToDelete: event.target.dataset.userid});
+    }
+
+    deleteRole(e){
+        console.log('delete role');
     }
 
     render() {
@@ -87,7 +101,9 @@ class UsersTable extends Component {
                 
                 <div>
                     <div className="pull-left search-input-container">
-					    <button className="btn btn-sm btn-success create-user-btn"><i className="fa fa-user-plus" /></button> 
+                        <Tooltip title="Create New User" placement="right">
+					        <button className="btn btn-sm btn-success create-user-btn"><i className="fa fa-user-plus" /></button> 
+                        </Tooltip>
 				    </div>
                     <div className="pull-right search-input-container">
 					    <input id="searchTheKey" placeholder="Search by Name" className="form-control" ref="pattern" onKeyUp={this.searchUsers.bind(this)}  type="text" ></input> 
@@ -105,6 +121,7 @@ class UsersTable extends Component {
                                 </th>
                                 <th>Email</th>  
                                 <th>Phone</th>
+                                <th>Roles</th>
                                 <th>
                                     Action    
                                 </th>                                                        
@@ -114,8 +131,7 @@ class UsersTable extends Component {
                         {
                             this.props.users.map((item, i)=>{
                                 return(
-                                    <UserTableRow user={item} key={i} index={i} editUser={this.editUser} deleteUser={this.deleteUser} confirm={this.confirm} cancel={this.cancel} /> 
-
+                                    <UserTableRow user={item} key={i} index={i} editUser={this.editUser} deleteRole={this.deleteRole} deleteUser={this.deleteUser} confirmRoleDelete={this.confirmRoleDelete} cancelRoleDelete={this.cancelRoleDelete} confirm={this.confirm} cancel={this.cancel} /> 
                                 )
                             })
                         }
@@ -143,7 +159,7 @@ function mapDispatchToProps(dispatch){
   }
   
   function mapStateToProps(state){
-      console.log('>>>>>>>>>>>>', state)
+      //console.log('>>>>>>>>>>>>', state)
       return{
           users: state.userlist.users
       }

@@ -25,7 +25,7 @@ function getPageTitle(path){
   if(path === '/'){
     return <span><b>Login</b> - Please enter your login credential</span>
   }
-  if(path === '/users' || '/dashboard'){
+  if(path === '/users' || path === '  /dashboard'){
     return <span><b>Users</b> - All Users at glance</span>
   }
   if(path === '/usergroup'){

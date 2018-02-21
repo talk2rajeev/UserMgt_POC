@@ -6,7 +6,7 @@
 @import '../node_modules/antd/dist/antd.css';
 
 $lightGrey: #f1f1f1;
-$fontRoboto: Roboto Slab;
+$fontRoboto: 'Roboto Slab', sans-serif;
 $fontRaleway : 'Raleway', sans-serif;
 $TxtFontSize: 12px;
 
@@ -14,11 +14,6 @@ $TxtFontSize: 12px;
 body{
     font-family:  $fontRoboto;
     font-size: $TxtFontSize;
-}
-
-
-.text-center {
-    text-align: center;
 }
 
 
@@ -280,6 +275,32 @@ a.sidebar-navLink:active{
     font-weight: bolder;
 }
 
+.cancel-create-user-icn{
+    position: absolute;
+    top: 5px; 
+    right: 5px;
+    font-size: 1.2em;
+    color: #d43f3a;
+    cursor: pointer;
+}
+.create-user-container{
+    display: block;
+    margin: 20px 0;
+}
+.create-user-box{
+    width: 50%;
+    padding: 20px;
+    position: relative;
+    border: 1px solid #d3dde0;
+    border-radius: 2px;
+    box-shadow: 1px 2px 2px #ddd;
+}
+.collapsible-container.create-user{
+    height: 0;
+    overflow: hidden;
+    transition: all .3s;
+}
+
 /*
 ant design style & override
 */
@@ -287,7 +308,7 @@ ant design style & override
     font-weight: bold;
 }
 .ant-transfer-list{
-    width: 220px;
+    width: 228px;
     height: 250px;
 }
 
@@ -466,6 +487,12 @@ button, input, select, textarea {
 .form-control-inline {
     width: 250px !important;
     display: inline-block;
+}
+
+input.required::before, .required::before{
+    content: '*';
+    color: red;
+    font-size: 1.2em;
 }
 .no-input{
     border: 0px;

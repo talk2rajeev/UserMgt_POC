@@ -16,7 +16,9 @@ import {
     GET_PERMISSIONS,
     CREATE_NEW_PERMISSION,
     DELETE_ROLES_PERM,
-    DELETE_ROLE
+    DELETE_ROLE,
+    GET_USER_GROUP,
+    SELECTED_USER_GROUP
 } from '../actions/index';
 
 
@@ -91,6 +93,28 @@ const modal = (state=initialModal, action) => {
     }
 }
 
+
+const initialUserGroup = [];
+const getUserGroups = (state=initialUserGroup, action) => {
+    switch(action.type){
+        case GET_USER_GROUP:
+            return { userGroup: action.userGroup, originalUserGroup: action.originalUserGroup}                  
+        default: 
+            return state;
+    }
+}
+
+const initialSelectedUserGroup = {};
+const getSelectedUserGroup = (state=initialSelectedUserGroup, action) => {
+    switch(action.type){
+        case SELECTED_USER_GROUP:
+            return { selectedUserGroup: action.userGroup}                  
+        default: 
+            return state;
+    }
+}
+
+
 const initialRole = [];
 const getRoles = (state=initialRole, action) => {
     switch(action.type){
@@ -131,6 +155,8 @@ const allReducers = combineReducers({
     authentication: userAuthentication,
     modal: modal,
     selectedUser: selectUser,
+    userGroup: getUserGroups,
+    selectedUserGroup: getSelectedUserGroup,
     roles: getRoles,
     permissions: getPermission
 });

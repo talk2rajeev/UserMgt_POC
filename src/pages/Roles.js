@@ -124,7 +124,7 @@ class Roles extends Component {
                             {
                                 this.props.roles.length === 33 ? <AutoSuggestion selectRole={this.selectRole}/> : null
                             }
-                            <AutoSuggestion selectRole={this.selectRole}/>
+                            <AutoSuggestion selectRole={this.selectRole} permissions={this.props.permissions}/>
                         </div>
                     </div>
 
@@ -227,7 +227,8 @@ function mapDispatchToProps(dispatch){
 function mapStateToProps(state){
     console.log('state >> ', state)
       return{
-         roles: state.roles
+         roles: state.roles,
+         permissions: state.permissions.permissions
       }
 }
 

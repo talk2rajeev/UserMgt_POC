@@ -1,21 +1,45 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { closeModal } from '../store/actions';
+import { closeModal, selectUser, submitEditedUser } from '../store/actions';
 
 class EditUserModal extends Component {
     
     constructor(props){
         super(props);
+        
         this.closeModal = this.closeModal.bind(this);
+        this.inputChangehandler = this.inputChangehandler.bind(this);
+        this.updateEditedUser = this.updateEditedUser.bind(this);  
+        
     }
 
     closeModal(){
         this.props.closeModal('edituser');
     }   
 
+    inputChangehandler(){
+        let name  = this.refs.name.value;
+        let email = this.refs.email.value;
+        let phone = this.refs.phone.value;
+        
+        let user = {id: this.props.user.id, name, email, phone, roles: this.props.user.roles};
+        this.props.selectUser(user);
+
+    }
+
+    updateEditedUser(){
+        this.props.submitEditedUser();
+        setTimeout(()=>{
+            this.closeModal();
+        }, 200)
+        
+    }
+
+
     render() {
-        if(!this.props.user ) {
+        
+        if( !this.props.user ) {
             return null
         }
         else
@@ -32,22 +56,22 @@ class EditUserModal extends Component {
                         
                             <div className="form-group">
                                 <label className="form-label">Name</label>
-                                <input type="text" className="form-control" value={this.props.user.name} ref="username"/>
+                                <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.name} ref="name"/>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Email</label>
-                                <input type="text" className="form-control" value={this.props.user.email} ref="password"/>
+                                <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.email} ref="email"/>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Phone</label>
-                                <input type="text" className="form-control" value={this.props.user.phone} ref="password"/>
+                                <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.phone} ref="phone"/>
                             </div>
                             
 
                         </div>
                         <div className="modal-footer">
                             <hr className="hr"/>
-                            <button className="btn btn-success" onClick={this.loginHandler}>Edit</button>
+                            <button className="btn btn-success" onClick={this.updateEditedUser}>Update</button>
                         </div>
                     </div>
                     
@@ -62,12 +86,13 @@ class EditUserModal extends Component {
 function mapDispatchToProps(dispatch){
     return {
         closeModal: bindActionCreators(closeModal, dispatch),
-       
+        selectUser: bindActionCreators(selectUser, dispatch),
+        submitEditedUser: bindActionCreators(submitEditedUser, dispatch)
     }
 }
 
 function mapStateToProps(state){
-    console.log('>>>>>>>>>>>>', state)
+    console.log('state>>>>>> :: ',state);
     return{
         isModalOpen: state.modal.editUserModal,
         user: state.selectedUser.user

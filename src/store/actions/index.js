@@ -16,6 +16,8 @@ export const GET_PERMISSIONS = 'GET_PERMISSIONS';
 export const CREATE_NEW_PERMISSION = 'CREATE_NEW_PERMISSION';
 export const DELETE_ROLES_PERM = 'DELETE_ROLES_PERM';
 export const DELETE_ROLE = 'DELETE_ROLE';
+export const GET_USER_GROUP = 'GET_USER_GROUP';
+export const SELECTED_USER_GROUP = 'SELECTED_USER_GROUP';
 
 /*
 Users
@@ -33,10 +35,11 @@ export const getUsers = () => dispatch => {
 };
 
 
-export const createUser = (user) => {
-    axios.get(`http://localhost:3000/user/create`)
+export const createNewUser = (user) => {
+    debugger
+    axios.post(`http://localhost:3000/user/create`, user)
       .then((response) => {
-            dispatch( ({type: CREATE_USER, users: response.data ,originalUsers: response.data}) )
+            dispatch( ({ type: CREATE_USER, users: response.data ,originalUsers: response.data }) )
       })
       .catch((err) => {
         console.error.bind(err);
@@ -114,9 +117,46 @@ export const sortUser = (sortType) => (dispatch, getState) => {
     }
 }
 
+export const deleteRoleFromUser = (uid, rid) => (dispatch, getState) => {
+    
+    axios.delete(`http://localhost:3000/user/role/delete`, {data: { id: uid, rid, rid }} )
+      .then((response) => {
+            dispatch( ({ type: GET_USERLIST, users: response.data ,originalUsers: response.data }) )
+      })
+      .catch((err) => {
+        console.error.bind(err);
+    })
 
+}
 
+export const submitEditedUser = () => (dispatch, getState) => {
+    let user = getState().selectedUser.user;
+    
+    axios.put(`http://localhost:3000/user/update`, user )
+      .then((response) => {
+            dispatch( ({ type: GET_USERLIST, users: response.data ,originalUsers: response.data }) )
+      })
+      .catch((err) => {
+        console.error.bind(err);
+    })
+}
 
+/*
+User Group
+*/
+export const getUserGroup = () => dispatch => {
+    axios.get(`http://localhost:3000/usergroup/getall`)
+      .then((response) => {
+            dispatch( ({type: GET_USER_GROUP, userGroup: response.data, originalUserGroup: response.data}) )
+      })
+      .catch((err) => {
+        console.error.bind(err);
+    })
+}
+
+export const selectedUserGroup = (usergroup) => dispatch => {
+    dispatch( ({type: SELECTED_USER_GROUP, userGroup: usergroup}) )
+}
 
 /*
 Roles

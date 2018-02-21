@@ -1,3 +1,16 @@
+
+.text-center {
+    text-align: center;
+}
+
+.page-content h3.heading{
+    color: #3f7384;
+}
+
+.bdr-left{
+    border-left: 1px solid #eff2f5;
+}
+
 hr{
     border: 0;
     border-top: 1px solid #0c5269;
@@ -40,9 +53,22 @@ hr{
 .bottom-bdr{
     border-bottom: 1px dashed #dedede;
 }
+.top-margin5{
+    margin-top: 5px;
+}
+.top-margin10{
+    margin-top: 10px;
+}
+.top-margin15{
+    margin-top: 15px;
+}
+.top-margin20{
+    margin-top: 20px;
+}
 .top-margin25{
     margin-top: 25px;
 }
+
 .clearfix{
     clear: both;
 }

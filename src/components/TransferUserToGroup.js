@@ -24,7 +24,7 @@ class TransferUserToGroup extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        targetKeys,
+        targetKeys: this.props.targetKeys,
         selectedKeys: [],
       };
 
@@ -55,6 +55,10 @@ class TransferUserToGroup extends React.Component {
     console.log('target:', e.target);
   }
 
+  componentWillReceiveProps(nextProps){
+    this.setState({targetKeys: nextProps.targetKeys});
+  }
+
   submitAssignedUserList(){
     console.log('targetKey: ', this.state.targetKeys);
   }
@@ -64,7 +68,7 @@ class TransferUserToGroup extends React.Component {
     return (
       <div>
       <Transfer
-        dataSource={mockData}
+        dataSource={this.props.dataSource}
         titles={['UserList', 'UserGroup']}
         targetKeys={state.targetKeys}
         selectedKeys={state.selectedKeys}

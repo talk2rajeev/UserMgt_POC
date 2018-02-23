@@ -12,9 +12,9 @@ import {
     selectUser, 
     sortUser, 
     searchUsers, 
-    createUser, 
     deleteRoleFromUser,
-    createNewUser 
+    createNewUser,
+    getRoles 
 } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
 import EditUserModal from '../components/EditUserModal';
@@ -64,6 +64,7 @@ class UsersTable extends Component {
 
     componentDidMount(){
         this.props.getUsers();
+        this.props.getRoles();
     }
 
     editUser(id, user){
@@ -127,9 +128,7 @@ class UsersTable extends Component {
     }
 
     openCreateUserBox(){
-        
         this.setState({isCreateUsrContainerOpen: true});
-        console.log(123);
     }
     closeCreateUserBox(){
         this.setState({isCreateUsrContainerOpen: false});
@@ -153,19 +152,19 @@ class UsersTable extends Component {
 
 
     submitUserForm(){
-        if(this.user.fname === '' || this.user.fname === '' || this.user.role.length === 0){
+        if(this.user.fname === '' || this.user.fname === undefined || this.user.role.length === 0){
             message.error('Please fill mandatory fields');
         }
         else{
-            this.props.createNewUser(this.user);
-            location.reload();
-        }
+            this.props.createNewUser(this.user);            
+        } 
+        
     }
 
     renderCreateUserBlock(){
         if(this.state.isCreateUsrContainerOpen === true){
             return(
-                <CreateUserForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} selectRole={this.selectRole} closeCreateUserBox={this.closeCreateUserBox}/>
+                <CreateUserForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} selectRole={this.selectRole} closeCreateUserBox={this.closeCreateUserBox} roles={this.props.roles.roles}/>
             )
         }
         else
@@ -238,6 +237,7 @@ class UsersTable extends Component {
 
 function mapDispatchToProps(dispatch){
     return {
+        getRoles: bindActionCreators(getRoles, dispatch),
         getUsers: bindActionCreators(getUsers, dispatch),
         removeUser: bindActionCreators(removeUser,dispatch),
         openModal: bindActionCreators(openModal,dispatch),
@@ -253,7 +253,8 @@ function mapDispatchToProps(dispatch){
   function mapStateToProps(state){
       //console.log('>>>>>>>>>>>>', state)
       return{
-          users: state.userlist.users
+          users: state.userlist.users,
+          roles: state.roles
       }
   }
 

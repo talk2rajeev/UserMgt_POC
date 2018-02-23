@@ -2,6 +2,7 @@ import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { closeModal, selectUser, submitEditedUser } from '../store/actions';
+import AutoSuggestion from './AutoSuggestion';
 
 class EditUserModal extends Component {
     
@@ -9,9 +10,11 @@ class EditUserModal extends Component {
         super(props);
         
         this.closeModal = this.closeModal.bind(this);
+        this.selectRole = this.selectRole.bind(this);
         this.inputChangehandler = this.inputChangehandler.bind(this);
         this.updateEditedUser = this.updateEditedUser.bind(this);  
         
+        this.roles = [];
     }
 
     closeModal(){
@@ -34,6 +37,12 @@ class EditUserModal extends Component {
             this.closeModal();
         }, 200)
         
+    }
+
+    selectRole(value, option){
+
+        console.log(value);
+
     }
 
 
@@ -65,6 +74,14 @@ class EditUserModal extends Component {
                             <div className="form-group">
                                 <label className="form-label">Phone</label>
                                 <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.phone} ref="phone"/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Roles</label>
+                                <AutoSuggestion 
+                                    placeholder="Add New Role" 
+                                    selectRole={this.selectRole} 
+                                    data={this.props.permissions}
+                                />                                
                             </div>
                             
 

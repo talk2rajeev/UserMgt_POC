@@ -19,8 +19,10 @@ class UserGroup extends Component {
         this.confirmDeleteUserGroup = this.confirmDeleteUserGroup.bind(this);
         this.renderTransferComponent = this.renderTransferComponent.bind(this);
         this.toggleCreateUGContainer = this.toggleCreateUGContainer.bind(this);
+        this.renderCreateUserGrpBtn = this.renderCreateUserGrpBtn.bind(this);
 
         this.toggle = false;
+        this.selectUserGroupObj = {};
     }
 
     setUserGroupId(id){
@@ -42,7 +44,8 @@ class UserGroup extends Component {
             return item.id === id;
         });
         console.log('>>>> ',id, usergroup[0]);
-        this.props.selectedUserGroup(usergroup[0]);
+        //this.props.selectedUserGroup(usergroup[0]);
+        this.selectUserGroupObj = usergroup[0];
     }
 
     componentDidMount(){
@@ -59,10 +62,14 @@ class UserGroup extends Component {
     }
 
     targetUsers(){
-        //return ['1', '2']
-        let targetKeys = this.props.selectedUG.selectedUserGroup.userIds.map((item, i)=>{
-            return item.id.toString();
-        });
+        
+        let targetKeys = [];
+        if(Object.keys(this.selectUserGroupObj).length>0){
+            targetKeys = this.selectUserGroupObj.userIds.map((item, i)=>{
+                return item.id.toString();
+            }); 
+        }
+        
         return targetKeys;
     }
 
@@ -71,6 +78,16 @@ class UserGroup extends Component {
         return(
             <TransferUserToGroup dataSource={ this.dataSource() } targetKeys={ this.targetUsers() }  />
         )
+    }
+
+    renderCreateUserGrpBtn(event){
+        //debugger
+        event.preventDefault();
+        return !this.toggle ? 
+            <Tooltip title="Create New UserGroup" placement="right">
+                <button onClick={this.toggleCreateUGContainer} className="btn btn-sm btn-primary"><i className="fa fa-users" />&nbsp;<i className="fa fa-plus" /></button>
+            </Tooltip> 
+         : null
     }
 
     toggleCreateUGContainer(){
@@ -85,9 +102,8 @@ class UserGroup extends Component {
         return(  
                 <div className="userGroup-container">
                     <div className="col-md-12 create-user-container row">
-                        <Tooltip title="Create New UserGroup" placement="right">
-                            <button onClick={this.toggleCreateUGContainer} className="btn btn-sm btn-primary"><i className="fa fa-users" />&nbsp;<i className="fa fa-plus" /></button>
-                        </Tooltip>    
+                        { this.renderCreateUserGrpBtn(event) }
+                           
                         <div id="collapsible-container-create-user" className="collapsible-container create-user  row">
                             <div className="col-md-3">
                                 <input className="form-control" placeholder="Group Name"/>
@@ -97,7 +113,7 @@ class UserGroup extends Component {
                                 <input className="form-control" placeholder="select"/>
                             </div>
                             <div className="col-md-6">
-                                 this.renderTransferComponent() 
+                                { this.renderTransferComponent() }
                             </div>
                         </div>
                     </div>

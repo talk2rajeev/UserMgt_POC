@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getRoles, createNewRoles, deletePermFromRoles, deleteRole } from '../store/actions';
+import { getRoles, createNewRoles, deletePermFromRoles, deleteRole, getPermissions } from '../store/actions';
 
 import { Popconfirm, message, Tooltip } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
@@ -29,6 +29,7 @@ class Roles extends Component {
 
     componentDidMount(){
         this.props.getRoles();
+        this.props.getPermissions();
     }
 
     cancel(event){
@@ -78,6 +79,8 @@ class Roles extends Component {
     
         this.setState({newRole});
 
+        //let id = document.querySelector('.ant-select-search__field');
+        //set AUtoComplete as blank
     }
 
     roleNameHandler(){
@@ -124,7 +127,7 @@ class Roles extends Component {
                             {
                                 this.props.roles.length === 33 ? <AutoSuggestion selectRole={this.selectRole}/> : null
                             }
-                            <AutoSuggestion selectRole={this.selectRole} permissions={this.props.permissions}/>
+                            <AutoSuggestion placeholder="Select Permissions" selectRole={this.selectRole} data={this.props.permissions}/>
                         </div>
                     </div>
 
@@ -220,7 +223,8 @@ function mapDispatchToProps(dispatch){
         getRoles: bindActionCreators(getRoles, dispatch),
         createNewRoles: bindActionCreators(createNewRoles, dispatch),
         deletePermFromRoles: bindActionCreators(deletePermFromRoles, dispatch),
-        deleteRole: bindActionCreators(deleteRole, dispatch)
+        deleteRole: bindActionCreators(deleteRole, dispatch),
+        getPermissions: bindActionCreators(getPermissions, dispatch)
     }
 }
   

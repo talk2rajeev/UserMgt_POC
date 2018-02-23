@@ -35,7 +35,8 @@ class Permission extends Component {
     }
 
     savePermName(id, name){
-        this.props.hideEditPermissionBtn(id, name);
+        debugger
+        this.props.hideEditPermissionBtn(id);
         this.props.saveEditedPermissionName(id, name);
         message.success('Permission name updated successfully');
     }
@@ -58,10 +59,9 @@ class Permission extends Component {
     }
 
     confirm(event){
-        console.dir(event.target.innerText);
         let permission = this.state.permissionToDlete;
         this.props.deletePermission(permission.id);
-        message.success('Permission deleted successfully');
+        
     }
     
 
@@ -87,8 +87,8 @@ class Permission extends Component {
                     <table className="table table-striped" style={{'width':'57.5%'}}>
                         <thead>
                             <tr>
-                                <td>Role</td>
-                                <td>Permissions</td>                              
+                                <td>Permission Id</td>
+                                <td>Permission Name</td>                              
                                 <td>Action</td>                              
                             </tr>
                         </thead>

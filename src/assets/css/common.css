@@ -11,6 +11,12 @@
     border-left: 1px solid #eff2f5;
 }
 
+.btn:focus {
+    /*outline: -webkit-focus-ring-color auto 5px;*/
+    outline: none;
+    outline-color: transparent;
+}
+
 hr{
     border: 0;
     border-top: 1px solid #0c5269;

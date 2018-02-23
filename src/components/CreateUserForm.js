@@ -31,7 +31,7 @@ const CreateUserForm = (props) => {
                 </div>
                 <div className="clearfix top-margin10">
                     <div className="">
-                        <AutoSuggestion selectRole={props.selectRole}/>
+                        <AutoSuggestion placeholder="Select Roles"  selectRole={props.selectRole} data={props.roles} />
                     </div>
                 </div>
 

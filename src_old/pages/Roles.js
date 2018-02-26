@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getRoles, createNewRoles, deletePermFromRoles, deleteRole, getPermissions, updateRole } from '../store/actions';
+import { getRoles, createNewRoles, deletePermFromRoles, deleteRole, getPermissions } from '../store/actions';
 
 import { Popconfirm, message, Tooltip } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
@@ -21,9 +21,6 @@ class Roles extends Component {
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.renderEditRoleModal = this.renderEditRoleModal.bind(this);
-        this.childInputChangehandler = this.childInputChangehandler.bind(this);
-        this.updateEditedRole = this.updateEditedRole.bind(this);
-        this.handleChange = this.handleChange.bind(this);
 
         this.confirmDeleteRole = this.confirmDeleteRole.bind(this);
         this.cancelDeleteRole = this.cancelDeleteRole.bind(this);        
@@ -33,10 +30,9 @@ class Roles extends Component {
         this.createRoleHandler = this.createRoleHandler.bind(this);
         this.processPermissionData = this.processPermissionData.bind(this);
 
-        this.state = {pidToDelete: {}, newRole: {'name': '', 'pIds': []}, isEditRoleModalOpen: false, selectedRole: null }
+        this.state = {pidToDelete: {}, newRole: {'name': '', 'pIds': []}, isEditRoleModalOpen: false }
         this.roleToDelete = null;
         this.selectedRole = null;
-        this.role = null;
     }
 
     componentDidMount(){
@@ -112,41 +108,28 @@ class Roles extends Component {
         this.setState({newRole});
     }
 
-    createRoleHandler(event){
-        event.preventDefault();
-        
+    createRoleHandler(){
+        debugger
         let role = this.state.newRole;
-        
-        let newPermission = [];
-
-        for(let i = 0; i < role.pIds.length; i++){
-            let temp = this.props.permissions.find((item)=>item.name === role.pIds[i]);
-            newPermission.push(temp);
-        }
-
-        role.permission = newPermission;
-        delete role.pIds;
-        
-        this.setState({
-            newRole: {'name': '', 'pIds': []}
-        })
 
         this.props.createNewRoles(role);
         message.success('New Role added succesfully');
     }
 
     removeRole(id){
-        
+        debugger
         console.log('deleterole: ',id);
         this.roleToDelete = id;
         //this.props.deleteRole(id);
 
     }
+
     confirmDeleteRole(event){
         
         this.props.deleteRole(this.roleToDelete);
         message.success('You just deleted Role');
     }
+
     cancelDeleteRole(event){
         message.error('Delete action cancelled ');
     }
@@ -165,60 +148,27 @@ class Roles extends Component {
     }
 
     openModal(item){     
-        
-        this.setState({isEditRoleModalOpen: true, selectedRole: item});  
+        this.selectedRole = item;
+        this.setState({isEditRoleModalOpen: true});  
     }
 
     closeModal(){
         this.setState({isEditRoleModalOpen: false}); 
     }
 
-    getDefaultPermissions(permission){
-        
-        return [];
-    }
-
     renderEditRoleModal(){
         if(this.state.isEditRoleModalOpen)
             return  <EditRoleModal 
-                        role={this.state.selectedRole}    
-                        closeModal={this.closeModal}
-                        permissions = {this.props.permissions}
-                        defaultPermissions = {this.props.role}
-                        childInputChangehandler={this.childInputChangehandler}
-                        updateEditedRole = {this.updateEditedRole}
-                        handleChange = {this.handleChange}
+                        permissions={ [{id: "5a92888dd4c6d88041ea96dc", name: "ODM Room Access"}, {id: "5a92888dd4c6d88041ea96dd", name: "Server Room Access"}] }  
+                        closeModal={this.closeModal} 
+                        role = { {_id: "5a92888dd4c6d88041ea96dc", name: "Admin", permission: [{id: "5a92888dd4c6d88041ea96dc", name: "ODM Room Access"} ]} } 
                     />
         else
             return null;    
     }
 
-    childInputChangehandler(){
-        
-        let rolename  = document.getElementById('rolename').value;
-        let { selectedRole }  = {...this.state};
-        selectedRole.name = rolename;
-        this.setState({selectedRole});
-
-    }
-
-    updateEditedRole(){
-        
-        this.props.updateRole(this.state.selectedRole);
-        this.setState({isEditRoleModalOpen: false}); 
-
-    }
    
-    handleChange(value, option){
-        let { selectedRole } = {...this.state};
-        let newPermission = [];
-        for(let i = 0; i < value.length; i++){
-            let temp = this.props.permissions.find((item)=>item.name === value[i]);
-            newPermission.push(temp);
-        }
-        selectedRole.permission = newPermission;
-        this.setState({selectedRole});
-    }
+
 
     render() {
         return(  
@@ -306,8 +256,7 @@ class Roles extends Component {
                                                 
                                             </td>
                                             <td>
-                                                <i title="Edit Role" className="fa fa-pencil" onClick={ ()=>this.openModal(item) } />
-                                                &nbsp;&nbsp;&nbsp;
+                                                <i title="Edit Role" className="fa fa-pencil" onClick={ this.openModal(item) }/>
                                                 <Popconfirm title="Are you sure delete this Role?" onConfirm={ (event)=>{this.confirmDeleteRole(event)} } onCancel={ (event)=>{this.cancelDeleteRole(event)} } okText="Yes" cancelText="No">   
                                                     <i title="remove permission" className="fa fa-trash" onClick={ ()=>this.removeRole(item._id) }/>
                                                 </Popconfirm>     
@@ -319,9 +268,7 @@ class Roles extends Component {
                             
                         </tbody>
                     </table>
-                    {
-                        this.renderEditRoleModal()
-                    }           
+                    { this.renderEditRoleModal() }            
                 </div>
             )    
     }
@@ -334,8 +281,7 @@ function mapDispatchToProps(dispatch){
         createNewRoles: bindActionCreators(createNewRoles, dispatch),
         deletePermFromRoles: bindActionCreators(deletePermFromRoles, dispatch),
         deleteRole: bindActionCreators(deleteRole, dispatch),
-        getPermissions: bindActionCreators(getPermissions, dispatch),
-        updateRole: bindActionCreators(updateRole, dispatch)
+        getPermissions: bindActionCreators(getPermissions, dispatch)
     }
 }
   

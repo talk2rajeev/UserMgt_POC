@@ -19,13 +19,7 @@ import {
     DELETE_ROLES_PERM,
     DELETE_ROLE,
     GET_USER_GROUP,
-    SELECTED_USER_GROUP,
-    GET_USERGROUPLIST,
-    REMOVE_USERGROUP,
-    CREATE_NEW_GROUP,
-    SORT_USERGROUP,
-    SEARCH_USERGROUP,
-    OPEN_TRANSFER
+    SELECTED_USER_GROUP
 } from '../actions/index';
 
 
@@ -103,44 +97,15 @@ const modal = (state=initialModal, action) => {
 }
 
 
-
-let initialUserGroup = {
-    usergroups: []
- };
-const getUserGroupList = (state=initialUserGroup, action) => {
+const initialUserGroup = [];
+const getUserGroups = (state=initialUserGroup, action) => {
     switch(action.type){
-        case GET_USERGROUPLIST:
-            return { usergroups: action.userGroups ,originalUsergroups: action.originalUserGroups}
-        case REMOVE_USERGROUP:
-            return { usergroups: action.userGroups ,originalUsergroups: action.originalUserGroups}  
-        case SORT_USERGROUP:
-            return { usergroups: action.userGroups ,originalUsergroups: action.originalUserGroups}  
-        case SEARCH_USERGROUP:
-            return { usergroups: action.userGroups ,originalUsergroups: action.originalUserGroups}
-        case CREATE_NEW_GROUP:
-            return { usergroups: action.userGroups ,originalUsergroups: action.originalUserGroups}           
-        default:
+        case GET_USER_GROUP:
+            return { userGroup: action.userGroup, originalUserGroup: action.originalUserGroup}                  
+        default: 
             return state;
     }
- }
-
- let initialTransfer = {
-    AssignUserToGroupTransfer: false,
-    groupname:"",
-    groupedUsers:[]
- 
- }
- const transfer = (state=initialTransfer, action) => {
-    switch(action.type){
-        case OPEN_TRANSFER:
-            if(action.groupname != '')
-                return { AssignUserToGroupTransfer: true ,groupname:action.groupname,groupedUsers:action.usersOfUserGroup};
-        default:
-            return state;
-    }
- }
-
-
+}
 
 const initialSelectedUserGroup = {};
 const getSelectedUserGroup = (state=initialSelectedUserGroup, action) => {
@@ -193,8 +158,7 @@ const allReducers = combineReducers({
     authentication: userAuthentication,
     modal: modal,
     selectedUser: selectUser,
-    usergroupslist: getUserGroupList,
-    transfer: transfer,
+    userGroup: getUserGroups,
     selectedUserGroup: getSelectedUserGroup,
     roles: getRoles,
     permissions: getPermission

@@ -309,7 +309,7 @@ ant design style & override
 }
 .ant-transfer-list{
     width: 228px;
-    height: 220px;
+    height: 250px;
 }
 
 
@@ -373,40 +373,6 @@ Modal
     cursor: pointer;
 }
 
-.close-bx-icn{
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    color: red;
- }
- .collapsible-container.create-usergroup{
-    position: relative;
-    background: #ecfbfb;
- }
- button.create-ug-btn:focus{
-    outline: none;
- }
-
- .userGroup-name-container{
-    position: relative;
- }
- .userGroup-name{
-    cursor: pointer;
- }
- 
- .userGroup-name:hover .userGroup-menu-options-container{
-    display: inline-block;
- }
- .hand-pointer{
-    cursor: pointer;  
- }
-
- .collapsible-container.create-usergroup{
-    height: 0;
-    transition: all .3s;
-    overflow: hidden;
- }
- 
 /*
   Bootstrap
 */

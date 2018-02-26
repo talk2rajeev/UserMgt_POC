@@ -1,0 +1,125 @@
+/*
+ font-awesome icons
+ Permission, setting: task
+ userlist: address-book
+ users: address-card
+*/
+html, body{
+    font-family: 'Roboto Slab', serif;
+}
+.left-menu-container{
+    background: #003e52;
+    color: #bdc7ca;
+    min-height: 500px;
+    height: 100vh;
+}
+
+.top-header-container{
+    
+    border-bottom: 1px solid #dedede;
+    background: #fafafa;
+}
+
+.logo_n_title{
+    padding: 10px 0;
+}
+
+.logo::before {
+    text-shadow: 1px 2px 2px #000;
+}
+
+.app-title{
+    line-height: 1;
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #bdc7ca;
+    text-shadow: 2px 3px 2px #02232d;
+}
+
+.icon-text-link-wrapper{
+    color: #168db3;
+    padding: 12px 0 4px;
+}
+
+.icon-text-link-wrapper:hover{
+    /*color: #042c3a;*/
+    color: #dedede;
+    cursor: pointer;
+    background: #367284;
+}
+
+.icon-text-link-wrapper i{
+    color: inherit;
+    font-size: 1.5em;
+}
+
+.left-menu-link{
+    color: inherit;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.left-menu-link:hover{
+    color: inherit;
+    text-decoration: none;
+}
+
+.page-level-txt{
+    display: inline-block;
+    padding: 6px 10px;
+}
+
+.logout-dropdown{
+    display: inline-block;
+    padding: 8px 10px;
+    border-left: 1px solid #dedede;
+    font-size: 12px;
+    font-weight: bold;
+    color: #0c7394;
+    position: relative;
+}
+
+.logout-dropdown span{
+    margin-right: 5px;
+}
+
+.dropdown-bx{
+    display: none;
+    position: absolute;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    width: 85%;
+    color: #555;
+    box-shadow: 1px 1px 2px #ccc;
+    background: #fff;
+    font: normal normal normal 14px/1 FontAwesome;
+    margin-top: 1px;
+    cursor: pointer;
+}
+
+.dropdown-bx::before{
+    content: "\f106";
+    position: absolute;
+    top: -12px;
+    color: #cdcdcd;
+    right: 2px;
+    font-size: 1.2em;
+}
+
+.dropdown-txt{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-txt:hover > .dropdown-bx{
+    display: block;
+}
+
+hr{
+    border: 0;
+    border-top: 1px solid #0c5269;
+    margin: 10px 0 0;
+}

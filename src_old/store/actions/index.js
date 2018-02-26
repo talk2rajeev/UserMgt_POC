@@ -20,10 +20,7 @@ export const CREATE_NEW_PERMISSION = 'CREATE_NEW_PERMISSION';
 export const DELETE_ROLES_PERM = 'DELETE_ROLES_PERM';
 export const DELETE_ROLE = 'DELETE_ROLE';
 export const GET_USER_GROUP = 'GET_USER_GROUP';
-export const GET_USERGROUPLIST = "GET_USERGROUPLIST";
 export const SELECTED_USER_GROUP = 'SELECTED_USER_GROUP';
-export const REMOVE_USERGROUP = 'REMOVE_USERGROUP';
-export const CREATE_NEW_GROUP = 'CREATE_NEW_GROUP';
 
 
 let PATH = require('../../utility/Constants');
@@ -187,81 +184,23 @@ export const submitEditedUser = () => (dispatch, getState) => {
 /*
 User Group
 */
-export const getUserGroups = () => dispatch => {
+export const getUserGroup = () => dispatch => {
+
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.getall}`;
     
-    reloadUserGroup()
+    axios.get(`http://localhost:3000/usergroup/getall`)
       .then((response) => {
-        dispatch( ({type: GET_USERGROUPLIST, userGroups: response.data, originalUserGroups: response.data}) )
+            dispatch( ({type: GET_USER_GROUP, userGroup: response.data, originalUserGroup: response.data}) )
       })
       .catch((err) => {
         console.error.bind(err);
     })
-};
+}
 
+export const selectedUserGroup = (usergroup) => dispatch => {
+    dispatch( ({type: SELECTED_USER_GROUP, userGroup: usergroup}) )
+}
 
- function reloadUserGroup(){
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.getall}`;
-    
-    return axios.get(url)
-    
- }
-
- export const removeUserGroup = (id) => (dispatch, getState) => {
-    debugger;
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.delete}${id}`;
-
-    axios.delete(url)
-    .then((response) => {
-        reloadUserGroup()
-        .then((result) => {
-            dispatch( ({type: REMOVE_USERGROUP, userGroups: result.data, originalUserGroups: result.data}) )
-            })
-            .catch((err) => {
-            console.error.bind(err);
-        })
-    })
-    .catch((err) => {
-            console.error.bind(err);
-    }); 
-
-    
- }
-
-
- export const openTransferUserGroup = (userGroupRow) => (dispatch) => {
-    const usersInGroup = userGroupRow.Users.map((item,i)=>{
-        return item.id ;
-      
-      })
-      debugger;
-    dispatch( ({type: OPEN_TRANSFER, groupname: userGroupRow.GroupName,usersOfUserGroup:usersInGroup}) )
- 
- }
-
- 
-export function createNewGroup(group){
-    
-    debugger;
-
-    return function(dispatch){
-        let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.create}`;   
-        axios.post(url, group)
-        .then((response) => {
-            reloadUserGroup()
-            .then((result) => {
-                dispatch( ({type: CREATE_NEW_GROUP, userGroups: result.data, originalUserGroups: result.data}) )
-              })
-              .catch((err) => {
-                console.error.bind(err);
-            })
-        })
-        .catch((err) => {
-            console.error.bind(err);
-        });  
-    }
-    
-};
 
 
 
@@ -286,25 +225,17 @@ function loadRoles(){
     return axios.get(url);
 }
 
-export function createNewRoles(role){
+export const createNewRoles = (role) => dispatch => {
+debugger
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.create}`;
     
-    return function(dispatch){
-        let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.create}`;
-    
-        axios.post(url, role)
-          .then((response) => {
-                loadRoles()
-                .then((result)=>{
-                    dispatch( ({type: GET_ROLES, roles: result.data, originalRoles: result.data}) )
-                })
-                //dispatch( ({type: GET_ROLES, roles: response.data ,originalRoles:response.data}) )
-          })
-          .catch((err) => {
-            console.error.bind(err);
-        });
-    }
-    
-    
+    // axios.post(`http://localhost:3000/role/create`, role)
+    //   .then((response) => {
+    //         dispatch( ({type: GET_ROLES, roles: response.data ,originalRoles:response.data}) )
+    //   })
+    //   .catch((err) => {
+    //     console.error.bind(err);
+    //   });
 
 }
 
@@ -341,7 +272,7 @@ export const deleteRole = (id) => (dispatch, getState)  => {
 
 export const updateRole = (role) => (dispatch)  => {
     
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.update}${role._id}`;
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.update}${id}`;
     axios.put(url, role)
       .then((response) => {
             loadRoles().then((result)=>{

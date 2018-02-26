@@ -1,86 +1,136 @@
-import React, {Component}  from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Transfer } from 'antd';
 
-const mockData = [];
-for (let i = 0; i < 8; i++) {
-  mockData.push({
-    key: i.toString(),
-    title: `user-${i}`
-  });
-}
-
-/*const targetKeys = mockData
-        .filter(item => +item.key % 3 > 1)
-        .map(item => item.key);*/
+var mockData = [];
+// for (let i = 0; i < 8; i++) {
+//   mockData.push({
+//     key: i.toString(),
+//     title: `user-${i}`
+//   });
+// }
 
 const targetKeys = [
   '2',
   '3'
 ];
-
-
+const selectedKeys = [];
+const row = {};
+var usersInGroup = [];
+var groupName = false;
 class TransferUserToGroup extends React.Component {
-   
-  constructor(props){
+  constructor(props) {
     super(props);
+    if (this.props.userGroupRow.user != undefined) {
+      usersInGroup = this.props.userGroupRow.user.map((item, i) => {
+        return item.id;
+      })
+    }
+
     this.state = {
-        targetKeys: this.props.targetKeys,
-        selectedKeys: [],
-      };
+      targetKeys: usersInGroup,
+      selectedKeys,
+      row: this.props.userGroupRow,
+      isTransferOpenClose: this.props.isTransferOpen
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.submitAssignedUserList = this.submitAssignedUserList.bind(this);
+    this.closeTransfer = this.closeTransfer.bind(this);
+  }
 
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSelectChange = this.handleSelectChange.bind(this);
-      this.handleScroll = this.handleScroll.bind(this);
-      this.submitAssignedUserList = this.submitAssignedUserList.bind(this);
-      
-  }  
-
-  handleChange(nextTargetKeys, direction, moveKeys){
+  handleChange(nextTargetKeys, direction, moveKeys) {
     this.setState({ targetKeys: nextTargetKeys });
-
     console.log('targetKeys: ', targetKeys);
     console.log('direction: ', direction);
     console.log('moveKeys: ', moveKeys);
   }
 
-  handleSelectChange(sourceSelectedKeys, targetSelectedKeys){
+  handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
+    debugger;
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
-
+    debugger;
     console.log('sourceSelectedKeys: ', sourceSelectedKeys);
     console.log('targetSelectedKeys: ', targetSelectedKeys);
   }
 
-  handleScroll(direction, e){
+  handleScroll(direction, e) {
     console.log('direction:', direction);
     console.log('target:', e.target);
   }
-
-  componentWillReceiveProps(nextProps){
-    this.setState({targetKeys: nextProps.targetKeys});
+  closeTransfer() {
+    this.setState({ isTransferOpenClose: false });
   }
 
-  submitAssignedUserList(){
+  componentDidMount(){
+    debugger;
+   
+  
+
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userGroupRow.user != undefined) {
+      usersInGroup = nextProps.userGroupRow.user.map((item, i) => {
+        return item.id;
+      })
+    }else{
+      usersInGroup=[];
+    }
+   // mockData=[];
+   
+   
+
+    this.setState({
+      targetKeys: usersInGroup,
+      selectedKeys,
+      row: nextProps.userGroupRow,
+      isTransferOpenClose: nextProps.isTransferOpen
+    });
+  }
+  componentWillUnmount() {
+    debugger;
+  }
+  submitAssignedUserList() {
     console.log('targetKey: ', this.state.targetKeys);
+    debugger;
+    var userRow = this.state.row;
+    var row = { ...this.state.row }
+    let users = this.state.targetKeys;
+    row.Users = users;
+    this.setState({ row });
   }
 
   render() {
     const state = this.state;
     return (
-      <div>
-      <Transfer
-        dataSource={this.props.dataSource}
-        titles={['UserList', 'UserGroup']}
-        targetKeys={state.targetKeys}
-        selectedKeys={state.selectedKeys}
-        onChange={this.handleChange}
-        onSelectChange={this.handleSelectChange}
-        onScroll={this.handleScroll}
-        render={item => item.title}
-      />
-      <button onClick={this.submitAssignedUserList}>assigned user list</button>
+      <div >
+        <Transfer
+          dataSource={this.props.mockdataa}
+           showSearch
+          titles={['UserList', this.props.userGroupName]}
+          targetKeys={state.targetKeys}
+          selectedKeys={state.selectedKeys}
+          onChange={this.handleChange}
+          onSelectChange={this.handleSelectChange}
+          onScroll={this.handleScroll}
+          render={item => item.title}
+        />
       </div>
     );
   }
 }
 
-export default TransferUserToGroup;
+function mapStateToProps(state) {
+  console.log('from TransferUserToGroup control/component: ', state);
+  debugger;
+  return {
+    usergroups: state.usergroupslist.usergroups,
+    userlist:state.userlist.users
+  }
+}
+const _TransferUserToGroup = connect(mapStateToProps, null)(TransferUserToGroup);
+
+export default _TransferUserToGroup;

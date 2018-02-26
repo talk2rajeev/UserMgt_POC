@@ -142,7 +142,7 @@ debugger;
         var group = {...this.state.group};
         let newroles=group.role;
          newroles = newroles.filter( (val) => {
-            return event.target.dataset.itemname === val ? false : true; 
+            return event.target.dataset.itemname === val.name ? false : true; 
         });
         group.role = newroles;
         console.log('new perms: ', newroles);

@@ -164,7 +164,7 @@ export const submitEditedUser = () => (dispatch, getState) => {
     debugger
     let user = getState().selectedUser.user;
 
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.update}${user.id}`;
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.update}${user._id}`;
     
     axios.put(url, user )
       .then((response) => {
@@ -340,7 +340,7 @@ export const deleteRole = (id) => (dispatch, getState)  => {
 };
 
 export const updateRole = (role) => (dispatch)  => {
-    
+    debugger
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.update}${role._id}`;
     axios.put(url, role)
       .then((response) => {

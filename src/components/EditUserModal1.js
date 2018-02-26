@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import SelectTags from './SelectTags';
 
-const EditUserModal1 = () => {
+const EditUserModal1 = (props) => {
     
     let inputChangehandler = () => {
         //debugger
@@ -9,31 +9,16 @@ const EditUserModal1 = () => {
         let lname  = this.refs.lname.value;
         let email = this.refs.email.value;
         
-        let user = {id: this.props.user.id, fistName: fname, lastName: lname, email, roles: this.roles};
-        this.props.selectUser(user);
+        //let user = {id: this.props.user.id, fistName: fname, lastName: lname, email, roles: this.roles};
+        //this.props.selectUser(user);
 
     }
 
-    let updateEditedUser = () => {
-        this.props.submitEditedUser();
-        setTimeout(()=>{
-            this.closeModal();
-        }, 200)
-        
-    }
 
 
     let getRolesArray = (data) => {
         return data;
     }    
-
-    let handleChange =  (value, option) => {
-        
-        let roles = this.props.roles.roles;
-
-        this.roles = getRoleArray(roles, value);
-        
-    }
 
     let getDefaultRole = (roles) => {
         let defaultRoles = roles.map((item)=>{
@@ -50,40 +35,36 @@ const EditUserModal1 = () => {
                 <div className={ "modal" }>
                     
                 
-                    <i className="fa fa-close close-modal-icon" onClick={this.closeModal}/>
+                    <i className="fa fa-close close-modal-icon" onClick={props.closeUserEditModal}/>
                     <div className="modal-header"><h3 className="modal-title">Edit User</h3><hr className="hr"/></div>
                     <div className="modal-body">
                     
                         <div className="form-group">
                             <label className="form-label">First Name</label>
-                            <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.firstName} ref="fname"/>
+                            <input type="text" className="form-control" value={props.user.firstName} name="firstName" onChange={props.childInputChangehandler} id="fname"/>
                         </div>
                         <div className="form-group">
                             <label className="form-label">Last Name</label>
-                            <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.lastName} ref="lname"/>
+                            <input type="text" className="form-control" value={props.user.lastName} name="lastName" onChange={props.childInputChangehandler}  id="lname"/>
                         </div>
                         <div className="form-group">
                             <label className="form-label">Email</label>
-                            <input type="text" className="form-control" onChange={this.inputChangehandler} value={this.props.user.email} ref="email"/>
+                            <input type="text" className="form-control" value={props.user.email} name="email" onChange={props.childInputChangehandler} id="email"/>
                         </div>
                         <div className="form-group">
                             <label className="form-label">Roles</label>
-                            <AutoSuggestion 
-                                placeholder="Add New Role" 
-                                selectRole={this.selectRole} 
-                                data={this.props.roles.roles}
-                            />                                
+                            <SelectTags 
+                                data={props.roles} 
+                                defaultData={ getDefaultRole(props.user.roles) } 
+                                handleChange={props.handleChange} 
+                            />               
                         </div>
-                        <SelectTags 
-                            data={this.props.roles.roles} 
-                            defaultData={ this.getDefaultRole(this.props.user.roles) } 
-                            handleChange={this.handleChange} 
-                        />
+                        
 
                     </div>
                     <div className="modal-footer">
                         <hr className="hr"/>
-                        <button className="btn btn-success" onClick={this.updateEditedUser}>Update</button>
+                        <button className="btn btn-success" onClick={props.updateEditedUser}>Update</button>
                     </div>
                 </div>
                 

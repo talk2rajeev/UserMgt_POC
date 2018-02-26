@@ -15,10 +15,11 @@ import {
     searchUsers, 
     deleteRoleFromUser,
     createNewUser,
-    getRoles 
+    getRoles,
+    submitEditedUser 
 } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
-import EditUserModal from '../components/EditUserModal';
+import EditUserModal1 from '../components/EditUserModal1';
 import CreateUserForm from '../components/CreateUserForm';
 
 
@@ -58,8 +59,14 @@ class UsersTable extends Component {
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
+        
+        this.openUserEditModal = this.openUserEditModal.bind(this);
+        this.closeUserEditModal = this.closeUserEditModal.bind(this);
+        this.updateEditedUser = this.updateEditedUser.bind(this);
+        this.selectRoleHandler = this.selectRoleHandler.bind(this);
+        this.childInputChangehandler = this.childInputChangehandler.bind(this);
 
-        this.state = { isCreateUsrContainerOpen: false };
+        this.state = { isCreateUsrContainerOpen: false, isEditUserModalOpen: false };
         this.roleToDelete = {uid: 0, rid: 0};
         this.userIdToDelete = 0;
         this.user = {roles: []};
@@ -71,7 +78,7 @@ class UsersTable extends Component {
     }
 
     editUser(id, user){
-        this.props.openModal("edituser");         
+        //this.props.openModal("edituser");         
         this.props.selectUser({id: id, firstName: user.firstName, lastName: user.lastName, email: user.email, roles: user.roles});
     }
 
@@ -155,6 +162,16 @@ class UsersTable extends Component {
         this.setState({isCreateUsrContainerOpen: false});
     }
 
+    openUserEditModal(event, user){
+        this.user = user;
+        this.props.selectUser({id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, roles: user.roles});
+        this.setState({isEditUserModalOpen: true, selectedUser: user});
+    }
+
+    closeUserEditModal(){
+        this.setState({isEditUserModalOpen: false});
+    }
+
     inputChangeHandler(event){
         let key = event.target.name;
         let value = event.target.value;
@@ -166,6 +183,37 @@ class UsersTable extends Component {
         if(key === 'email')
                 this.user.email =  value;  
         
+    }
+
+    childInputChangehandler(event){
+        let key = event.target.name;
+        let value = event.target.value;
+
+        let { selectedUser }  = {...this.state};
+
+        if(key === 'firstName')
+            selectedUser.firstName = value;
+        if(key === 'lastName')
+            selectedUser.lastName =  value;  
+        if(key === 'email')
+            selectedUser.email =  value; 
+        
+        this.setState({selectedUser});  
+                    
+    }
+
+    updateEditedUser(){
+        this.props.selectUser(this.state.selectedUser);
+        this.props.submitEditedUser();
+        this.setState({isEditUserModalOpen: false});
+        
+    }
+    selectRoleHandler(value, option){
+        let roles = this.props.roles.roles;
+        let { selectedUser }  = {...this.state};
+        
+        selectedUser.roles = getRoleArray(roles, value);
+        this.setState({selectedUser});          
     }
 
 
@@ -217,6 +265,21 @@ class UsersTable extends Component {
             return null;
     }
 
+    renderEditUserModal(){
+        if(this.state.isEditUserModalOpen)
+            return  (<EditUserModal1 
+                        user={ this.state.selectedUser }
+                        roles = { this.props.roles.roles }
+                        defaultRoles = { this.props.selectUser.user }
+                        childInputChangehandler = { this.childInputChangehandler }
+                        updateEditedUser = { this.updateEditedUser }
+                        handleChange = { this.selectRoleHandler }                        
+                        closeUserEditModal={ this.closeUserEditModal }
+                    />)
+        else
+            return null;    
+    }
+
     
 
     render() {
@@ -264,13 +327,16 @@ class UsersTable extends Component {
                                         cancelRoleDelete={this.cancelRoleDelete} 
                                         confirm={this.confirm} 
                                         cancel={this.cancel} 
+                                        openUserEditModal = { this.openUserEditModal }  
                                     /> 
                                 )
                             })
                         }
                         </tbody>
-                    </table>
-                    <EditUserModal />        
+                    </table> 
+                    {
+                        this.renderEditUserModal()
+                    }      
                 </div>
             )    
     }
@@ -288,15 +354,19 @@ function mapDispatchToProps(dispatch){
         sortUser: bindActionCreators(sortUser,dispatch),
         searchUsers: bindActionCreators(searchUsers,dispatch),
         deleteRoleFromUser: bindActionCreators(deleteRoleFromUser, dispatch),
-        createNewUser: bindActionCreators(createNewUser, dispatch) 
+        createNewUser: bindActionCreators(createNewUser, dispatch),
+        submitEditedUser: bindActionCreators(submitEditedUser, dispatch)
     }
   }
   
   function mapStateToProps(state){
-      //console.log('>>>>>>>>>>>>', state)
+      console.log('{{{{{{{{{{{{ state}}}}}}}}:', state)
       return{
           users: state.userlist.users,
-          roles: state.roles
+          roles: state.roles,
+          //selectUser: state.selectedUser.user,
+          selectedUser: state.selectedUser.user
+          
       }
   }
 

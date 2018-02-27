@@ -406,7 +406,10 @@ Modal
     transition: all .3s;
     overflow: hidden;
  }
- 
+
+ .pagination .ant-pagination{
+     float: right;
+ } 
 /*
   Bootstrap
 */

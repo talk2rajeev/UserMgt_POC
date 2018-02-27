@@ -25,7 +25,10 @@ import {
     CREATE_NEW_GROUP,
     SORT_USERGROUP,
     SEARCH_USERGROUP,
-    OPEN_TRANSFER
+    OPEN_TRANSFER,
+    SET_PAGE_NUMBER,
+    GET_PAGINATION,
+    SET_PAGE_TOTAL
 } from '../actions/index';
 
 
@@ -104,6 +107,7 @@ const modal = (state=initialModal, action) => {
 
 
 
+
 let initialUserGroup = {
     usergroups: []
  };
@@ -153,6 +157,7 @@ const getSelectedUserGroup = (state=initialSelectedUserGroup, action) => {
 }
 
 
+
 const initialRole = [];
 const getRoles = (state=initialRole, action) => {
     switch(action.type){
@@ -188,6 +193,32 @@ const getPermission = (state=initialRole, action) => {
 }
 
 
+
+const initialPagination = {pagination: {curPage: 1, totalPage: 1, pageSize: 10} };
+const getPagination = (state=initialPagination, action) => {
+    let pagination =null;
+    debugger
+    switch(action.type){
+        
+        case GET_PAGINATION:
+            return { pagination: action.pagination };  
+
+        case SET_PAGE_NUMBER:
+                pagination = {...state.pagination};
+                pagination.curPage = action.page;
+                return {...state, pagination: pagination};  
+
+        case SET_PAGE_TOTAL:
+                pagination = {...state.pagination};
+                pagination.totalPage = action.total;
+                return {...state, pagination: pagination};      
+
+        default: 
+            return state;
+    }
+}
+
+
 const allReducers = combineReducers({
     userlist: getUserList,
     authentication: userAuthentication,
@@ -197,7 +228,8 @@ const allReducers = combineReducers({
     transfer: transfer,
     selectedUserGroup: getSelectedUserGroup,
     roles: getRoles,
-    permissions: getPermission
+    permissions: getPermission,
+    pagination: getPagination
 });
 
 export default allReducers;

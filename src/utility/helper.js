@@ -29,3 +29,14 @@ export function getRoleArray(roles, value){
     return formattedRoles;
 }
 
+
+export function getPageTotal(arr){
+    return arr.length;
+}
+
+
+export function getpageChunk(arr, pagination){
+    
+    return arr.splice((pagination.pagination.curPage-1)*pagination.pagination.pageSize, pagination.pagination.pageSize);
+}
+

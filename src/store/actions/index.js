@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sortDesc, sortAsc } from '../../utility/helper';
+import { sortDesc, sortAsc, getPageTotal, getpageChunk } from '../../utility/helper';
 import {  message } from 'antd';
 
 
@@ -24,43 +24,47 @@ export const GET_USERGROUPLIST = "GET_USERGROUPLIST";
 export const SELECTED_USER_GROUP = 'SELECTED_USER_GROUP';
 export const REMOVE_USERGROUP = 'REMOVE_USERGROUP';
 export const CREATE_NEW_GROUP = 'CREATE_NEW_GROUP';
-
+export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
+export const GET_PAGINATION = 'GET_PAGINATION';
+export const SET_PAGE_TOTAL = 'SET_PAGE_TOTAL';
 
 let PATH = require('../../utility/Constants');
 
 /*
 Users
 */
-export const getUsers = () => dispatch => {
-
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.getall}`;
-    
-    //axios.get(`http://localhost:3000/user/getall`)
-    axios.get(url)
-      .then((response) => {
-            dispatch( ({type: GET_USERLIST, users: response.data, originalUsers: response.data}) )
-      })
-      .catch((err) => {
+export const getUsers = () => (dispatch, getState) => {
+    debugger
+    let pagination = getState().pagination;
+    reLoadUserList().then(result => {
+        let pageTotal = getPageTotal(result.data);
+        var res = JSON.stringify(result.data);
+        dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+        let pageChunk = getpageChunk(result.data, pagination); 
+        dispatch( ({type: GET_USERLIST, users: pageChunk, originalUsers: JSON.parse(res) }) );           
+    }).catch((err) => {
         console.error.bind(err);
-      })
-
+    });
 };
 
 
+function reLoadUserList(){  
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.getall}`;
+    return axios.get(url);
+};
+
 export const createNewUser = (user) => dispatch => {
-    debugger
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.create}`;
-    
-    //axios.post(`http://localhost:3000/user/create`, user)
-    axios.post(url, user)
-    .then((response) => {
+
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.create}`;    
+    axios.post(url, user).then((response) => {
         reLoadUserList().then(result => {
             dispatch( ({type: GET_USERLIST, users: result.data, originalUsers: result.data}) )            
+        }).catch((err) => {
+            console.error.bind(err);
         });
-      })
-      .catch((err) => {
+    }).catch((err) => {
         console.error.bind(err);
-      })
+    })
         
 }
 
@@ -74,14 +78,14 @@ export const authenticateUser = (user) => dispatch => {
 
 export const removeUser = (id) => (dispatch, getState) => {
     
-    
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.delete}${id}`;
     
-    //axios.delete(`http://localhost:3000/user/delete`, {data: { id: id }} )
     axios.delete(url)
     .then((response) => {
         reLoadUserList().then(result => {
             dispatch( ({type: GET_USERLIST, users: result.data, originalUsers: result.data}) )            
+        }).catch((err) => {
+            console.error.bind(err);
         });
     }).catch((err) => {
         console.error.bind(err);
@@ -89,10 +93,7 @@ export const removeUser = (id) => (dispatch, getState) => {
 
 }
 
-function reLoadUserList(){  
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.getall}`;
-    return axios.get(url);
-};
+
 
 
 export const selectUser = (user) => (dispatch, getState) => {
@@ -115,12 +116,12 @@ export const getModalFlag = (type) => (dispatch) => {
 
 
 export const searchUsers = (searchValue) => (dispatch, getState) => {
-    
+    debugger
     let users = getState().userlist.originalUsers;
     var searchedUsers;
     
     if(searchValue == ''){
-     dispatch( ({type: SEARCH_USER, users: getState().userlist.originalUsers ,originalUsers:getState().userlist.originalUsers}) )
+     dispatch( ({type: SEARCH_USER, users: getState().userlist.originalUsers, originalUsers:getState().userlist.originalUsers}) )
     }
     if(searchValue != ''){
         searchedUsers= users.filter(function(item){
@@ -447,7 +448,6 @@ export const hideEditPermissionBtn = (id) => (dispatch, getState) => {
 
 
 export const deletePermission = (id) => (dispatch, getState) => {
-    
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.delete}${id}`;
     axios.delete(url)
       .then((response) => {
@@ -457,6 +457,19 @@ export const deletePermission = (id) => (dispatch, getState) => {
       })
       .catch((err) => {
             console.error.bind(err);
-    })
-    
+    })   
+}
+
+
+export const setPageNumber = (page) => (dispatch, getState) =>{
+    dispatch( ({type: SET_PAGE_NUMBER, page: page}) );
+}
+
+export const setPageTotal = (total) => (dispatch, getState) =>{
+    dispatch( ({type: SET_PAGE_TOTAL, total: total}) );
+}
+
+export const getPagination = () => (dispatch, getState) =>{
+    let pagination = getState().pagination;
+    dispatch( ({type: GET_PAGINATION, pagination: pagination}) );
 }

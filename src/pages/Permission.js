@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { getPermissions, createNewPermission, editPermissionName, deletePermission, hideEditPermissionBtn, saveEditedPermissionName } from '../store/actions';
 
-import { Popconfirm, message, Tooltip } from 'antd';
+import { Popconfirm, message, Tooltip, notification } from 'antd';
 import LineSeparator from '../components/LineSeparator';
 import { dirname } from 'path';
 
@@ -18,6 +18,7 @@ class Permission extends Component {
         this.removePermission = this.removePermission.bind(this);
         this.cancel = this.cancel.bind(this);
         this.confirm = this.confirm.bind(this);
+        this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
 
         this.state = { permissionToDlete: {id: null, name: ''}};
     }
@@ -42,10 +43,21 @@ class Permission extends Component {
     }
 
     createNewPermission(){
+        debugger
         let permission_name = this.refs.permission_name.value;
-        this.props.createNewPermission(permission_name);
-        message.success('New Permission created successfully');
-        
+        if(permission_name.length !== 0){
+            this.props.createNewPermission(permission_name);
+            message.success('New Permission created successfully');        
+        }else{
+            this.openNotificationWithIcon('error');
+        }
+    }
+
+    openNotificationWithIcon(type){
+        notification[type]({
+          message: 'Invalid Form',
+          description: 'Please enter Permission Name',
+        });
     }
     
     removePermission(event){

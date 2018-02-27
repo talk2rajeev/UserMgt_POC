@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { Popconfirm, message, Tooltip, notification } from 'antd';
+import { Popconfirm, message, Tooltip, notification, Pagination } from 'antd';
 import { getRoleArray } from '../utility/helper';
 import AutoSuggestion from '../components/AutoSuggestion';
 
@@ -16,7 +16,9 @@ import {
     deleteRoleFromUser,
     createNewUser,
     getRoles,
-    submitEditedUser 
+    submitEditedUser,
+    getPagination,
+    setPageNumber 
 } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
 import EditUserModal1 from '../components/EditUserModal1';
@@ -60,13 +62,16 @@ class UsersTable extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
         
+        this.onPagination = this.onPagination.bind(this);
+
         this.openUserEditModal = this.openUserEditModal.bind(this);
         this.closeUserEditModal = this.closeUserEditModal.bind(this);
         this.updateEditedUser = this.updateEditedUser.bind(this);
         this.selectRoleHandler = this.selectRoleHandler.bind(this);
         this.childInputChangehandler = this.childInputChangehandler.bind(this);
 
-        this.state = { isCreateUsrContainerOpen: false, isEditUserModalOpen: false };
+
+        this.state = { isCreateUsrContainerOpen: false, isEditUserModalOpen: false, pagination: {current: 2}  };
         this.roleToDelete = {uid: 0, rid: 0};
         this.userIdToDelete = 0;
         this.user = {roles: []};
@@ -232,6 +237,16 @@ class UsersTable extends Component {
         
     }
 
+    onPagination(page){
+        console.log(page);
+        //this.state.pagination.current
+        this.setState({
+          current: page,
+        });
+        this.props.setPageNumber(page);
+        this.props.getUsers();        
+    }
+
     renderCreateUserBlock(){
         if(this.state.isCreateUsrContainerOpen === true){
             return(
@@ -280,7 +295,6 @@ class UsersTable extends Component {
             return null;    
     }
 
-    
 
     render() {
         if(!this.props.users)
@@ -336,7 +350,10 @@ class UsersTable extends Component {
                     </table> 
                     {
                         this.renderEditUserModal()
-                    }      
+                    }  
+                    <div className="pagination">
+                        <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                    </div>    
                 </div>
             )    
     }
@@ -355,7 +372,10 @@ function mapDispatchToProps(dispatch){
         searchUsers: bindActionCreators(searchUsers,dispatch),
         deleteRoleFromUser: bindActionCreators(deleteRoleFromUser, dispatch),
         createNewUser: bindActionCreators(createNewUser, dispatch),
-        submitEditedUser: bindActionCreators(submitEditedUser, dispatch)
+        submitEditedUser: bindActionCreators(submitEditedUser, dispatch),
+        getPagination: bindActionCreators(getPagination, dispatch),
+        setPageNumber: bindActionCreators(setPageNumber, dispatch)
+        
     }
   }
   
@@ -364,8 +384,8 @@ function mapDispatchToProps(dispatch){
       return{
           users: state.userlist.users,
           roles: state.roles,
-          //selectUser: state.selectedUser.user,
-          selectedUser: state.selectedUser.user
+          selectedUser: state.selectedUser.user,
+          pagination: state.pagination
           
       }
   }

@@ -1,9 +1,25 @@
 @import './assets/css/reset.css';
-@import './assets/css/roboto.css';
+/*@import './assets/css/roboto.css';*/
 @import './assets/css/font-awesome.min.css';
 @import './assets/css/bootstrap-grid.min.css';
 @import './assets/css/common.css';
 @import '../node_modules/antd/dist/antd.css';
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url(assets/fonts/y7lebkjgREBJK96VQi37Zo4P5ICox8Kq3LLUNMylGO4.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url(assets/fonts/QAUlVt1jXOgQavlW5wEfxQLUuEpTyoUstqEm5AMlJo4.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'anticon';
+    src: url(assets/fonts/font_148784_dky7e838xq4obt9.woff) format('woff2');
+}
+
+  
 
 $lightGrey: #f1f1f1;
 $fontRoboto: 'Roboto Slab', sans-serif;
@@ -167,17 +183,17 @@ a.sidebar-navLink:active{
 .dropdown-txt:hover > .dropdown-bx{
     display: block;
 }
-.pull-left{
-    float: left;
-}
-.pull-right{
-    float: right;
-}
+
 
 .modal-title{
     font-size: 1.8em;
 }
-
+.create-client-container{
+    width: 65%;
+    padding: 20px;
+    border: 1px solid #cdcdcd;
+    box-shadow: 1px 3px 5px #ddd;
+}
 .page-content{
     font-family: $fontRaleway;
 }
@@ -234,6 +250,13 @@ a.sidebar-navLink:active{
     width: 57.333%;
     position: relative;
     border: 1px solid #efefef;
+}
+.close-createClient-icn{
+    position: absolute;
+    top: 6px;
+    left: 98%;
+    color: red;
+    cursor: pointer;
 }
 .createRoleBox-row{
     padding: 5px 0;
@@ -308,8 +331,8 @@ ant design style & override
     font-weight: bold;
 }
 .ant-transfer-list{
-    width: 228px;
-    height: 220px;
+    width: 319px;
+    height: 470px;
 }
 
 
@@ -402,7 +425,6 @@ Modal
  }
 
  .collapsible-container.create-usergroup{
-    height: 0;
     transition: all .3s;
     overflow: hidden;
  }
@@ -521,6 +543,24 @@ button, input, select, textarea {
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
+.form-control-no-width {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
 .form-control-inline {
     width: 250px !important;
     display: inline-block;

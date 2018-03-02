@@ -42,10 +42,15 @@ class TransferUserToGroup extends React.Component {
   }
 
   handleChange(nextTargetKeys, direction, moveKeys) {
+    debugger;
     this.setState({ targetKeys: nextTargetKeys });
-    console.log('targetKeys: ', targetKeys);
-    console.log('direction: ', direction);
-    console.log('moveKeys: ', moveKeys);
+    //setTimeout(()=>{
+      this.props.transferHandleChange(nextTargetKeys, direction, moveKeys);
+    //}, 200);
+    
+    // console.log('targetKeys: ', targetKeys);
+    // console.log('direction: ', direction);
+    // console.log('moveKeys: ', moveKeys);
   }
 
   handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {

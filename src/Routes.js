@@ -7,6 +7,8 @@ import Roles from './pages/Roles';
 import Permission from './pages/Permission';
 import UsersTable from './pages/UsersTable';
 import Login from './pages/Login';
+import Client from './pages/Client';
+
 
 const Routes = () => (
   
@@ -14,6 +16,7 @@ const Routes = () => (
       <Route exact path='/' component={Login}/>
       <Layout>
         <Route exact path='/dashboard' component={UsersTable}/>
+        <Route exact path='/client' component={Client}/>
         <Route path='/users' component={UsersTable}/>      
         <Route path='/usergroup' component={UserGroup}/>
         <Route path='/roles' component={Roles}/>

@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import { Popconfirm, message, Tooltip, notification, Pagination } from 'antd';
 import { getRoleArray } from '../utility/helper';
 import AutoSuggestion from '../components/AutoSuggestion';
+import Loader from '../components/Loader';
 
 import { 
     getUsers, 
@@ -71,7 +72,7 @@ class UsersTable extends Component {
         this.childInputChangehandler = this.childInputChangehandler.bind(this);
 
 
-        this.state = { isCreateUsrContainerOpen: false, isEditUserModalOpen: false, pagination: {current: 2}  };
+        this.state = { isCreateUsrContainerOpen: false, isEditUserModalOpen: false, pagination: {current: 1}  };
         this.roleToDelete = {uid: 0, rid: 0};
         this.userIdToDelete = 0;
         this.user = {roles: []};
@@ -123,7 +124,7 @@ class UsersTable extends Component {
     openNotificationWithIcon(type){
         notification[type]({
           message: 'Invalid user form',
-          description: 'Please fill mandatory fields. Email & Role is mandatory.',
+          description: 'Email Field is mandatory.',
         });
     }
 
@@ -153,7 +154,7 @@ class UsersTable extends Component {
 
     handleChange(value, option) {
         //select role callback from CreateUserForm component
-        debugger
+        
         let roles = this.props.roles.roles;
 
         this.user.roles = getRoleArray(roles, value);
@@ -223,7 +224,7 @@ class UsersTable extends Component {
 
 
     submitUserForm(){
-        if(this.user.email === '' || this.user.email === undefined || this.user.roles.length === 0){
+        if(this.user.email === '' || this.user.email === undefined){
             //message.error('Please fill mandatory fields: Email, Role');
             this.openNotificationWithIcon('error');
         }
@@ -298,7 +299,7 @@ class UsersTable extends Component {
 
     render() {
         if(!this.props.users)
-            return <div>Loading......</div>
+            return <Loader />
         else
             return(
                 
@@ -351,6 +352,7 @@ class UsersTable extends Component {
                     {
                         this.renderEditUserModal()
                     }  
+                    
                     <div className="pagination">
                         <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
                     </div>    

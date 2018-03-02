@@ -10,7 +10,7 @@ for (let i = 10; i < 36; i++) {
 
 
 class SelectTags extends React.Component {
-
+    
     processData(data){
         let newdata =  data.map((item)=>{
             return item.name;

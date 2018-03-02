@@ -28,6 +28,9 @@ function getPageTitle(path){
   if(path === '/users' || path === '  /dashboard'){
     return <span><b>Users</b> - All Users at glance</span>
   }
+  if(path === '/client'){
+    return <span><b>Clients</b> - All Clients at glance</span>
+  }
   if(path === '/usergroup'){
     return <span><b>User Group</b> - All Usergroups at glance</span>
   }

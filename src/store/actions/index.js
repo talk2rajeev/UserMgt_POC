@@ -34,7 +34,6 @@ let PATH = require('../../utility/Constants');
 Users
 */
 export const getUsers = () => (dispatch, getState) => {
-    debugger
     let pagination = getState().pagination;
     reLoadUserList().then(result => {
         let pageTotal = getPageTotal(result.data);
@@ -116,7 +115,7 @@ export const getModalFlag = (type) => (dispatch) => {
 
 
 export const searchUsers = (searchValue) => (dispatch, getState) => {
-    debugger
+    
     let users = getState().userlist.originalUsers;
     var searchedUsers;
     
@@ -162,7 +161,7 @@ export const deleteRoleFromUser = (uid, rid) => (dispatch, getState) => {
 }
 
 export const submitEditedUser = () => (dispatch, getState) => {
-    debugger
+    
     let user = getState().selectedUser.user;
 
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.update}${user._id}`;
@@ -209,7 +208,7 @@ export const getUserGroups = () => dispatch => {
  }
 
  export const removeUserGroup = (id) => (dispatch, getState) => {
-    debugger;
+    
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.delete}${id}`;
 
     axios.delete(url)
@@ -235,16 +234,14 @@ export const getUserGroups = () => dispatch => {
         return item.id ;
       
       })
-      debugger;
+      
     dispatch( ({type: OPEN_TRANSFER, groupname: userGroupRow.GroupName,usersOfUserGroup:usersInGroup}) )
  
  }
 
  
 export function createNewGroup(group){
-    
     debugger;
-
     return function(dispatch){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.create}`;   
         axios.post(url, group)
@@ -341,7 +338,7 @@ export const deleteRole = (id) => (dispatch, getState)  => {
 };
 
 export const updateRole = (role) => (dispatch)  => {
-    debugger
+    
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.role.update}${role._id}`;
     axios.put(url, role)
       .then((response) => {
@@ -363,23 +360,22 @@ export const updateRole = (role) => (dispatch)  => {
 
 
 
-
-
 /*
 Permission 
 */
-export const getPermissions = () => dispatch => {
+export const getPermissions = () => (dispatch, getState) => {
 
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.getall}`;
-
-    //axios.get(`http://localhost:3000/permission/getall`)
-    axios.get(url)
-      .then((response) => {
-            dispatch( ({type: GET_PERMISSIONS, permissions: response.data, originalPermissions: response.data}) );
-      })
-      .catch((err) => {
+    reLoadPermission().then(result => {
+        
+        let pagination = getState().pagination;
+        let pageTotal = getPageTotal(result.data);
+        var res = JSON.stringify(result.data);
+        dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+        let pageChunk = getpageChunk(result.data, pagination); 
+        dispatch( ({type: GET_PERMISSIONS, permissions: pageChunk, originalPermissions: JSON.parse(res) }) );
+    }).catch((err) => {
         console.error.bind(err);
-      })
+    })
 };
 
 function reLoadPermission(){  
@@ -394,7 +390,12 @@ export const createNewPermission = (name) => dispatch => {
     axios.post(url, {name: name, clientId: "", clientName: ""})
       .then((response) => {
             reLoadPermission().then((result)=>{
-                dispatch( ({type: GET_PERMISSIONS, permissions: result.data, originalPermissions: result.data}) );
+                let pagination = getState().pagination;
+                let pageTotal = getPageTotal(result.data);
+                var res = JSON.stringify(result.data);
+                dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+                let pageChunk = getpageChunk(result.data, pagination); 
+                dispatch( ({type: GET_PERMISSIONS, permissions: pageChunk, originalPermissions: JSON.parse(res) }) );
             })
       })
       .catch((err) => {
@@ -452,7 +453,12 @@ export const deletePermission = (id) => (dispatch, getState) => {
     axios.delete(url)
       .then((response) => {
             reLoadPermission().then((result)=>{
-                dispatch( ({type: GET_PERMISSIONS, permissions: result.data, originalPermissions: result.data}) );
+                let pagination = getState().pagination;
+                let pageTotal = getPageTotal(result.data);
+                var res = JSON.stringify(result.data);
+                dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+                let pageChunk = getpageChunk(result.data, pagination); 
+                dispatch( ({type: GET_PERMISSIONS, permissions: pageChunk, originalPermissions: JSON.parse(res) }) );
             })
       })
       .catch((err) => {

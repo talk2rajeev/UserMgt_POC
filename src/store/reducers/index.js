@@ -36,7 +36,7 @@ let initialUser = {
     users: []
 };
 
-const getUserList = (state=initialUser, action) => {
+export const getUserList = (state=initialUser, action) => {
     switch(action.type){
         case GET_USERLIST:
             return { users: action.users ,originalUsers: action.originalUsers} 
@@ -197,7 +197,7 @@ const getPermission = (state=initialRole, action) => {
 const initialPagination = {pagination: {curPage: 1, totalPage: 1, pageSize: 10} };
 const getPagination = (state=initialPagination, action) => {
     let pagination =null;
-    debugger
+    
     switch(action.type){
         
         case GET_PAGINATION:

@@ -21,16 +21,17 @@ export const EditUserGroupModal = (props) =>  {
     }
 
    
-         
+       
     return(  
-        <div className={"modal-container show "}>
+        <div className={"modal-container show "} style={{"top":"-40px"}}>
             <div className="backdrop"></div>
             <div className="modal-dialog">
                 <div className={ "modal" } style={{'width':'750px'}}>
                     
                 
                     <i className="fa fa-close close-modal-icon" onClick={props.closeEditableUGModal}/>
-                    <div className="modal-header"><h3 className="modal-title">Edit User Group</h3><hr className="hr"/></div>
+                    <div className="modal-header"><h3 className="modal-title">Edit User Group</h3>
+                    </div>
                     <div className="modal-body">
                     
                         <div className="form-group">
@@ -45,12 +46,19 @@ export const EditUserGroupModal = (props) =>  {
 
                         <div className="form-group">
                             <div className="form-label">Assign Users to User-Group</div>
-                            
+                            <TransferUserToGroup 
+                                transferHandleChange={props.transferHandleChange} 
+                                isTransferOpen={true} 
+                                mockdataa={props.mockdataa} 
+                                userGroupName={props.userGroupName} 
+                                userGroupRow={props.userGroupRow} 
+                                targetKeys={props.usergroup.user}
+                                type="edit"
+                            />
                         </div>
 
                     </div>
                     <div className="modal-footer">
-                        <hr className="hr"/>
                         <button className="btn btn-success" onClick={props.updateEditedUG}>Update</button>
                     </div>
                 </div>

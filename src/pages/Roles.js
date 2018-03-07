@@ -291,15 +291,10 @@ class Roles extends Component {
                                                     item.permission.map((val, j)=>{
                                                         return(
                                                             
-                                                            <Popconfirm key={'pid'+j} title="Are you sure delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
                                                                 <span data-id={val.id} href="#" id={val.id} className="delete-perm-badge">
                                                                     {val.name} &nbsp;
-                                                                    <Tooltip title="Delete Permission" placement="right">
-                                                                        <i title="remove permission" data-role={JSON.stringify(item)} data-permid={val.id} className="fa fa-close delete-perm" onClick={ (event)=>{this.setDataId(event)} }/>
-                                                                    </Tooltip>
+                                                                    
                                                                 </span>
-                                                            </Popconfirm>   
-                                                                 
                                                         )
                                                     })
                                                 }

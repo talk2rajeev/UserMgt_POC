@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { sortDesc, sortAsc, getPageTotal, getpageChunk } from '../../utility/helper';
-import {  message } from 'antd';
+import {  message, notification } from 'antd';
 
 
 export const GET_USERLIST = "GET_USERLIST";
@@ -27,8 +27,85 @@ export const CREATE_NEW_GROUP = 'CREATE_NEW_GROUP';
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const GET_PAGINATION = 'GET_PAGINATION';
 export const SET_PAGE_TOTAL = 'SET_PAGE_TOTAL';
+export const GET_CLIENT_LIST = 'GET_CLIENT_LIST';
 
 let PATH = require('../../utility/Constants');
+
+
+/*
+Clients
+*/
+const clientSuccessNotification = (type) => {
+    notification[type]({
+      duration: 10,  
+      message: 'Client created',
+      description: 'client secret: gfdgfd56rrbir78r76t96nt6t96nt9tm9',
+    });
+};
+
+export const getClients = () => dispatch => {
+    reLoadClients().then(result => {
+        dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );           
+    }).catch((err) => {
+        console.error.bind(err);
+    });
+}
+
+function reLoadClients(){  
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.getall}`;
+    return axios.get(url);
+};
+
+export const createClient = (client) => (dispatch, getState) => {
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.create}`;
+    axios.post(url, client).then(response=>{
+        reLoadClients().then(result => {
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) ); 
+            //message.success('Client Created successfully');   
+            clientSuccessNotification('success');       
+        }).catch((err) => {
+            console.error.bind(err);
+            message.error('Client Creation failed!');
+        });
+    }).catch((err) => {
+        console.error.bind(err);
+    });  
+}
+
+export const deleteClient = (id) => (dispatch, getState) => {
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.delete}${id}`;
+    axios.delete(url, id).then(response=>{
+        reLoadClients().then(result => {
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );     
+            message.success('Client deleted successfully');                            
+        }).catch((err) => {
+            console.error.bind(err);
+            message.error('Client delete operation failed!');            
+        });
+    }).catch((err) => {
+        console.error.bind(err);
+    });  
+}
+
+export const updateClient = (client) => (dispatch, getState) => {
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.update}${client.id}`;
+    axios.put(url, client).then(response=>{
+        reLoadClients().then(result => {
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) ); 
+            message.success('Client updated successfully');                                                  
+        }).catch((err) => {
+            console.error.bind(err);
+            message.error('Client updation failed!');                        
+        });
+    }).catch((err) => {
+        console.error.bind(err);
+    });
+}
+
+
+
+
+
 
 /*
 Users
@@ -207,8 +284,30 @@ export const getUserGroups = () => dispatch => {
     
  }
 
+
+ export function editGroup(group){
+    debugger;
+    return function(dispatch){
+        let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.update}${group._id}`;  
+        axios.put(url, group)
+        .then((response) => {
+            reloadUserGroup()
+            .then((result) => {
+                dispatch( ({type: GET_USERGROUPLIST, userGroups: result.data, originalUserGroups: result.data}) );
+                message.success('UserGroup Created successfully');          
+                
+              })
+              .catch((err) => {
+                console.error.bind(err);
+            })
+        })
+        .catch((err) => {
+            console.error.bind(err);
+        });  
+    }   
+ };
+
  export const removeUserGroup = (id) => (dispatch, getState) => {
-    
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.delete}${id}`;
 
     axios.delete(url)
@@ -248,7 +347,8 @@ export function createNewGroup(group){
         .then((response) => {
             reloadUserGroup()
             .then((result) => {
-                dispatch( ({type: CREATE_NEW_GROUP, userGroups: result.data, originalUserGroups: result.data}) )
+                dispatch( ({type: CREATE_NEW_GROUP, userGroups: result.data, originalUserGroups: result.data}) );
+                message.success('UserGroup created successfully');                                          
               })
               .catch((err) => {
                 console.error.bind(err);
@@ -383,7 +483,7 @@ function reLoadPermission(){
     return axios.get(url);
 };
 
-export const createNewPermission = (name) => dispatch => {
+export const createNewPermission = (name) => (dispatch, getState) => {
 
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.create}`;
     

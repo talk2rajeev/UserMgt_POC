@@ -28,14 +28,27 @@ import {
     OPEN_TRANSFER,
     SET_PAGE_NUMBER,
     GET_PAGINATION,
-    SET_PAGE_TOTAL
+    SET_PAGE_TOTAL,
+    GET_CLIENT_LIST
 } from '../actions/index';
 
 
-let initialUser = {
-    users: []
-};
 
+
+let initialClient = [];
+export const getClientList = (state=initialClient, action) => {
+    switch(action.type){
+        case GET_CLIENT_LIST:
+            return { clients: action.client }             
+        default: 
+            return state;
+    }
+}
+
+
+
+
+let initialUser = { users: [] };
 export const getUserList = (state=initialUser, action) => {
     switch(action.type){
         case GET_USERLIST:
@@ -220,6 +233,7 @@ const getPagination = (state=initialPagination, action) => {
 
 
 const allReducers = combineReducers({
+    clients: getClientList,
     userlist: getUserList,
     authentication: userAuthentication,
     modal: modal,

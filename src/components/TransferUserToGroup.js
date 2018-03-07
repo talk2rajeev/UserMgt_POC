@@ -20,6 +20,7 @@ const row = {};
 var usersInGroup = [];
 var groupName = false;
 class TransferUserToGroup extends React.Component {
+  
   constructor(props) {
     super(props);
     if (this.props.userGroupRow.user != undefined) {
@@ -77,6 +78,7 @@ class TransferUserToGroup extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
+   /* debugger;
     if (nextProps.userGroupRow.user != undefined) {
       usersInGroup = nextProps.userGroupRow.user.map((item, i) => {
         return item.id;
@@ -94,6 +96,7 @@ class TransferUserToGroup extends React.Component {
       row: nextProps.userGroupRow,
       isTransferOpenClose: nextProps.isTransferOpen
     });
+    */
   }
   componentWillUnmount() {
     debugger;
@@ -110,13 +113,16 @@ class TransferUserToGroup extends React.Component {
 
   render() {
     const state = this.state;
+    const tg =  this.props.type==="create" && this.props.targetKeys.length ===0 ? [] :  state.targetKeys;
+
+    debugger;
     return (
       <div >
         <Transfer
           dataSource={this.props.mockdataa}
            showSearch
-          titles={['UserList', this.props.userGroupName]}
-          targetKeys={state.targetKeys}
+          titles={['UserList', this.props.userGroupRow.name]}
+          targetKeys={ tg }
           selectedKeys={state.selectedKeys}
           onChange={this.handleChange}
           onSelectChange={this.handleSelectChange}

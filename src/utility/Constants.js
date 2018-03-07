@@ -32,6 +32,12 @@ export const API_PATH = {
 module.exports ={
     BASE_PATH: "http://127.0.0.1:9002",
     API_PATH: {
+        "client": {
+            "getall": "/client/get-all",
+            "create": "/client/create",
+            "delete": "/client/delete?id=",
+            "update": "/client/update?id="
+        },
         "user": {
             "getall": "/user/get-all",
             "create": "/user/create",

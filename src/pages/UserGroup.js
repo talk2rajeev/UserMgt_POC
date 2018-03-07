@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUserGroups, getUsers, removeUserGroup, openTransferUserGroup, openModal, closeModal, selectUser, sortUser, searchGroupUsers } from '../store/actions';
+import { getUserGroups, getUsers, editGroup,removeUserGroup, openTransferUserGroup, openModal, closeModal, selectUser, sortUser, searchGroupUsers } from '../store/actions';
 import UserGroupRow from '../components/UserGroupRow.jsx';
-import { Popconfirm, message ,notification} from 'antd';
+import { Popconfirm, message ,notification, Tooltip} from 'antd';
 import EditUserModal from '../components/EditUserModal';
 import TransferUserToGroup from '../components/TransferUserToGroup';
 import { getRoles, createNewGroup } from '../store/actions';
@@ -41,17 +41,20 @@ class UserGroup extends Component {
         this.handleEditableRoleChange = this.handleEditableRoleChange.bind(this);
         this.updateEditedUG = this.updateEditedUG.bind(this);
         this.childInputChangehandler = this.childInputChangehandler.bind(this);
-
+        this.cancelUGDelete = this.cancelUGDelete.bind(this);
+        this.confirmUGDelete = this.confirmUGDelete.bind(this);
 
         this.toggleOpen = false;
         this.UG = this.props.usergroups;
         this.user =[];
+        this.UgToDelte = null;
         this.state = { id: 0, 
                        group: { 'name': '', 'role': [], 'user': [] }, 
                        isTransferCompOpen: false, 
                        userGroupName: "", 
                        userGroupRow: {},
-                       isUgEditModalOpen: false 
+                       isUgEditModalOpen: false,
+                       user: [] 
                     }
     }
     componentDidMount() {
@@ -97,15 +100,17 @@ class UserGroup extends Component {
            // this.user ko set karo
         var group = { ...this.state.group }
         group.user = this.user;
-        this.setState({ group });
+        //this.setState({ group });
         this.props.createNewGroup(group);
-        this.props.getUserGroups();
+        //this.props.getUserGroups();
+        this.setState({group, isTransferCompOpen:false})
         } 
         
     }
     
     editUser(userGroup) {
             let group = {...this.state.group};
+            debugger;
             group  = userGroup;
             this.setState({group, isUgEditModalOpen: true});
     }
@@ -124,12 +129,30 @@ class UserGroup extends Component {
 
     handleEditableRoleChange(value, option){
             console.log('selected value ', value);
+
+
+            event.preventDefault();
+            
+            var group = {...this.state.group};
+            let roles=[];
+            for (let i = 0; i < value.length; i++) {
+                var  roleIdName=this.props.roles.roles.find((item)=>{
+                        if (item.name===value[i])
+                        roles.push({id: item._id, name: item.name});
+                        })   
+            }    
+            group.role=roles;
+            this.setState({group});
+        
+            
     }
 
     updateEditedUG(){
-
+        debugger;
+        this.props.editGroup(this.state.group);
+        this.setState({ isUgEditModalOpen: false });
     }
-
+    
     renderEditableUGModal(){
         return this.state.isUgEditModalOpen ? 
                             <EditUserGroupModal 
@@ -139,8 +162,23 @@ class UserGroup extends Component {
                                 updateEditedUG = { this.updateEditedUG }
                                 usergroup = {this.state.group}
                                 roles = {this.props.roles.roles}
+                                transferHandleChange={this.transferHandleChange} 
+                                isTransferOpen={true} 
+                                mockdataa={this.getMockData()} 
+                                userGroupName={this.state.userGroupName} 
+                                userGroupRow={this.state.group} 
+                            
                             />
                             : null
+    }
+
+    confirmUGDelete(event){
+        this.props.removeUserGroup(this.UgToDelte);
+        message.success('User Group Deleted Succesfully');
+    }
+
+    cancelUGDelete(event){
+        message.error('Delete Operation cancelled');
     }
 
     setDataId(e, id) {
@@ -148,14 +186,17 @@ class UserGroup extends Component {
         e.preventDefault();
         this.setState({ id: id });
     }
+
     removeUserGroup(id, index) {
-        var c = confirm("Are you sure to delete the usergroup?");
+        this.UgToDelte = id;
+        /*var c = confirm("Are you sure to delete the usergroup?");
         this.setState({ isTransferCompOpen: false });
         if (c) {
             this.props.removeUserGroup(id);
             this.setState({ isTransferCompOpen: true, userGroupRow: {}, userGroupName: "" });
             this.closeTransfer();
         }
+        */
     }
 
     selectRole(value, option) {
@@ -192,19 +233,22 @@ class UserGroup extends Component {
     }
 
     renderTransferCOmp() {
+        debugger;
         return (
             <TransferUserToGroup 
                 transferHandleChange={this.transferHandleChange} 
                 isTransferOpen={true} 
                 mockdataa={this.getMockData()} 
                 userGroupName={this.state.userGroupName} 
-                userGroupRow={this.state.userGroupRow} 
+                targetKeys={this.state.group.user} 
+                userGroupRow={[]}
+                type="create"
             />
         )
     }
 
     transferHandleChange(nextTargetKeys, direction, moveKeys) {
-        debugger
+        debugger;
         console.log('targetKeys: ', nextTargetKeys);
         let users = [];
         for (let i = 0; i < nextTargetKeys.length; i++) {
@@ -219,21 +263,49 @@ class UserGroup extends Component {
             });
         }
         this.user = users;
+        let group = {...this.state.group};
+        group.user = this.user;
+        this.setState({group});
       }
 
 
     handleChange(value, option) {
         //select role callback from CreateUserForm component
         debugger;
-        let roles = this.props.roles.roles;
+        //let roles = this.props.roles.roles;
 
+        //
+            console.log('selected from parent: ', value, option);
+            debugger;
+            event.preventDefault();
+            
+            var group = {...this.state.group};
+           // var roleOfUG=group.role;
+     debugger;
+     let roles=[];
+        for (let i = 0; i < value.length; i++) {
+               var  roleIdName=this.props.roles.roles.find((item)=>{
+                    if (item.name===value[i])
+                    roles.push({id: item._id, name: item.name});
+                    //  return item;
+                    })    
+          //  const roleIds = {...group.roles.name};
+           // roleIdName.includes(value) !== true ? roleOfUG.push({id:"11111",name:value}) : null;
+        }    
+        group.role=roles;
+            this.setState({group});
+        //
         //this.user.roles = getRoleArray(roles, value);
 
     }
 
     showCreateUGBox() {
-        debugger
-        this.setState({ isTransferCompOpen: true });
+        debugger;
+        var group = { ...this.state.group }
+        group.user = [];
+       // this.setState({ group });
+        this.setState({ isTransferCompOpen: true, group});
+
     }
 
     closeCreateUGBox() {
@@ -256,18 +328,19 @@ class UserGroup extends Component {
     renderCreateUGForm() {
         return this.state.isTransferCompOpen ?
             <div id="collapsible-container-create-usergroup" className="collapsible-container create-usergroup">
-                <h3 className="heading">Create New User Group</h3>
+                <h3 className="heading" style={{'padding':'8px 0 0 35px'}}>Create New User Group</h3>
                 <i className="fa fa-close close-bx-icn" onClick={this.closeCreateUGBox} />
-                <div className="create-role-container row">
-                    <div className="col-md-7 row">
-                        <div className="col-md-6" style={{ 'height': '40px' }}>
-                            <input type="text" placeholder="New User Group" onChange={this.groupNameHandler} ref="groupname" className="form-control" />
+                <div className="create-role-container row" style={{'padding':'10px 0'}}>
+                    <div className="col-md-7 row" style={{'marginLeft':'20px'}}>
+                        <div className="col-md-12" style={{ 'height': '40px' }}>
+                            <input type="text" style={{'width': '97%'}} placeholder="New User Group" onChange={this.groupNameHandler} ref="groupname" className="form-control" />
                         </div>
-                        <div className="col-md-6" style={{ 'position': 'relative', 'height': '40px' }}>
-                            <SelectTags placeholder="Please select Roles" data={this.props.roles.roles ? this.props.roles.roles : []} defaultData={[]} handleChange={this.props.handleChange} />
+                        <div className="col-md-12 ant-select-container" style={{ 'position': 'relative', 'height': '40px' }}>
+                            <SelectTags placeholder="Please select Roles" data={this.props.roles.roles ? this.props.roles.roles : []} defaultData={[]} handleChange={this.handleChange} />
                         </div>
                         <div className="clearfix" />
                         <div className="col-md-12">
+                            <h4>Assign Users to User Group</h4>
                             {this.renderTransferCOmp()}
                         </div>
                         <div className="createRoleBox-row" style={{ 'padding': '5px 10px' }}>
@@ -290,11 +363,6 @@ class UserGroup extends Component {
                         <tr>
                             <th>
                                 <span>GroupName</span>
-                                &nbsp;&nbsp;
-                                        <span>
-                                    <i className="tablecell-sort-icon fa fa-arrow-up" onClick={(e) => this.sortUser('desc')} />
-                                    <i className="tablecell-sort-icon fa fa-arrow-down" onClick={(e) => this.sortUser('asc')} />
-                                </span>
                             </th>
                             <th>Role</th>
                             <th>Permissions</th>
@@ -309,6 +377,8 @@ class UserGroup extends Component {
                                             editUser={(ug) => this.editUser(ug)} 
                                             usergroups={item} key={i} index={i} 
                                             removeUserGroup={this.removeUserGroup}
+                                            confirmUGDelete = { this.confirmUGDelete }
+                                            cancelUGDelete  = { this.cancelUGDelete }
                                         />
                                     )
                                 }) : null
@@ -320,14 +390,20 @@ class UserGroup extends Component {
     }
 
     renderCreateUgBtn(){
-        return !this.state.isTransferCompOpen ? <button onClick={this.showCreateUGBox} className="create-ug-btn btn btn-sm btn-primary"> <i className="fa fa-users" /> <i className="fa fa-plus" /> </button> : null
+        return !this.state.isTransferCompOpen ? 
+            <Tooltip title="Create New UserGroup" placement="right">
+                <button onClick={this.showCreateUGBox} className="create-ug-btn btn btn-sm btn-primary top-margin15"> 
+                    <i className="fa fa-users" /> <i className="fa fa-plus" /> 
+                </button>
+            </Tooltip> 
+            : null
          
     }
 
     render() {
         return (
             <div className="userGroup-container">
-                <br />
+                
                 { this.renderCreateUgBtn() }
                 {this.renderCreateUGForm()}
 
@@ -360,7 +436,8 @@ function mapDispatchToProps(dispatch) {
         openModal: bindActionCreators(openModal, dispatch),
         openTransferUserGroup: bindActionCreators(openTransferUserGroup, dispatch),
         getRoles: bindActionCreators(getRoles, dispatch),
-        createNewGroup: bindActionCreators(createNewGroup, dispatch)
+        createNewGroup: bindActionCreators(createNewGroup, dispatch),
+        editGroup:bindActionCreators(editGroup, dispatch)
 
 
     }

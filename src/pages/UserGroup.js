@@ -96,7 +96,7 @@ class UserGroup extends Component {
             this.openNotificationWithIcon('error');
             
         }else{
-            debugger;
+            
            // this.user ko set karo
         var group = { ...this.state.group }
         group.user = this.user;
@@ -110,7 +110,7 @@ class UserGroup extends Component {
     
     editUser(userGroup) {
             let group = {...this.state.group};
-            debugger;
+            
             group  = userGroup;
             this.setState({group, isUgEditModalOpen: true});
     }
@@ -148,7 +148,7 @@ class UserGroup extends Component {
     }
 
     updateEditedUG(){
-        debugger;
+        
         this.props.editGroup(this.state.group);
         this.setState({ isUgEditModalOpen: false });
     }
@@ -233,7 +233,7 @@ class UserGroup extends Component {
     }
 
     renderTransferCOmp() {
-        debugger;
+        
         return (
             <TransferUserToGroup 
                 transferHandleChange={this.transferHandleChange} 
@@ -248,7 +248,7 @@ class UserGroup extends Component {
     }
 
     transferHandleChange(nextTargetKeys, direction, moveKeys) {
-        debugger;
+        
         console.log('targetKeys: ', nextTargetKeys);
         let users = [];
         for (let i = 0; i < nextTargetKeys.length; i++) {
@@ -271,17 +271,17 @@ class UserGroup extends Component {
 
     handleChange(value, option) {
         //select role callback from CreateUserForm component
-        debugger;
+        
         //let roles = this.props.roles.roles;
 
         //
             console.log('selected from parent: ', value, option);
-            debugger;
+            
             event.preventDefault();
             
             var group = {...this.state.group};
            // var roleOfUG=group.role;
-     debugger;
+     
      let roles=[];
         for (let i = 0; i < value.length; i++) {
                var  roleIdName=this.props.roles.roles.find((item)=>{
@@ -300,7 +300,7 @@ class UserGroup extends Component {
     }
 
     showCreateUGBox() {
-        debugger;
+        
         var group = { ...this.state.group }
         group.user = [];
        // this.setState({ group });
@@ -314,7 +314,7 @@ class UserGroup extends Component {
     }
 
     processRolesData(roles) {
-        debugger;
+       
         let perms = [];
         if (this.props.roles.roles !== undefined) {
             perms = this.props.roles.roles.map((item) => {

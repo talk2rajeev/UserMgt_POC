@@ -169,6 +169,7 @@ class UsersTable extends Component {
     }
 
     openUserEditModal(event, user){
+        debugger
         this.user = user;
         this.props.selectUser({id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, roles: user.roles});
         this.setState({isEditUserModalOpen: true, selectedUser: user});
@@ -230,6 +231,10 @@ class UsersTable extends Component {
         }
         else{
             debugger
+            if(!this.user.lastName)
+                this.user.lastName ='';
+            if(!this.user.firstName)
+                this.user.firstName ='';    
             this.props.createNewUser(this.user);  
             message.success('User added successfully'); 
             this.setState({isCreateUsrContainerOpen: false});    
@@ -282,6 +287,7 @@ class UsersTable extends Component {
     }
 
     renderEditUserModal(){
+        debugger
         if(this.state.isEditUserModalOpen)
             return  (<EditUserModal1 
                         user={ this.state.selectedUser }

@@ -25,7 +25,7 @@ const ClientTable = (props) => {
                                     <td>
                                         <i className="fa fa-pencil" onClick={()=>props.openEditClientModal(item)}/> &nbsp; &nbsp;
                                         <Popconfirm title="Are you sure to delete this Client" onConfirm={(event) => { props.confirmClientDelete(event) }} onCancel={(event) => { props.cancelClientDelete(event) }} okText="Yes" cancelText="No">      
-                                            <i onClick={()=>props.setClientId(item.id)} className="fa fa-trash" />
+                                            <i onClick={()=>props.setClientId(item._id)} className="fa fa-trash" />
                                         </Popconfirm>
                                     </td>
                                 </tr>

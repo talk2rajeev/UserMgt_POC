@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { AutoComplete } from 'antd';
 
-const rawDataSource = [{id: 401, name: 'Server Room Access'}, {id: 402, name: 'ODM Room Access'}, {id: 403, name: 'HR portal access'}, {id: 405, name: 'DMM App Access'}, {id: 409, name: 'JIRA Admin access'}];
+const rawDataSource = [];
 
 const getDataSource = (rawDataSource) => {
   let data = null;

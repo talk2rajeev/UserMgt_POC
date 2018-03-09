@@ -1,11 +1,21 @@
 import React, {Component}  from 'react';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { getPermissions, createNewPermission, editPermissionName, deletePermission, hideEditPermissionBtn, saveEditedPermissionName } from '../store/actions';
+import { 
+    getPermissions, 
+    createNewPermission, 
+    editPermissionName, 
+    deletePermission, 
+    hideEditPermissionBtn, 
+    saveEditedPermissionName,
+    getPagination,
+    setPageNumber  
+} from '../store/actions';
 
-import { Popconfirm, message, Tooltip } from 'antd';
+import { Popconfirm, message, Tooltip, notification, Pagination } from 'antd';
 import LineSeparator from '../components/LineSeparator';
 import { dirname } from 'path';
+import Loader from '../components/Loader';
 
 class Permission extends Component {
     
@@ -18,8 +28,10 @@ class Permission extends Component {
         this.removePermission = this.removePermission.bind(this);
         this.cancel = this.cancel.bind(this);
         this.confirm = this.confirm.bind(this);
+        this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
+        this.onPagination = this.onPagination.bind(this);
 
-        this.state = { permissionToDlete: {id: null, name: ''}};
+        this.state = { permissionToDlete: {id: null, name: ''}, pagination: {current: 1} };
     }
 
     componentDidMount(){
@@ -42,10 +54,21 @@ class Permission extends Component {
     }
 
     createNewPermission(){
+        debugger
         let permission_name = this.refs.permission_name.value;
-        this.props.createNewPermission(permission_name);
-        message.success('New Permission created successfully');
-        
+        if(permission_name.length !== 0){
+            this.props.createNewPermission(permission_name);
+            message.success('New Permission created successfully');        
+        }else{
+            this.openNotificationWithIcon('error');
+        }
+    }
+
+    openNotificationWithIcon(type){
+        notification[type]({
+          message: 'Invalid Form',
+          description: 'Please enter Permission Name',
+        });
     }
     
     removePermission(event){
@@ -62,6 +85,15 @@ class Permission extends Component {
         let permission = this.state.permissionToDlete;
         this.props.deletePermission(permission.id);
         message.success('New Permission Deleted successfully');        
+    }
+
+    onPagination(page){
+        debugger
+        this.setState({
+          current: page,
+        });
+        this.props.setPageNumber(page);
+        this.props.getPermissions();      
     }
     
 
@@ -111,10 +143,13 @@ class Permission extends Component {
                                             </td>
                                         </tr>    
                                     )
-                                }) : null
+                                }) : <Loader />
                             }
                         </tbody> 
                     </table>    
+                    <div className="pagination" style={{'width':'57.5%'}}>
+                        <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                    </div> 
                 </div>
             )    
     }
@@ -128,14 +163,17 @@ function mapDispatchToProps(dispatch){
         editPermissionName: bindActionCreators(editPermissionName, dispatch),
         hideEditPermissionBtn: bindActionCreators(hideEditPermissionBtn, dispatch),
         deletePermission: bindActionCreators(deletePermission, dispatch),
-        saveEditedPermissionName: bindActionCreators(saveEditedPermissionName, dispatch)
+        saveEditedPermissionName: bindActionCreators(saveEditedPermissionName, dispatch),
+        getPagination: bindActionCreators(getPagination, dispatch),
+        setPageNumber: bindActionCreators(setPageNumber, dispatch)
     }
 }
   
 function mapStateToProps(state){
     console.log('permission >> ', state)
       return{
-        permissions: state.permissions
+        permissions: state.permissions,
+        pagination: state.pagination        
       }
 }
 

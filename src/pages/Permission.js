@@ -9,13 +9,16 @@ import {
     hideEditPermissionBtn, 
     saveEditedPermissionName,
     getPagination,
-    setPageNumber  
+    setPageNumber,
+    getClients  
 } from '../store/actions';
 
 import { Popconfirm, message, Tooltip, notification, Pagination } from 'antd';
 import LineSeparator from '../components/LineSeparator';
 import { dirname } from 'path';
 import Loader from '../components/Loader';
+import AutoSuggestion from '../components/AutoSuggestion';
+
 
 class Permission extends Component {
     
@@ -30,12 +33,16 @@ class Permission extends Component {
         this.confirm = this.confirm.bind(this);
         this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
         this.onPagination = this.onPagination.bind(this);
+        this.processClientData = this.processClientData.bind(this);
+        this.selectRole = this.selectRole.bind(this);
 
         this.state = { permissionToDlete: {id: null, name: ''}, pagination: {current: 1} };
+        this.permission = {};
     }
 
     componentDidMount(){
         this.props.getPermissions();
+        this.props.getClients();
     }
 
     permissionNameChangeHandler(event){
@@ -54,11 +61,10 @@ class Permission extends Component {
     }
 
     createNewPermission(){
-        debugger
         let permission_name = this.refs.permission_name.value;
         if(permission_name.length !== 0){
-            this.props.createNewPermission(permission_name);
-            message.success('New Permission created successfully');        
+            this.permission.name = permission_name;
+            this.props.createNewPermission(this.permission);       
         }else{
             this.openNotificationWithIcon('error');
         }
@@ -88,12 +94,30 @@ class Permission extends Component {
     }
 
     onPagination(page){
-        debugger
         this.setState({
           current: page,
         });
         this.props.setPageNumber(page);
         this.props.getPermissions();      
+    }
+
+    processClientData( clients ){
+        //event.preventDefault();
+        let newClients = [];
+        if(clients !== undefined){
+            newClients = clients.map((item)=>{
+                return item.name;
+            })
+            return newClients;
+        }
+        return ['ghfgh', 'hkjhljn'];
+    }
+
+    selectRole(value, option){
+        debugger
+        let client = this.props.clients.clients.find(item=> item.name === value);
+        this.permission.clientId = client._id;
+        this.permission.clientName = client.name;
     }
     
 
@@ -103,14 +127,16 @@ class Permission extends Component {
                     
                     <h3 className="top-margin25">Create Permission</h3>
                     <div className="row">
-                        <div className="col-md-3">            
-                            <div className="input-group">
-                                <input type="text" ref="permission_name" placeholder="Permission Name/Code" className="form-control"  />
-                                <div className="input-group-btn">
-                                    <button className="btn btn-primary" type="submit" onClick={this.createNewPermission}>
-                                        <i className="fa fa-save"></i>
-                                    </button>
-                                </div>
+                        <div className="col-md-12 row"> 
+                            <div className="col-md-3">
+                                <AutoSuggestion placeholder="Select Client" 
+                                    data={this.processClientData(  this.props.clients.clients )} 
+                                    selectRole={this.selectRole} 
+                                />
+                            </div>                                   
+                            <div className="col-md-5">
+                                <input type="text" ref="permission_name" placeholder="Permission Name" className=" form-control-no-width"  />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<button className="btn btn-primary" type="submit" onClick={this.createNewPermission}>Create</button> 
                             </div>
                         </div>
                     </div>
@@ -165,7 +191,8 @@ function mapDispatchToProps(dispatch){
         deletePermission: bindActionCreators(deletePermission, dispatch),
         saveEditedPermissionName: bindActionCreators(saveEditedPermissionName, dispatch),
         getPagination: bindActionCreators(getPagination, dispatch),
-        setPageNumber: bindActionCreators(setPageNumber, dispatch)
+        setPageNumber: bindActionCreators(setPageNumber, dispatch),
+        getClients: bindActionCreators(getClients, dispatch)        
     }
 }
   
@@ -173,7 +200,8 @@ function mapStateToProps(state){
     console.log('permission >> ', state)
       return{
         permissions: state.permissions,
-        pagination: state.pagination        
+        pagination: state.pagination,
+        clients: state.clients       
       }
 }
 

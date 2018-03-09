@@ -43,7 +43,7 @@ class TransferUserToGroup extends React.Component {
   }
 
   handleChange(nextTargetKeys, direction, moveKeys) {
-    debugger;
+    
     this.setState({ targetKeys: nextTargetKeys });
     //setTimeout(()=>{
       this.props.transferHandleChange(nextTargetKeys, direction, moveKeys);
@@ -55,9 +55,9 @@ class TransferUserToGroup extends React.Component {
   }
 
   handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-    debugger;
+    
     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
-    debugger;
+    
     console.log('sourceSelectedKeys: ', sourceSelectedKeys);
     console.log('targetSelectedKeys: ', targetSelectedKeys);
   }
@@ -71,7 +71,7 @@ class TransferUserToGroup extends React.Component {
   }
 
   componentDidMount(){
-    debugger;
+   
    
   
 
@@ -99,11 +99,11 @@ class TransferUserToGroup extends React.Component {
     */
   }
   componentWillUnmount() {
-    debugger;
+   
   }
   submitAssignedUserList() {
     console.log('targetKey: ', this.state.targetKeys);
-    debugger;
+    
     var userRow = this.state.row;
     var row = { ...this.state.row }
     let users = this.state.targetKeys;
@@ -115,7 +115,7 @@ class TransferUserToGroup extends React.Component {
     const state = this.state;
     const tg =  this.props.type==="create" && this.props.targetKeys.length ===0 ? [] :  state.targetKeys;
 
-    debugger;
+    
     return (
       <div >
         <Transfer
@@ -136,7 +136,7 @@ class TransferUserToGroup extends React.Component {
 
 function mapStateToProps(state) {
   console.log('from TransferUserToGroup control/component: ', state);
-  debugger;
+  
   return {
     usergroups: state.usergroupslist.usergroups,
     userlist:state.userlist.users

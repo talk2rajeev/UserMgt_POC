@@ -35,34 +35,38 @@ let PATH = require('../../utility/Constants');
 /*
 Clients
 */
-const clientSuccessNotification = (type) => {
+const clientSuccessNotification = (type, secret) => {
+    debugger
     notification[type]({
       duration: 10,  
       message: 'Client created',
-      description: 'client secret: gfdgfd56rrbir78r76t96nt6t96nt9tm9',
+      description: `client secret: ${secret}`,
     });
-};
+ };
 
-export const getClients = () => dispatch => {
+
+ export const getClients = () => dispatch => {
     reLoadClients().then(result => {
-        dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );           
+        dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );          
     }).catch((err) => {
         console.error.bind(err);
     });
-}
-
-function reLoadClients(){  
+ }
+ 
+ function reLoadClients(){  
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.getall}`;
     return axios.get(url);
-};
-
-export const createClient = (client) => (dispatch, getState) => {
+ };
+ 
+ export const createClient = (client) => (dispatch, getState) => {
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.create}`;
     axios.post(url, client).then(response=>{
+        debugger;
         reLoadClients().then(result => {
-            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) ); 
-            //message.success('Client Created successfully');   
-            clientSuccessNotification('success');       
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );
+            //message.success('Client Created successfully');  
+            
+            clientSuccessNotification('success', response.data.clientSecret);      
         }).catch((err) => {
             console.error.bind(err);
             message.error('Client Creation failed!');
@@ -70,13 +74,13 @@ export const createClient = (client) => (dispatch, getState) => {
     }).catch((err) => {
         console.error.bind(err);
     });  
-}
-
-export const deleteClient = (id) => (dispatch, getState) => {
+ }
+ 
+ export const deleteClient = (id) => (dispatch, getState) => {
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.delete}${id}`;
     axios.delete(url, id).then(response=>{
         reLoadClients().then(result => {
-            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );     
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );    
             message.success('Client deleted successfully');                            
         }).catch((err) => {
             console.error.bind(err);
@@ -85,13 +89,13 @@ export const deleteClient = (id) => (dispatch, getState) => {
     }).catch((err) => {
         console.error.bind(err);
     });  
-}
-
-export const updateClient = (client) => (dispatch, getState) => {
+ }
+ 
+ export const updateClient = (client) => (dispatch, getState) => {
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.update}${client.id}`;
     axios.put(url, client).then(response=>{
         reLoadClients().then(result => {
-            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) ); 
+            dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );
             message.success('Client updated successfully');                                                  
         }).catch((err) => {
             console.error.bind(err);
@@ -100,7 +104,7 @@ export const updateClient = (client) => (dispatch, getState) => {
     }).catch((err) => {
         console.error.bind(err);
     });
-}
+ }
 
 
 
@@ -190,6 +194,20 @@ export const getModalFlag = (type) => (dispatch) => {
     dispatch( ({type: GET_MODAL, modaltype: type}) )
 }
 
+// searchRolesinUsers(roles,searchValue)
+// {
+//     var flagS=false;
+//     for(var i=0;i<roles.length;i++){
+//            if(roles[i].name.toLowerCase().includes(searchValue.toLowerCase())){
+//              flagS= true;
+//              //break;
+//              i=i+roles.length;
+//       // return flagS;
+             
+//            }
+//        }
+//        return flagS;
+// }
 
 export const searchUsers = (searchValue) => (dispatch, getState) => {
     
@@ -201,9 +219,15 @@ export const searchUsers = (searchValue) => (dispatch, getState) => {
     }
     if(searchValue != ''){
         searchedUsers= users.filter(function(item){
+            debugger;
            return item.firstName.toLowerCase().includes(searchValue.toLowerCase()) || 
            item.lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
-           item.email.toLowerCase().includes(searchValue.toLowerCase());
+           item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+           item.roles.find(function(element) {
+            return element.name.toLowerCase().includes(searchValue.toLowerCase());
+          });
+           //searchRolesinUsers(item.roles,searchValue);
+           //item.roles[0].name.toLowerCase().includes(searchValue.toLowerCase());
         });
      dispatch( ({type: SEARCH_USER, users: searchedUsers ,originalUsers:getState().userlist.originalUsers}) );
     }
@@ -483,7 +507,7 @@ function reLoadPermission(){
     return axios.get(url);
 };
 
-export const createNewPermission = (name) => (dispatch, getState) => {
+/*export const createNewPermission = (name) => (dispatch, getState) => {
 
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.create}`;
     
@@ -503,7 +527,30 @@ export const createNewPermission = (name) => (dispatch, getState) => {
       })
 
       window.location.reload;
+};*/
+
+export const createNewPermission = (permission) => (dispatch, getState) => {
+
+    let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.create}`;
+    
+    axios.post(url, permission )
+      .then((response) => {
+            reLoadPermission().then((result)=>{
+                let pagination = getState().pagination;
+                let pageTotal = getPageTotal(result.data);
+                var res = JSON.stringify(result.data);
+                dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+                let pageChunk = getpageChunk(result.data, pagination); 
+                dispatch( ({type: GET_PERMISSIONS, permissions: pageChunk, originalPermissions: JSON.parse(res) }) );
+                message.success('New Permission created successfully'); 
+            })
+      })
+      .catch((err) => {
+        console.error.bind(err);
+      })
+
 };
+
 
 
 export const editPermissionName = (permname, permid) => (dispatch, getState) => {

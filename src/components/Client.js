@@ -81,16 +81,7 @@ class Client extends Component {
             this.openNotificationWithIcon('error');
         }
         else{
-            
-            let c = {};
-            c.name = this.client.name;
-            c.redirectUrl = this.client.redirectUrl;
-            c.logoutURI = this.client.logoutURI;
-            c.refreshToken = this.client.refreshTokenLifeTime_hh+'-'+this.client.refreshTokenLifeTime_mm;
-            c.accessToken = this.client.AccessTokenLifeTime_hh+''+this.client.AccessTokenLifeTime_mm;
-            c.description = this.client.description;
-
-            this.props.createClient(c);
+            this.props.createClient(this.client);
             this.clearClientForm();
         }    
     }
@@ -115,13 +106,11 @@ class Client extends Component {
     }
 
     updateClientForm(){
-        debugger;
         this.props.updateClient(this.state.client);
         this.setState({isEditClientModalOpen: false});        
     }
 
     setClientId(id){
-        debugger
         this.clientId = id;
     }
 

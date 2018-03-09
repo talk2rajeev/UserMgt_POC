@@ -64,7 +64,9 @@ style
 }
 
 .logo_n_title{
-    padding: 10px 6px;
+    padding: 8px 15px;
+    background: #244956;
+    border-bottom: 1px solid #336373;
 }
 
 .logo::before {
@@ -76,7 +78,7 @@ style
     display: block;
     margin-top: 5px;
     font-weight: bold;
-    color: #bdc7ca;
+    color: #48c2e7;
     text-shadow: 2px 3px 2px #02232d;
 }
 

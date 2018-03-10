@@ -61,6 +61,7 @@ class Client extends Component {
     clearClientForm(){
         document.getElementById('cname').value = '';        
         document.getElementById('redirectUrl').value = '';
+        document.getElementById('logoutUrl').value = '';
         document.getElementById('at_h').value = '';
         document.getElementById('at_m').value = '';
         document.getElementById('rt_h').value = '';
@@ -76,14 +77,23 @@ class Client extends Component {
     }
 
     submitUserForm(){
-        console.log(this.client);
-        if(this.client.name==='' || this.client.name === undefined){
-            this.openNotificationWithIcon('error');
-        }
-        else{
-            this.props.createClient(this.client);
-            this.clearClientForm();
-        }    
+        // console.log(this.client);
+        // if(this.client.name==='' || this.client.name === undefined){
+        //     this.openNotificationWithIcon('error');
+        // }
+        // else{
+        //     debugger
+        //     let c = {};
+        //     c.name = this.client.name;
+        //     c.redirectUrl = this.client.redirectUrl;
+        //     c.logoutURI = this.client.logoutURI;
+        //     c.refreshToken = this.client.refreshTokenLifeTime_hh+'-'+this.client.refreshTokenLifeTime_mm;
+        //     c.accessToken = this.client.AccessTokenLifeTime_hh+''+this.client.AccessTokenLifeTime_mm;
+        //     c.description = this.client.description;
+            
+        //     //this.props.createClient(this.client);
+        //     //this.clearClientForm();
+        // }    
     }
 
     openEditClientModal(client){

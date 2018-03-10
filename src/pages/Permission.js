@@ -125,7 +125,7 @@ class Permission extends Component {
         return(  
                 <div className="userRole-container">
                     
-                    <h3 className="top-margin25">Create Permission</h3>
+                    <h5 className="top-margin25">Create Permission</h5>
                     <div className="row">
                         <div className="col-md-12 row"> 
                             <div className="col-md-3">
@@ -141,7 +141,7 @@ class Permission extends Component {
                         </div>
                     </div>
 
-                    <h3 className="top-margin25">Permission List</h3>
+                    <h5 className="top-margin25">Permission List</h5>
                     <table className="table table-striped" style={{'width':'57.5%'}}>
                         <thead>
                             <tr>

@@ -122,3 +122,27 @@ div[class*='col-']{
 .hide{
     display: none;
 }
+
+@media (max-width:992px){
+    .sidebar-navLink{
+        width: 20% !important;
+        float: left;
+    }
+    .createRoleBox{
+        width: 74% !important;
+    }
+    .dropdown-txt .fa-angle-down::before{
+        display: none;
+    }
+}
+
+@media (max-width:768px){
+    .sidebar-navLink{
+        width: 20% !important;
+        float: left;
+    }
+    .createRoleBox{
+        width: 100% !important;
+    }
+    
+}

@@ -17,7 +17,7 @@ const CreateUserForm = (props) => {
         <div className="create-user-container">
             <div className="create-user-box">
                 <i className="fa fa-close cancel-create-user-icn" onClick={props.closeCreateUserBox}/>    
-                <h3 className="heading">Create New User</h3>
+                <h5 className="heading">Create New User</h5>
                 <hr className="hr"/> 
 
                 <div className="row top-margin10">

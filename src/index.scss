@@ -64,7 +64,7 @@ style
 }
 
 .logo_n_title{
-    padding: 8px 15px;
+    padding: 7px 10px;
     background: #244956;
     border-bottom: 1px solid #336373;
 }
@@ -115,7 +115,8 @@ style
 .sidebar-navLink.active{
     color: #dedede;
     cursor: pointer;
-    background: #367284;  
+    background: #367284; 
+    text-decoration: none;
 }
 
 a.sidebar-navLink:active{
@@ -155,6 +156,8 @@ a.sidebar-navLink:active{
 
 .dropdown-bx{
     display: none;
+    right: 10px;
+    text-align: center;
     position: absolute;
     border: 1px solid #ddd;
     border-radius: 4px;

@@ -287,7 +287,7 @@ class UsersTable extends Component {
     }
 
     renderEditUserModal(){
-        debugger
+        
         if(this.state.isEditUserModalOpen)
             return  (<EditUserModal1 
                         user={ this.state.selectedUser }

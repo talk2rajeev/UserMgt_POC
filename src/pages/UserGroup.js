@@ -328,7 +328,7 @@ class UserGroup extends Component {
     renderCreateUGForm() {
         return this.state.isTransferCompOpen ?
             <div id="collapsible-container-create-usergroup" className="collapsible-container create-usergroup">
-                <h3 className="heading" style={{'padding':'8px 0 0 35px'}}>Create New User Group</h3>
+                <h5 className="heading" style={{'padding':'8px 0 0 35px'}}>Create New User Group</h5>
                 <i className="fa fa-close close-bx-icn" onClick={this.closeCreateUGBox} />
                 <div className="create-role-container row" style={{'padding':'10px 0'}}>
                     <div className="col-md-7 row" style={{'marginLeft':'20px'}}>
@@ -340,7 +340,7 @@ class UserGroup extends Component {
                         </div>
                         <div className="clearfix" />
                         <div className="col-md-12">
-                            <h4>Assign Users to User Group</h4>
+                            <h5>Assign Users to User Group</h5>
                             {this.renderTransferCOmp()}
                         </div>
                         <div className="createRoleBox-row" style={{ 'padding': '5px 10px' }}>

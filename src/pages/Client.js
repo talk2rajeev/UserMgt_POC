@@ -33,7 +33,9 @@ class Client extends Component {
         this.updateClientForm       = this.updateClientForm.bind(this);
         this.inputEditClientChangeHandler = this.inputEditClientChangeHandler.bind(this);
         this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
-        
+        this.hrsToMinute = this.hrsToMinute.bind(this);
+        this.validateMinute = this.validateMinute.bind(this);
+
         this.state = {isCreateClientFormOpen: false, isEditClientModalOpen: false};
         this.client = {};
         this.clientId = null;
@@ -75,6 +77,30 @@ class Client extends Component {
         });
     }
 
+    hrsToMinute(hrs){
+        
+        let hr;
+        if(hrs===undefined || parseInt(hrs) === NaN){
+            return 0; 
+        }
+        if(parseInt(hrs) < 0){
+            hr = hrs * -1;
+        }
+        return hr * 60;
+    }
+
+    validateMinute(mins){
+        
+        let min = mins;
+        if(mins===undefined || parseInt(mins) === NaN){
+            return 0; 
+        }
+        if(parseInt(mins) < 0){
+            min = mins * -1;
+        }
+        return min;
+    }
+
     submitUserForm(){
         console.log(this.client);
         if(this.client.name==='' || this.client.name === undefined){
@@ -83,12 +109,12 @@ class Client extends Component {
         else{
             
             let c = {};
-            c.name = this.client.name;
-            c.redirectUrl = this.client.redirectUrl;
-            c.logoutURI = this.client.logoutURI;
-            c.refreshToken = this.client.refreshTokenLifeTime_hh+'-'+this.client.refreshTokenLifeTime_mm;
-            c.accessToken = this.client.AccessTokenLifeTime_hh+''+this.client.AccessTokenLifeTime_mm;
-            c.description = this.client.description;
+            c.name = this.client.name || '';
+            c.redirectUrl = this.client.redirectUrl || '';
+            c.logoutURI = this.client.logoutURI || '';
+            c.refreshToken = (parseInt(this.hrsToMinute(this.client.refreshTokenLifeTime_hh))  + parseInt(this.validateMinute(this.client.refreshTokenLifeTime_mm))).toString();
+            c.accessToken = (parseInt(this.hrsToMinute(this.client.AccessTokenLifeTime_hh)) + parseInt(this.validateMinute(this.client.AccessTokenLifeTime_mm))).toString();
+            c.description = this.client.description || '';
 
             this.props.createClient(c);
             this.clearClientForm();
@@ -148,7 +174,7 @@ class Client extends Component {
     renderCreateClientForm(){
         return this.state.isCreateClientFormOpen ? 
             <div className="pos-rel create-client-container top-margin10">
-                <h3 className="heading">Create New Client</h3>
+                <h5 className="heading">Create New Client</h5>
                 <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateUserBox}/>
                 <CreateClientForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} />
             </div> 

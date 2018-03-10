@@ -3,12 +3,14 @@ import React from 'react';
 const TopHeader = () => {
   return(
   <div className="top-header row">
-    <div className="col-md-12 col-sm-12">
-      <h3 className="pull-left">
-        User Management
+    <div className="col-md-12 col-sm-12 col-xs-12">
+      <h3 className="col-md-10 col-sm-10 col-xs-10 pull-left text-center app-title">
+        User Authorization &amp; Management
       </h3>
-      <div className="pull-right logout-dropdown">
-        <span className="dropdown-txt"><span>rajeeev@sdf.com</span> <i className="fa fa-angle-down" aria-hidden="true"></i>
+      <div className="col-md-2 col-sm-2 col-xs-2 pull-right text-right logout-dropdown">
+        <span className="dropdown-txt">
+          <span className="hidden-sm hidden-xs">user@sony.com</span> <i className="fa fa-angle-down" aria-hidden="true"></i>
+          <span className="fa fa-user fa-2x hidden-xl hidden-lg hidden-md" />
           <div className="dropdown-bx">
             <i className="fa fa-sign-out"></i>
             &nbsp; Logout

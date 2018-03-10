@@ -224,12 +224,12 @@ class Roles extends Component {
         return(  
                 <div className="userRole-container">
                     <br />   
-                    <h3>Create New Role</h3> 
+                    <h5>Create New Role</h5> 
                     <div className="create-role-container row">
-                        <div className="col-md-3">                        
+                        <div className="col-md-3 col-sm-9 col-xs-12 top-margin10">                        
                             <input type="text" placeholder="Type New Role" onChange={ this.roleNameHandler } ref="rolename" className="form-control"  />
                         </div>
-                        <div className="col-md-4" style={{'position':'relative'}}>
+                        <div className="col-md-4 col-sm-9 col-xs-12 top-margin10" style={{'position':'relative'}}>
                             {
                                 this.props.roles.length === 33 ? <AutoSuggestion selectRole={this.selectRole}/> : null
                             }
@@ -270,8 +270,8 @@ class Roles extends Component {
 
                     <LineSeparator />
 
-                    <h3>Existing Roles</h3>
-                    <table className="table table-striped" style={{'width':'57.5%'}}>
+                    <h5>Existing Roles</h5>
+                    <table className="table table-striped">
                         <thead>
                             <tr>
                                 <td>Role</td>

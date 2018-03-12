@@ -194,7 +194,7 @@ a.sidebar-navLink:active{
     font-size: 1.8em;
 }
 .create-client-container{
-    width: 65%;
+    width: 66%;
     padding: 20px;
     border: 1px solid #cdcdcd;
     box-shadow: 1px 3px 5px #ddd;
@@ -259,7 +259,8 @@ a.sidebar-navLink:active{
 .close-createClient-icn{
     position: absolute;
     top: 6px;
-    left: 98%;
+    right: 10;
+    font-size: 1.3em;
     color: red;
     cursor: pointer;
 }
@@ -557,6 +558,7 @@ button, input, select, textarea {
 
 .form-control-no-width {
     height: 34px;
+    min-width: 208px;
     padding: 6px 12px;
     font-size: 14px;
     line-height: 1.42857143;

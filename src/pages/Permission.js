@@ -123,56 +123,63 @@ class Permission extends Component {
 
     render() {
         return(  
-                <div className="userRole-container">
+                <div className="userRole-container row">
                     
-                    <h5 className="top-margin25">Create Permission</h5>
-                    <div className="row">
-                        <div className="col-md-12 row"> 
-                            <div className="col-md-3">
-                                <AutoSuggestion placeholder="Select Client" 
-                                    data={this.processClientData(  this.props.clients.clients )} 
-                                    selectRole={this.selectRole} 
-                                />
-                            </div>                                   
-                            <div className="col-md-5">
-                                <input type="text" ref="permission_name" placeholder="Permission Name" className=" form-control-no-width"  />
-                                &nbsp;&nbsp;&nbsp;&nbsp;<button className="btn btn-primary" type="submit" onClick={this.createNewPermission}>Create</button> 
-                            </div>
+                    <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                        <h5 className="top-margin25">Create Permission</h5>
+                        <div className="row">
+                            
+                                <div className="col-md-5 col-sm-5 col-xs-5">
+                                    <AutoSuggestion placeholder="Select Client" 
+                                        data={this.processClientData(  this.props.clients.clients )} 
+                                        selectRole={this.selectRole} 
+                                    />
+                                </div>                                   
+                                <div className="col-md-5 col-sm-5 col-xs-5">
+                                    <input type="text" ref="permission_name" placeholder="Permission Name" className=" form-control"  />       
+                                </div>
+                                <div className="col-md-2 col-sm-2 col-xs-2">
+                                    <button className="btn btn-primary hidden-xs" type="submit" onClick={this.createNewPermission}>Create</button>                                 
+                                    <span className="visible-xs"><i className="btn btn-sm btn-primary fa fa-plus" />  </span>
+                                </div>
+                            
                         </div>
                     </div>
 
-                    <h5 className="top-margin25">Permission List</h5>
-                    <table className="table table-striped" style={{'width':'57.5%'}}>
-                        <thead>
-                            <tr>
-                                <td>Permission Name</td>                              
-                                <td>Action</td>                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                this.props.permissions.length !== 0 ?
-                                this.props.permissions.permissions.map((item, i)=>{
-                                    return(
-                                        <tr key={i}>
-                                            <td>
-                                                <Tooltip title="Click to edit Permission name" placement="top">
-                                                <input onChange={this.permissionNameChangeHandler} type="text" data-permid={item.id} value={item.name} placeholder="Permission Name/Code" className="form-control form-control-inline no-input"  />
-                                                </Tooltip>
-                                                <i className={"fa fa-check edit-perm-btn "+(item.edited ? 'show': 'hide')} onClick={()=>this.savePermName(item.id, item.name)}/>
-                                                
-                                            </td>
-                                            <td>
-                                                <Popconfirm title="Are you sure to delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
-                                                    <i title="remove permission" data-permid={item.id} data-permname={item.name}  className="fa fa-trash" onClick={ this.removePermission }/>
-                                                </Popconfirm>    
-                                            </td>
-                                        </tr>    
-                                    )
-                                }) : <Loader />
-                            }
-                        </tbody> 
-                    </table>    
+                    <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                        <h5 className="top-margin25">Permission List</h5>
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>Permission Name</td>                              
+                                    <td>Action</td>                              
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    this.props.permissions.length !== 0 ?
+                                    this.props.permissions.permissions.map((item, i)=>{
+                                        return(
+                                            <tr key={i}>
+                                                <td>
+                                                    <Tooltip title="Click to edit Permission name" placement="top">
+                                                    <input onChange={this.permissionNameChangeHandler} type="text" data-permid={item.id} value={item.name} placeholder="Permission Name/Code" className="form-control form-control-inline no-input"  />
+                                                    </Tooltip>
+                                                    <i className={"fa fa-check edit-perm-btn "+(item.edited ? 'show': 'hide')} onClick={()=>this.savePermName(item.id, item.name)}/>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <Popconfirm title="Are you sure to delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
+                                                        <i title="remove permission" data-permid={item.id} data-permname={item.name}  className="fa fa-trash" onClick={ this.removePermission }/>
+                                                    </Popconfirm>    
+                                                </td>
+                                            </tr>    
+                                        )
+                                    }) : <Loader />
+                                }
+                            </tbody> 
+                        </table> 
+                    </div>   
                     <div className="pagination" style={{'width':'57.5%'}}>
                         <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
                     </div> 

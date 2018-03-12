@@ -173,7 +173,7 @@ class Client extends Component {
 
     renderCreateClientForm(){
         return this.state.isCreateClientFormOpen ? 
-            <div className="pos-rel create-client-container top-margin10">
+            <div className="col-sm-12 col-xs-12 pos-rel create-client-container top-margin10">
                 <h5 className="heading">Create New Client</h5>
                 <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateUserBox}/>
                 <CreateClientForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} />
@@ -201,7 +201,7 @@ class Client extends Component {
                 <div>
                    { this.renderCreateUserButton() } 
                 </div>
-                <div>
+                <div className="row">
                     { 
                         this.props.clients.length !== 0 ? 
                         <ClientTable 

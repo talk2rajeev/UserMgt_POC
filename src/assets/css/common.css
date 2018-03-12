@@ -134,6 +134,13 @@ div[class*='col-']{
     .dropdown-txt .fa-angle-down::before{
         display: none;
     }
+    .create-client-container{
+        width: 100% !important;
+    }
+    .create-user-box{
+        width: 100% !important;
+    }
+    
 }
 
 @media (max-width:768px){

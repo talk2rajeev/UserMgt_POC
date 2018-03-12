@@ -46,8 +46,8 @@ const CreateUserForm = (props) => {
                 </div>
 
                 <div className="clearfix top-margin10">
-                    <div className="align-right text-alert"><span>Email field is mandatory.</span></div>
                     <div className="">
+                        <button className="btn btn-sm btn-default" onClick={(event)=>props.closeCreateUserBox}>Cancel</button> &nbsp;                   
                         <button className="btn btn-sm btn-primary" onClick={(event)=>props.submitUserForm(event)}>Submit</button>
                     </div>
                 </div>

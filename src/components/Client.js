@@ -21,7 +21,7 @@ class Client extends Component {
         this.submitUserForm         = this.submitUserForm.bind(this);
         this.openCreateUserBox      = this.openCreateUserBox.bind(this);
         this.inputChangeHandler     = this.inputChangeHandler.bind(this);       
-        this.closeCreateUserBox     = this.closeCreateUserBox.bind(this);
+        this.closeCreateClientBox     = this.closeCreateClientBox.bind(this);
         this.renderCreateClientForm = this.renderCreateClientForm.bind(this);
         this.renderCreateUserButton = this.renderCreateUserButton.bind(this);
         this.setClientId            = this.setClientId.bind(this);
@@ -47,7 +47,7 @@ class Client extends Component {
         this.setState({isCreateClientFormOpen: true});
     }
 
-    closeCreateUserBox(){
+    closeCreateClientBox(){
         this.setState({isCreateClientFormOpen: false});
     }
 
@@ -148,11 +148,12 @@ class Client extends Component {
         return this.state.isCreateClientFormOpen ? 
             <div className="pos-rel create-client-container top-margin10">
                 <h3 className="heading">Create New Client</h3>
-                <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateUserBox}/>
-                <CreateClientForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} />
+                <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateClientBox}/>
+                <CreateClientForm closeCreateClientBox={this.closeCreateClientBox} inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} />
             </div> 
         : null;
     }
+    
 
     renderEditClientForm(){
         return this.state.isEditClientModalOpen ? 

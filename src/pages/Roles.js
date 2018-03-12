@@ -270,53 +270,58 @@ class Roles extends Component {
 
                     <LineSeparator />
 
-                    <h5>Existing Roles</h5>
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <td>Role</td>
-                                <td>Permissions</td>                              
-                                <td>Action</td>                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                this.props.roles.length !== 0 ?
-                                this.props.roles.roles.map((item, i)=>{
-                                    return(
-                                        <tr key={i}>
-                                            <td>{item.name}</td>
-                                            <td>
-                                                {
-                                                    item.permission.map((val, j)=>{
-                                                        return(
-                                                            
-                                                                <span data-id={val.id} href="#" id={val.id} className="delete-perm-badge">
-                                                                    {val.name} &nbsp;
+                    <div className="row">
+                        <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                            <h5>Existing Roles</h5>
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td>Role</td>
+                                        <td>Permissions</td>                              
+                                        <td>Action</td>                              
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.props.roles.length !== 0 ?
+                                        this.props.roles.roles.map((item, i)=>{
+                                            return(
+                                                <tr key={i}>
+                                                    <td>{item.name}</td>
+                                                    <td>
+                                                        {
+                                                            item.permission.map((val, j)=>{
+                                                                return(
                                                                     
-                                                                </span>
-                                                        )
-                                                    })
-                                                }
-                                                
-                                            </td>
-                                            <td>
-                                                <i title="Edit Role" className="fa fa-pencil" onClick={ ()=>this.openModal(item) } />
-                                                &nbsp;&nbsp;&nbsp;
-                                                <Popconfirm title="Are you sure delete this Role?" onConfirm={ (event)=>{this.confirmDeleteRole(event)} } onCancel={ (event)=>{this.cancelDeleteRole(event)} } okText="Yes" cancelText="No">   
-                                                    <i title="remove permission" className="fa fa-trash" onClick={ ()=>this.removeRole(item._id) }/>
-                                                </Popconfirm>     
-                                            </td>                                            
-                                        </tr>            
-                                    )
-                                }) : null
-                            }
-                            
-                        </tbody>
-                    </table>
+                                                                        <span data-id={val.id} href="#" id={val.id} className="delete-perm-badge">
+                                                                            {val.name} &nbsp;
+                                                                            
+                                                                        </span>
+                                                                )
+                                                            })
+                                                        }
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        <i title="Edit Role" className="fa fa-pencil" onClick={ ()=>this.openModal(item) } />
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <Popconfirm title="Are you sure delete this Role?" onConfirm={ (event)=>{this.confirmDeleteRole(event)} } onCancel={ (event)=>{this.cancelDeleteRole(event)} } okText="Yes" cancelText="No">   
+                                                            <i title="remove permission" className="fa fa-trash" onClick={ ()=>this.removeRole(item._id) }/>
+                                                        </Popconfirm>     
+                                                    </td>                                            
+                                                </tr>            
+                                            )
+                                        }) : null
+                                    }
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     {
                         this.renderEditRoleModal()
-                    }           
+                    }    
+                           
                 </div>
             )    
     }

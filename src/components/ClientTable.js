@@ -6,8 +6,8 @@ import { Popconfirm, Tooltip } from 'antd';
 const ClientTable = (props) => {
   
     return(
-        <div className="top-margin10">
-           <table className="table table-striped" style={{'width':'65%'}}>
+        <div className="top-margin10 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+           <table className="table table-striped">
                 <thead>
                     <tr>
                         <th>Client</th>

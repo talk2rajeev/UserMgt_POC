@@ -32,6 +32,7 @@ const CreateClientForm = (props) => {
                     <textarea name="description" id="desc" style={{"height": "120px"}} className="form-control required" placeholder="Description" onChange={(event)=>props.inputChangeHandler(event)}></textarea>
                 </div>
                 <div className="align-right top-margin10">
+                    <button className="btn btn-sm btn-default" onClick={props.closeCreateClientBox}>Cancel</button> &nbsp;
                     <button className="btn btn-sm btn-primary" onClick={props.submitUserForm}>Submit</button>
                 </div>
            </div>

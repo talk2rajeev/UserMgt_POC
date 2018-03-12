@@ -373,7 +373,7 @@ class UserGroup extends Component {
                             this.props.usergroups.length !== 0 ?
                                 this.props.usergroups.map((item, i) => {
                                     return (
-                                        <UserGroupRow 
+                                        <UserGroupRow key={i}
                                             editUser={(ug) => this.editUser(ug)} 
                                             usergroups={item} key={i} index={i} 
                                             removeUserGroup={this.removeUserGroup}

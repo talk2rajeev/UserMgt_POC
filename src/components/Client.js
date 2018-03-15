@@ -19,7 +19,7 @@ class Client extends Component {
         super(props);
 
         this.submitUserForm         = this.submitUserForm.bind(this);
-        this.openCreateUserBox      = this.openCreateUserBox.bind(this);
+        this.openCreateClientBox      = this.openCreateClientBox.bind(this);
         this.inputChangeHandler     = this.inputChangeHandler.bind(this);       
         this.closeCreateClientBox     = this.closeCreateClientBox.bind(this);
         this.renderCreateClientForm = this.renderCreateClientForm.bind(this);
@@ -43,7 +43,7 @@ class Client extends Component {
         this.props.getClients();
     }
 
-    openCreateUserBox(){
+    openCreateClientBox(){
         this.setState({isCreateClientFormOpen: true});
     }
 
@@ -136,7 +136,7 @@ class Client extends Component {
         return !this.state.isCreateClientFormOpen ? 
             <div className="top-margin10">
                 <Tooltip title="Create Client" placement="right">
-                    <button className="btn btn-sm btn-primary " onClick={this.openCreateUserBox}>
+                    <button className="btn btn-sm btn-primary " onClick={this.openCreateClientBox}>
                         <i className="fa fa-male" /> &nbsp; <i className="fa fa-plus" />
                     </button>
                 </Tooltip>
@@ -153,7 +153,7 @@ class Client extends Component {
             </div> 
         : null;
     }
-    
+
 
     renderEditClientForm(){
         return this.state.isEditClientModalOpen ? 

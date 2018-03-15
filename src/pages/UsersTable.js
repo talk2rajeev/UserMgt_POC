@@ -22,13 +22,13 @@ import {
     setPageNumber 
 } from '../store/actions';
 import UserTableRow from '../components/UserTableRow.jsx';
-import EditUserModal1 from '../components/EditUserModal1';
+import EditUserModal from '../components/EditUserModal';
 import CreateUserForm from '../components/CreateUserForm';
 
 
 
 function confirm(e) {
-    debugger
+    
   console.dir(e.target.textContent);
   message.success('You just deleted '+ e.target.textContent);
 }
@@ -101,7 +101,7 @@ class UsersTable extends Component {
 
     confirm(e){
         e.preventDefault();
-        debugger
+        
         const userid = this.userIdToDelete; 
         this.props.removeUser(userid);
         message.success('User deleted successfully');
@@ -129,7 +129,7 @@ class UsersTable extends Component {
     }
 
     deleteUser(event, id){
-        debugger
+        
         event.preventDefault();
         this.userIdToDelete = event.target.dataset.userid;
     }
@@ -139,7 +139,7 @@ class UsersTable extends Component {
     }
 
     selectRole(value, option){
-        debugger
+        
         let role = value.split('-')
         role = role.map(function(item){
             return item.trim();
@@ -169,7 +169,7 @@ class UsersTable extends Component {
     }
 
     openUserEditModal(event, user){
-        debugger
+        
         this.user = user;
         this.props.selectUser({id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, roles: user.roles});
         this.setState({isEditUserModalOpen: true, selectedUser: user});
@@ -212,7 +212,7 @@ class UsersTable extends Component {
     updateEditedUser(){
         this.props.selectUser(this.state.selectedUser);
         this.props.submitEditedUser();
-        this.setState({isEditUserModalOpen: false});
+        this.setState({isEditUserModalOpen: false, selectedUser: {}});
         
     }
     selectRoleHandler(value, option){
@@ -230,7 +230,7 @@ class UsersTable extends Component {
             this.openNotificationWithIcon('error');
         }
         else{
-            debugger
+            
             if(!this.user.lastName)
                 this.user.lastName ='';
             if(!this.user.firstName)
@@ -289,7 +289,7 @@ class UsersTable extends Component {
     renderEditUserModal(){
         
         if(this.state.isEditUserModalOpen)
-            return  (<EditUserModal1 
+            return  (<EditUserModal
                         user={ this.state.selectedUser }
                         roles = { this.props.roles.roles }
                         defaultRoles = { this.props.selectUser.user }

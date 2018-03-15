@@ -10,8 +10,8 @@ const ClientTable = (props) => {
            <table className="table table-striped">
                 <thead>
                     <tr>
+                        <th>Client Id</th>
                         <th>Client</th>
-                        <th>Redirect Url</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -20,8 +20,8 @@ const ClientTable = (props) => {
                         props.clients.map((item, key)=>{
                             return(
                                 <tr key={key}>
+                                    <td>{item._id}</td>
                                     <td>{item.name}</td>
-                                    <td>{item.redirectUrl}</td>
                                     <td>
                                         <i className="fa fa-pencil" onClick={()=>props.openEditClientModal(item)}/> &nbsp; &nbsp;
                                         <Popconfirm title="Are you sure to delete this Client" onConfirm={(event) => { props.confirmClientDelete(event) }} onCancel={(event) => { props.cancelClientDelete(event) }} okText="Yes" cancelText="No">      

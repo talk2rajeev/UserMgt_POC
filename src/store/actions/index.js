@@ -36,9 +36,9 @@ let PATH = require('../../utility/Constants');
 Clients
 */
 const clientSuccessNotification = (type, secret) => {
-    debugger
+    
     notification[type]({
-      duration: 10,  
+      duration: 60,  
       message: 'Client created',
       description: `client secret: ${secret}`,
     });
@@ -61,7 +61,7 @@ const clientSuccessNotification = (type, secret) => {
  export const createClient = (client) => (dispatch, getState) => {
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.client.create}`;
     axios.post(url, client).then(response=>{
-        debugger;
+    
         reLoadClients().then(result => {
             dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );
             //message.success('Client Created successfully');  
@@ -219,7 +219,7 @@ export const searchUsers = (searchValue) => (dispatch, getState) => {
     }
     if(searchValue != ''){
         searchedUsers= users.filter(function(item){
-            debugger;
+            
            return item.firstName.toLowerCase().includes(searchValue.toLowerCase()) || 
            item.lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
            item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -270,7 +270,8 @@ export const submitEditedUser = () => (dispatch, getState) => {
     axios.put(url, user )
       .then((response) => {
         reLoadUserList().then(result => {
-            dispatch( ({type: GET_USERLIST, users: result.data, originalUsers: result.data}) )            
+            dispatch( ({type: GET_USERLIST, users: result.data, originalUsers: result.data}) );
+            message.success('User Edited successfully');             
         });
       })
       .catch((err) => {
@@ -310,7 +311,7 @@ export const getUserGroups = () => dispatch => {
 
 
  export function editGroup(group){
-    debugger;
+    
     return function(dispatch){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.update}${group._id}`;  
         axios.put(url, group)
@@ -364,7 +365,7 @@ export const getUserGroups = () => dispatch => {
 
  
 export function createNewGroup(group){
-    debugger;
+    
     return function(dispatch){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.create}`;   
         axios.post(url, group)

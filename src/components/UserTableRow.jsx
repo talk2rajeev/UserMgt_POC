@@ -1,5 +1,6 @@
 import React from 'react';
 import { Popconfirm, Tooltip } from 'antd';
+import RoleNameTag from './RoleNameTag';
 
 const UserTableRow = (props) => {
   const {id, firstName, lastName, email, roles} = props.user;
@@ -11,9 +12,7 @@ const UserTableRow = (props) => {
         { 
             roles.map((item, i)=>{
               return(
-                <span key={i} className="delete-perm-badge">
-                  {item.name} &nbsp; 
-                </span>
+                <RoleNameTag key={i} name={item.name} data_id={''} href="#" id={''} />     
               )
             })  
         }

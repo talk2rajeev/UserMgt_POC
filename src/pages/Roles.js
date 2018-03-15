@@ -7,6 +7,8 @@ import { Popconfirm, message, Tooltip } from 'antd';
 import AutoSuggestion from '../components/AutoSuggestion';
 import LineSeparator from '../components/LineSeparator';
 import EditRoleModal from '../components/EditRoleModal';
+import SelectTags from '../components/SelectTags';
+import RoleNameTag from '../components/RoleNameTag';
 
 
 class Roles extends Component {
@@ -24,21 +26,32 @@ class Roles extends Component {
         this.childInputChangehandler = this.childInputChangehandler.bind(this);
         this.updateEditedRole = this.updateEditedRole.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handlePermissionChange = this.handlePermissionChange.bind(this);
 
         this.confirmDeleteRole = this.confirmDeleteRole.bind(this);
         this.cancelDeleteRole = this.cancelDeleteRole.bind(this);        
-        this.selectRole = this.selectRole.bind(this);
+        //this.selectRole = this.selectRole.bind(this);
         this.roleNameHandler = this.roleNameHandler.bind(this);
         this.removeFromPermissionList = this.removeFromPermissionList.bind(this);
         this.createRoleHandler = this.createRoleHandler.bind(this);
         this.processPermissionData = this.processPermissionData.bind(this);
+        this.openCreateRoleForm = this.openCreateRoleForm.bind(this);
+        this.closeCreateRoleForm = this.closeCreateRoleForm.bind(this);
 
-        this.state = {pidToDelete: {}, newRole: {'name': '', 'pIds': []}, isEditRoleModalOpen: false, selectedRole: null }
+        this.state = {
+            pidToDelete: {}, 
+            newRole: {name:"", permission:[]}, 
+            isEditRoleModalOpen: false, 
+            selectedRole: {
+                name:"", permission:[]
+            },
+            isCreateRoleFormOpen: false 
+        };
         this.roleToDelete = null;
         this.selectedRole = null;
         this.role = null;
     }
-
+    
     componentDidMount(){
         this.props.getRoles();
         this.props.getPermissions();
@@ -77,7 +90,7 @@ class Roles extends Component {
         this.setState( {pidToDelete: {pid: e.target.dataset.permid, role: e.target.dataset.role} } );
     }
 
-    selectRole(value, option){
+    /*selectRole(value, option){
 
         var newRole = {...this.state.newRole}
         const pIds = newRole.pIds;
@@ -90,7 +103,7 @@ class Roles extends Component {
             id.value='';
         }, 200);
         //set AUtoComplete as blank
-    }
+    }*/
 
     roleNameHandler(){
         let rolename = this.refs.rolename.value;
@@ -115,23 +128,11 @@ class Roles extends Component {
     createRoleHandler(event){
         event.preventDefault();
         
-        let role = this.state.newRole;
-        
-        let newPermission = [];
-
-        for(let i = 0; i < role.pIds.length; i++){
-            let temp = this.props.permissions.find((item)=>item.name === role.pIds[i]);
-            newPermission.push(temp);
-        }
-
-        role.permission = newPermission;
-        delete role.pIds;
-        
+        this.props.createNewRoles(this.state.newRole);
         this.setState({
             newRole: {'name': '', 'pIds': []}
         })
 
-        this.props.createNewRoles(role);
         message.success('New Role added succesfully');
     }
 
@@ -151,18 +152,7 @@ class Roles extends Component {
         message.error('Delete action cancelled ');
     }
 
-    processPermissionData( permissions ){
-        
-        
-        let perms = [];
-        if(this.props.permissions !== undefined){
-            perms = this.props.permissions.map((item)=>{
-                return item.name;
-            })
-            return perms;
-        }
-        return [];
-    }
+    
 
     openModal(item){     
         
@@ -202,11 +192,9 @@ class Roles extends Component {
 
     }
 
-    updateEditedRole(){
-        
+    updateEditedRole(){        
         this.props.updateRole(this.state.selectedRole);
         this.setState({isEditRoleModalOpen: false}); 
-
     }
    
     handleChange(value, option){
@@ -220,57 +208,90 @@ class Roles extends Component {
         this.setState({selectedRole});
     }
 
+    handlePermissionChange(value, option){
+        debugger
+        let { newRole } = {...this.state};
+        let newPermission = [];
+        for(let i = 0; i < value.length; i++){
+            let temp = this.props.permissions.find((item)=>item.name === value[i]);
+            newPermission.push({id: temp.id, name: temp.name});
+        }
+        newRole.permission = newPermission;
+        this.setState({newRole});
+    }
+
+    processPermissionData( permissions ){  
+        let perms = [];
+        if(this.props.permissions !== undefined){
+            perms = this.props.permissions.map((item)=>{
+                return item;
+            })
+            return perms;
+        }
+        return [];
+    }
+
+    openCreateRoleForm(){
+        this.setState({isCreateRoleFormOpen: true});
+    }
+
+    closeCreateRoleForm(){
+        this.setState({isCreateRoleFormOpen: false});
+    }
+
+    renderCreateRoleButton(){
+        return !this.state.isCreateRoleFormOpen ? 
+            <div className="top-margin10">
+                <Tooltip title="Create Role" placement="right">
+                    <button className="btn btn-sm btn-primary " onClick={this.openCreateRoleForm}>
+                        <i className="fa fa-tasks" /> &nbsp; <i className="fa fa-plus" />
+                    </button>
+                </Tooltip>
+            </div>
+            : null;
+    }
+
+    renderCreateRoleForm(){
+        return this.state.isCreateRoleFormOpen ? 
+            <div className="createRoleFormBox col-md-7">
+                <h5>Create New Role</h5> 
+                <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateRoleForm}/>
+                <div className="create-role-container row">
+                    <div className="col-md-6 col-sm-6 col-xs-12 top-margin10">                        
+                        <input type="text" placeholder="Type New Role" onChange={ this.roleNameHandler } ref="rolename" className="form-control"  />
+                    </div>
+                    <div className="col-md-6 col-sm-6 col-xs-12 top-margin10" style={{'position':'relative'}}>
+                        <SelectTags 
+                            placeholder="Please select Roles" 
+                            data={this.processPermissionData(this.props.permissions)}
+                            defaultData={[]} 
+                            handleChange={this.handlePermissionChange} 
+                        />                           
+                    </div>
+                    <div className="col-md-12 col-sm-12 col-xs-12 top-margin10">
+                        <button onClick={this.createRoleHandler} className="btn btn-sm btn-primary pull-right">
+                            Create Role
+                        </button>
+                        <span className="pull-right">&nbsp;&nbsp;</span>
+                        <button onClick={this.closeCreateRoleForm} className="btn btn-sm btn-default pull-right">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+                <div className="clearfix"></div>
+            </div>
+            : null
+    }
+
     render() {
         return(  
                 <div className="userRole-container">
                     <br />   
-                    <h5>Create New Role</h5> 
-                    <div className="create-role-container row">
-                        <div className="col-md-3 col-sm-9 col-xs-12 top-margin10">                        
-                            <input type="text" placeholder="Type New Role" onChange={ this.roleNameHandler } ref="rolename" className="form-control"  />
-                        </div>
-                        <div className="col-md-4 col-sm-9 col-xs-12 top-margin10" style={{'position':'relative'}}>
-                            {
-                                this.props.roles.length === 33 ? <AutoSuggestion selectRole={this.selectRole}/> : null
-                            }
-                            <AutoSuggestion placeholder="Select Permissions" data={this.processPermissionData( this.props.permissions)} selectRole={this.selectRole} olddata={this.props.permissions}/>
-                        </div>
-                    </div>
 
-                    <div className={"createRoleBox top-margin25 "}>
-                        
-                        <div className="createRoleBox-row">                        
-                            <div className="col-md-2 label"> RoleName: </div>
-                            <div className="col-md-10"> <span className="rolename">{this.state.newRole.name}</span>  </div>
-                            <div className="clearfix" />
-                        </div>
-                        <div className="createRoleBox-row">
-                            <div className="col-md-2 label"> Permissions: </div>
-                            <div className="col-md-10">
-                                {
-                                    this.state.newRole.pIds.map( (item, i)=> {
-                                        return(
-                                            <span key={'role-'+i} className='delete-perm-badge'>
-                                                {item}&nbsp;
-                                                <i className="fa fa-close delete-perm" data-itemname={item}  onClick={ (event, item)=>{this.removeFromPermissionList(event, item)} } />
-                                            </span> 
-                                        )
-                                    })
-                                }
-                            </div>
-                            <div className="clearfix" />
-                        </div>
-                        <div className="createRoleBox-row" style={{'padding':'5px 10px'}}>
-                                <button onClick={this.createRoleHandler} className="btn btn-xs btn-primary">
-                                    Create Role <i className="fa fa-plus" />
-                                </button>
-                        </div>
-                        <div className={" "+ (this.state.newRole.name!== '' && this.state.newRole.pIds.length!== 0 ? '' : 'disabled')} />
-                    </div>
-
-                    <LineSeparator />
-
-                    <div className="row">
+                    { this.renderCreateRoleButton() }  
+                    { this.renderCreateRoleForm() }
+                    
+                    <div className="row top-margin20">
                         <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                             <h5>Existing Roles</h5>
                             <table className="table table-striped">
@@ -292,11 +313,7 @@ class Roles extends Component {
                                                         {
                                                             item.permission.map((val, j)=>{
                                                                 return(
-                                                                    
-                                                                        <span data-id={val.id} href="#" id={val.id} className="delete-perm-badge">
-                                                                            {val.name} &nbsp;
-                                                                            
-                                                                        </span>
+                                                                    <RoleNameTag key={j} name={val.name} data_id={val.id} href="#" id={val.id} />     
                                                                 )
                                                             })
                                                         }
@@ -317,10 +334,11 @@ class Roles extends Component {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    {
+                        {
                         this.renderEditRoleModal()
-                    }    
+                    } 
+                    </div>
+                       
                            
                 </div>
             )    
@@ -349,3 +367,5 @@ function mapStateToProps(state){
 
 const _Roles = connect(mapStateToProps, mapDispatchToProps )(Roles);
 export default _Roles;
+
+//<AutoSuggestion placeholder="Select Permissions" data={this.processPermissionData( this.props.permissions)} selectRole={this.selectRole} olddata={this.props.permissions}/>

@@ -35,19 +35,14 @@ const CreateUserForm = (props) => {
                 </div>
                 <div className="clearfix top-margin10">
                     <div className="">
-                        <input type="number" name="phone" placeholder="Contact Number" onChange={(event)=>props.inputChangeHandler(event)} className="form-control required"/>
-                    </div>
-                </div>
-                <div className="clearfix top-margin10">
-                    <div className="">
-                        <SelectTags placeholder="Please select Roles" data={props.roles} defaultData={[]} handleChange={props.handleChange} />
+                        <SelectTags placeholder="Roles" data={props.roles} defaultData={[]} handleChange={props.handleChange} />
                         
                     </div>
                 </div>
 
                 <div className="clearfix top-margin10">
                     <div className="">
-                        <button className="btn btn-sm btn-default" onClick={(event)=>props.closeCreateUserBox}>Cancel</button> &nbsp;                   
+                        <button className="btn btn-sm btn-default" onClick={props.closeCreateUserBox}>Cancel</button> &nbsp;                   
                         <button className="btn btn-sm btn-primary" onClick={(event)=>props.submitUserForm(event)}>Submit</button>
                     </div>
                 </div>

@@ -30,7 +30,7 @@ export const EditRoleModal = (props) =>  {
                 <div className={ "modal" }>
                     
                 
-                    <i className="fa fa-close close-modal-icon" onClick={props.closeModal}/>
+                    <i className="fa fa-close close-modal-icon" style={{'color':'red', 'fontSize':'1.3em'}} onClick={props.closeModal}/>
                     <div className="modal-header"><h3 className="modal-title">Edit Role</h3><hr className="hr"/></div>
                     <div className="modal-body">
                     
@@ -56,6 +56,7 @@ export const EditRoleModal = (props) =>  {
                     </div>
                     <div className="modal-footer">
                         <hr className="hr"/>
+                        <button className="btn btn-default" onClick={props.closeModal}>Cancel</button> &nbsp;&nbsp;
                         <button className="btn btn-success" onClick={props.updateEditedRole}>Update</button>
                     </div>
                 </div>

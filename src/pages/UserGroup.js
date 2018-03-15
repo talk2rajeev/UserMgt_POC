@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { getUserGroups, getUsers, editGroup,removeUserGroup, openTransferUserGroup, openModal, closeModal, selectUser, sortUser, searchGroupUsers } from '../store/actions';
 import UserGroupRow from '../components/UserGroupRow.jsx';
 import { Popconfirm, message ,notification, Tooltip} from 'antd';
-import EditUserModal from '../components/EditUserModal';
+//import EditUserModal from '../components/EditUserModal';
 import TransferUserToGroup from '../components/TransferUserToGroup';
 import { getRoles, createNewGroup } from '../store/actions';
 import AutoSuggestionRoles from '../components/AutoSuggestionRoles';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Popconfirm, message, Popover } from 'antd';
-
+import RoleNameTag from './RoleNameTag';
 
 const content = (users) => {
   debugger
@@ -31,9 +31,8 @@ const UserGroupRow = (props) => (
       {
         props.usergroups.role.map((val, j) => {
           return (
-              <span data-id={val[j]} href="#" id={val[j]} className="delete-perm-badge">
-                {val?val.name:""} &nbsp;
-              </span>
+              <RoleNameTag key={j} name={val?val.name:""} data_id={val[j]} href="#" id={val[j]} />
+              
           )
         })
       }

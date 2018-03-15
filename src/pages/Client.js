@@ -18,10 +18,10 @@ class Client extends Component {
     constructor(props){
         super(props);
 
-        this.submitUserForm         = this.submitUserForm.bind(this);
+        this.submitClientForm         = this.submitClientForm.bind(this);
         this.openCreateUserBox      = this.openCreateUserBox.bind(this);
         this.inputChangeHandler     = this.inputChangeHandler.bind(this);       
-        this.closeCreateUserBox     = this.closeCreateUserBox.bind(this);
+        this.closeCreateClientBox     = this.closeCreateClientBox.bind(this);
         this.renderCreateClientForm = this.renderCreateClientForm.bind(this);
         this.renderCreateUserButton = this.renderCreateUserButton.bind(this);
         this.setClientId            = this.setClientId.bind(this);
@@ -49,11 +49,12 @@ class Client extends Component {
         this.setState({isCreateClientFormOpen: true});
     }
 
-    closeCreateUserBox(){
+    closeCreateClientBox(){
         this.setState({isCreateClientFormOpen: false});
     }
 
     inputChangeHandler(event){
+        
         let name = event.target.name;
         let value = event.target.value;
 
@@ -101,7 +102,8 @@ class Client extends Component {
         return min;
     }
 
-    submitUserForm(){
+    submitClientForm(){
+        debugger
         console.log(this.client);
         if(this.client.name==='' || this.client.name === undefined){
             this.openNotificationWithIcon('error');
@@ -141,13 +143,13 @@ class Client extends Component {
     }
 
     updateClientForm(){
-        debugger;
+        
         this.props.updateClient(this.state.client);
         this.setState({isEditClientModalOpen: false});        
     }
 
     setClientId(id){
-        debugger
+        
         this.clientId = id;
     }
 
@@ -175,8 +177,8 @@ class Client extends Component {
         return this.state.isCreateClientFormOpen ? 
             <div className="col-sm-12 col-xs-12 pos-rel create-client-container top-margin10">
                 <h5 className="heading">Create New Client</h5>
-                <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateUserBox}/>
-                <CreateClientForm inputChangeHandler={this.inputChangeHandler} submitUserForm={this.submitUserForm} />
+                <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateClientBox}/>
+                <CreateClientForm closeCreateClientBox={this.closeCreateClientBox} inputChangeHandler={this.inputChangeHandler} submitClientForm={this.submitClientForm} />
             </div> 
         : null;
     }

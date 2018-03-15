@@ -54,7 +54,7 @@ class Permission extends Component {
     }
 
     savePermName(id, name){
-        debugger
+        
         this.props.hideEditPermissionBtn(id);
         this.props.saveEditedPermissionName({id, name});
         message.success('Permission name updated successfully');
@@ -114,7 +114,7 @@ class Permission extends Component {
     }
 
     selectRole(value, option){
-        debugger
+        
         let client = this.props.clients.clients.find(item=> item.name === value);
         this.permission.clientId = client._id;
         this.permission.clientName = client.name;
@@ -140,7 +140,7 @@ class Permission extends Component {
                                 </div>
                                 <div className="col-md-2 col-sm-2 col-xs-2">
                                     <button className="btn btn-primary hidden-xs" type="submit" onClick={this.createNewPermission}>Create</button>                                 
-                                    <span className="visible-xs"><i className="btn btn-sm btn-primary fa fa-plus" />  </span>
+                                    <span className="visible-xs"><i className="btn btn-sm btn-primary fa fa-plus" onClick={this.createNewPermission}/>  </span>
                                 </div>
                             
                         </div>

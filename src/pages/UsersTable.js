@@ -275,7 +275,7 @@ class UsersTable extends Component {
             return(
                     <div className="pull-left search-input-container">
                         <Tooltip title="Create New User" placement="right">
-					        <button className="btn btn-sm btn-success create-user-btn" onClick={this.openCreateUserBox}>
+					        <button className="btn btn-primary create-user-btn" onClick={this.openCreateUserBox}>
                                 <i className="fa fa-user-plus" />
                             </button> 
                         </Tooltip>
@@ -315,6 +315,8 @@ class UsersTable extends Component {
                     <div className="pull-right search-input-container">
 					    <input id="searchTheKey" placeholder="Search by Name" className="form-control" ref="pattern" onKeyUp={this.searchUsers.bind(this)}  type="text" ></input> 
 				    </div>
+                    <div className="clearfix" />
+                    <div className="table-responsive">
                     <table className="table table-striped">
                         <thead>
                             <tr>
@@ -328,6 +330,7 @@ class UsersTable extends Component {
                                 </th>
                                 <th>Email</th>  
                                 <th>Roles</th>
+                                <th>Group Roles</th>                                
                                 <th>
                                     Action    
                                 </th>                                                        
@@ -355,6 +358,7 @@ class UsersTable extends Component {
                         }
                         </tbody>
                     </table> 
+                    </div>
                     {
                         this.renderEditUserModal()
                     }  

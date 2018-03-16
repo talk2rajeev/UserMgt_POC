@@ -253,7 +253,7 @@ class Roles extends Component {
 
     renderCreateRoleForm(){
         return this.state.isCreateRoleFormOpen ? 
-            <div className="createRoleFormBox col-md-7">
+            <div className="createRoleFormBox col-md-7 col-sm-9 col-xs-12 ">
                 <h5>Create New Role</h5> 
                 <i className="fa fa-close close-createClient-icn" onClick={this.closeCreateRoleForm}/>
                 <div className="create-role-container row">

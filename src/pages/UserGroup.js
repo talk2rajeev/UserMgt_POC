@@ -357,7 +357,8 @@ class UserGroup extends Component {
 
     renderUserGrpTable() {
         return !this.state.isTransferCompOpen ?
-            <div className="col-md-7">
+        <div className="row">
+            <div className="col-md-7 col-sm-12 col-xs-12">
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -386,6 +387,7 @@ class UserGroup extends Component {
                     </tbody>
                 </table>
             </div>
+        </div>    
             : null
     }
 

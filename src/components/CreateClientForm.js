@@ -4,7 +4,7 @@ const CreateClientForm = (props) => {
  return(
    <div>
        <div className="row top-margin10">
-           <div className="col-md-8">
+           <div className="col-md-8 col-sm-12 col-xs-12">
                 <div className="top-margin15">
                     <input type="text" id="cname" name="name" placeholder="Client Name" onChange={(event)=>props.inputChangeHandler(event)} className="form-control required"/>
                 </div>

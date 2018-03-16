@@ -18,6 +18,9 @@ const UserTableRow = (props) => {
         }
       </td>
       <td>
+        <RoleNameTag name="group-role" data_id="" href="#" id="" />
+      </td>
+      <td>
           <i className="fa fa-pencil  " onClick = {()=>props.openUserEditModal(event, props.user)} />&nbsp;&nbsp;&nbsp;&nbsp;
           <Popconfirm title="Are you sure to delete the user?" onConfirm={ (events)=>props.confirm(event) } onCancel={(event)=>props.cancel(event)} okText="Yes" cancelText="No">
             <i className="fa fa-trash" data-userid={props.user._id}  onClick={(event)=>props.deleteUser(event)}/>

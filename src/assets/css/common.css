@@ -112,6 +112,12 @@ hr{
 .top-margin25{
     margin-top: 25px;
 }
+.border-light{
+    border: 1px solid #cdcdcd;
+} 
+.pad20{
+    padding: 20px;
+}
 
 .clearfix{
     clear: both;
@@ -139,6 +145,10 @@ div[class*='col-']{
     }
     .create-user-box{
         width: 100% !important;
+    }
+    .dropdown-bx{
+        width: 100!important;
+        right: 20 !important;
     }
     
 }

@@ -133,15 +133,22 @@ function reLoadUserList(){
     return axios.get(url);
 };
 
-export const createNewUser = (user) => dispatch => {
+export const createNewUser = (user) => (dispatch, getState) => {
 
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.user.create}`;    
     axios.post(url, user).then((response) => {
+        
+        let pagination = getState().pagination;
         reLoadUserList().then(result => {
-            dispatch( ({type: GET_USERLIST, users: result.data, originalUsers: result.data}) )            
+            let pageTotal = getPageTotal(result.data);
+            var res = JSON.stringify(result.data);
+            dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+            let pageChunk = getpageChunk(result.data, pagination); 
+            dispatch( ({type: GET_USERLIST, users: pageChunk, originalUsers: JSON.parse(res) }) );           
         }).catch((err) => {
             console.error.bind(err);
         });
+
     }).catch((err) => {
         console.error.bind(err);
     })
@@ -289,16 +296,27 @@ export const submitEditedUser = () => (dispatch, getState) => {
 /*
 User Group
 */
-export const getUserGroups = () => dispatch => {
+export const getUserGroups = () => (dispatch, getState) => {
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.getall}`;
     
-    reloadUserGroup()
-      .then((response) => {
-        dispatch( ({type: GET_USERGROUPLIST, userGroups: response.data, originalUserGroups: response.data}) )
-      })
-      .catch((err) => {
+    reloadUserGroup().then(result => {
+        let pagination = getState().pagination;
+        let pageTotal = getPageTotal(result.data);
+        var res = JSON.stringify(result.data);
+        dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+        let pageChunk = getpageChunk(result.data, pagination); 
+        dispatch( ({type: GET_USERGROUPLIST, userGroups: pageChunk, originalUserGroups: JSON.parse(res) }) )
+    }).catch((err) => {
         console.error.bind(err);
     })
+
+    // reloadUserGroup()
+    //   .then((response) => {
+    //     dispatch( ({type: GET_USERGROUPLIST, userGroups: response.data, originalUserGroups: response.data}) )
+    //   })
+    //   .catch((err) => {
+    //     console.error.bind(err);
+    // })
 };
 
 
@@ -311,18 +329,19 @@ export const getUserGroups = () => dispatch => {
 
 
  export function editGroup(group){
-    
+    //debugger
     return function(dispatch){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.update}${group._id}`;  
         axios.put(url, group)
         .then((response) => {
-            reloadUserGroup()
-            .then((result) => {
-                dispatch( ({type: GET_USERGROUPLIST, userGroups: result.data, originalUserGroups: result.data}) );
-                message.success('UserGroup Created successfully');          
-                
-              })
-              .catch((err) => {
+            reloadUserGroup().then(result => {
+                let pagination = getState().pagination;
+                let pageTotal = getPageTotal(result.data);
+                var res = JSON.stringify(result.data);
+                dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+                let pageChunk = getpageChunk(result.data, pagination); 
+                dispatch( ({type: GET_USERGROUPLIST, userGroups: pageChunk, originalUserGroups: JSON.parse(res) }) )
+            }).catch((err) => {
                 console.error.bind(err);
             })
         })
@@ -366,7 +385,7 @@ export const getUserGroups = () => dispatch => {
  
 export function createNewGroup(group){
     
-    return function(dispatch){
+    return function(dispatch, getState){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.create}`;   
         axios.post(url, group)
         .then((response) => {
@@ -386,8 +405,22 @@ export function createNewGroup(group){
     
 };
 
+export const searchFromUserGroup = (pattern) => (dispatch, getState) => {
+    let userGroups = getState().usergroupslist;    
+    let searchedResult = searchInUserGroup(pattern, userGroups.originalUsergroups);
+    dispatch( ({type: GET_USERGROUPLIST, userGroups: searchedResult, originalUserGroups: userGroups.originalUsergroups }) )        
+}
 
-
+function searchInUserGroup(pattern, usergroups){
+    let result = [];
+    result = usergroups.filter((item)=>{
+        return item.name.toLowerCase().includes(pattern.toLowerCase()) ||
+        item.role.find((role)=>{
+            return role.name.toLowerCase().includes(pattern.toLowerCase())
+        })
+    });
+    return result;
+}
 
 
 

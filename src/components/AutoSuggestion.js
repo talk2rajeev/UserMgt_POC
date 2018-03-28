@@ -15,7 +15,7 @@ const getDataSource = (rawDataSource) => {
 const AutoSuggestion = (props) => {
 
   let data = props.data !== undefined && props.data.length > 0 ? getDataSource(props.data) : getDataSource(rawDataSource);
-  let placeholder = props.placeholder || 'Plea Select';
+  let placeholder = props.placeholder || 'Please Select';
 
   return (
     <AutoComplete

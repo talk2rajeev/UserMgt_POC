@@ -35,7 +35,10 @@ class Client extends Component {
         this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
         this.hrsToMinute = this.hrsToMinute.bind(this);
         this.validateMinute = this.validateMinute.bind(this);
-
+        this.getHr = this.getHr.bind(this);
+        this.getMin = this.getMin.bind(this);
+        this.copyToClipboard = this.copyToClipboard.bind(this);
+            
         this.state = {isCreateClientFormOpen: false, isEditClientModalOpen: false};
         this.client = {};
         this.clientId = null;
@@ -64,6 +67,7 @@ class Client extends Component {
     clearClientForm(){
         document.getElementById('cname').value = '';        
         document.getElementById('redirectUrl').value = '';
+        document.getElementById('logoutUrl').value = ''
         document.getElementById('at_h').value = '';
         document.getElementById('at_m').value = '';
         document.getElementById('rt_h').value = '';
@@ -80,8 +84,8 @@ class Client extends Component {
 
     hrsToMinute(hrs){
         
-        let hr;
-        if(hrs===undefined || parseInt(hrs) === NaN){
+        let hr=hrs;
+        if(hrs===undefined || parseInt(hrs) === NaN || hrs===''){
             return 0; 
         }
         if(parseInt(hrs) < 0){
@@ -93,7 +97,7 @@ class Client extends Component {
     validateMinute(mins){
         
         let min = mins;
-        if(mins===undefined || parseInt(mins) === NaN){
+        if(mins===undefined || parseInt(mins) === NaN || mins === ''){
             return 0; 
         }
         if(parseInt(mins) < 0){
@@ -102,8 +106,19 @@ class Client extends Component {
         return min;
     }
 
-    submitClientForm(){
+    copyToClipboard(value, type){
         debugger
+        if(type === 'id'){
+            document.getElementById('id').select();
+            document.execCommand("Copy");
+        } 
+        if(type === 'secret'){
+            document.getElementById('secret').select();
+            document.execCommand("Copy");
+        }
+    }
+
+    submitClientForm(){
         console.log(this.client);
         if(this.client.name==='' || this.client.name === undefined){
             this.openNotificationWithIcon('error');
@@ -114,19 +129,35 @@ class Client extends Component {
             c.name = this.client.name || '';
             c.redirectUrl = this.client.redirectUrl || '';
             c.logoutURI = this.client.logoutURI || '';
-            c.refreshToken = (parseInt(this.hrsToMinute(this.client.refreshTokenLifeTime_hh))  + parseInt(this.validateMinute(this.client.refreshTokenLifeTime_mm))).toString();
-            c.accessToken = (parseInt(this.hrsToMinute(this.client.AccessTokenLifeTime_hh)) + parseInt(this.validateMinute(this.client.AccessTokenLifeTime_mm))).toString();
+            c.refreshToken = (parseInt(this.hrsToMinute(this.client.refreshTokenLifeTime_hh || 0))  + parseInt(this.validateMinute(this.client.refreshTokenLifeTime_mm || 0))).toString();
+            c.accessToken = (parseInt(this.hrsToMinute(this.client.AccessTokenLifeTime_hh || 0)) + parseInt(this.validateMinute(this.client.AccessTokenLifeTime_mm || 0))).toString();
             c.description = this.client.description || '';
-
             this.props.createClient(c);
             this.clearClientForm();
+            this.client = {};
         }    
     }
 
     openEditClientModal(client){
         this.client = client;
-        this.setState({client: client});
-        this.setState({isEditClientModalOpen: true});
+       // this.setState({client: client});
+       this.setState({isEditClientModalOpen: true});
+        //if(this.state.isEditClientModalOpen){
+          //  let clientNew = {...this.state.client};
+          let clientNew = client;
+          
+            let refreshTokenHr=this.getHr(client.refreshToken);
+            let refreshTokenMin=this.getMin(client.refreshToken);
+            let accessTokenHr=this.getHr(client.accessToken);
+            let accessTokenMin=this.getMin(client.accessToken);
+    
+            clientNew["refreshTokenHr"] = refreshTokenHr;
+            clientNew["refreshTokenMin"] = refreshTokenMin;
+            clientNew["accessTokenHr"] = accessTokenHr;
+            clientNew["accessTokenMin"] = accessTokenMin;
+            
+            this.setState({client:clientNew});
+        //   }
     }
 
     closeEditClientModal(){
@@ -134,17 +165,31 @@ class Client extends Component {
     }
 
     inputEditClientChangeHandler(event){
+        
         let client = {...this.state.client};
         let name = event.target.name;
         let value = event.target.value;
-
+        if(event.target.name=='AccessTokenLifeTime_hh')
+           client['accessTokenHr'] = value;
+        if(event.target.name=='AccessTokenLifeTime_mm')
+        client['accessTokenMin'] = value;
+        if(event.target.name=='refreshTokenLifeTime_hh')
+        client['refreshTokenHr'] = value;
+        if(event.target.name=='refreshTokenLifeTime_mm')
+        client['refreshTokenMin'] = value;   
+          
         client[name] = value;
         this.setState({client});
     }
 
     updateClientForm(){
         
-        this.props.updateClient(this.state.client);
+        let clientToUpdate = this.state.client;
+        
+        clientToUpdate['refreshToken'] = (parseInt(this.hrsToMinute(clientToUpdate.refreshTokenHr || 0))  + parseInt(this.validateMinute(clientToUpdate.refreshTokenMin || 0))).toString();
+        clientToUpdate['accessToken'] = (parseInt(this.hrsToMinute(clientToUpdate.accessTokenHr || 0)) + parseInt(this.validateMinute(clientToUpdate.accessTokenMin || 0))).toString();
+       // this.props.updateClient(this.state.client);
+       this.props.updateClient(clientToUpdate);
         this.setState({isEditClientModalOpen: false});        
     }
 
@@ -182,14 +227,48 @@ class Client extends Component {
             </div> 
         : null;
     }
-
+     getMin(mins){
+        let min = mins;
+        let hrMins='';
+        if(mins===undefined || parseInt(mins) === NaN || mins === ''){
+            return 0; 
+        }
+        if(parseInt(mins) < 0){
+            min = mins * -1;
+        }
+        if(parseInt(mins) > 0){
+            //hrMins =Math.floor( mins / 60);
+            hrMins = mins % 60;
+        }
+        return hrMins;
+    }
+    getHr(mins){
+        let min = mins;
+        let hrMins='';
+        if(mins===undefined || parseInt(mins) === NaN || mins === ''){
+            return 0; 
+        }
+        if(parseInt(mins) < 0){
+            min = mins * -1;
+        }
+        if(parseInt(mins) > 0){
+            hrMins =Math.floor( mins / 60);
+           // hrMins = mins % 60;
+        }
+        return hrMins;
+    }
     renderEditClientForm(){
+       // let {name, redirectUrl, logoutURI, refreshToken, accessToken, clientId} = this.state.client;
+     
+        //accessToken=HrMin(accessToken);
+        //{parseInt(accessToken.split('-')[0])}
         return this.state.isEditClientModalOpen ? 
             <EditClientModal 
                 client={this.state.client}
                 closeEditClientModal = {this.closeEditClientModal}
                 inputEditClientChangeHandler  = {this.inputEditClientChangeHandler}  
                 updateClientForm = {this.updateClientForm}
+                copyToClipboard = {this.copyToClipboard}
             />
             : null
     }

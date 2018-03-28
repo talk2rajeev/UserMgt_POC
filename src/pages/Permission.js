@@ -68,7 +68,11 @@ class Permission extends Component {
         let permission_name = this.refs.permission_name.value;
         if(permission_name.length !== 0){
             this.permission.name = permission_name;
-            this.props.createNewPermission(this.permission);       
+            this.props.createNewPermission(this.permission); 
+            this.closePermissionForm() ;
+            setTimeout(()=>{
+                this.openPermissionForm();
+            },10);     
         }else{
             this.openNotificationWithIcon('error');
         }
@@ -151,18 +155,19 @@ class Permission extends Component {
                         <i className="fa fa-close close-createClient-icn" onClick={this.closePermissionForm}/>
                         <div className="row">
                             
-                                <div className="col-md-5 col-sm-5 col-xs-5">
-                                    <AutoSuggestion placeholder="Select Client" 
+                                <div className="col-md-6 col-sm-12 col-xs-12">
+                                    <AutoSuggestion 
+                                        placeholder="Select Client" 
                                         data={this.processClientData(  this.props.clients.clients )} 
                                         selectRole={this.selectRole} 
                                     />
                                 </div>                                   
-                                <div className="col-md-5 col-sm-5 col-xs-5">
+                                <div className="col-md-6 col-sm-12 col-xs-12">
                                     <input type="text" ref="permission_name" placeholder="Permission Name" className=" form-control"  />       
                                 </div>
-                                <div className="col-md-2 col-sm-2 col-xs-2">
-                                    <button className="btn btn-primary hidden-xs" type="submit" onClick={this.createNewPermission}>Create</button>                                 
-                                    <span className="visible-xs"><i className="btn btn-sm btn-primary fa fa-plus" onClick={this.createNewPermission}/>  </span>
+                                <div className="col-md-12 col-sm-12 col-xs-12 top-margin15">
+                                    <button className="btn btn-primary pull-right" type="submit" onClick={this.createNewPermission}>Create</button>                                  
+                                    <button className="btn btn-default pull-right" type="submit" onClick={this.closePermissionForm} style={{'marginRight': '7px'}}>Cancel</button>                                                                     
                                 </div>
                             
                         </div>
@@ -182,7 +187,8 @@ class Permission extends Component {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <td>Permission Name</td>                              
+                                        <td>Permission Name</td>  
+                                        <td>Client</td>                            
                                         <td>Action</td>                              
                                     </tr>
                                 </thead>
@@ -194,10 +200,13 @@ class Permission extends Component {
                                                 <tr key={i}>
                                                     <td>
                                                         <Tooltip title="Click to edit Permission name" placement="top">
-                                                        <input onChange={this.permissionNameChangeHandler} type="text" data-permid={item.id} value={item.name} placeholder="Permission Name/Code" className="form-control form-control-inline no-input"  />
+                                                        <input onChange={this.permissionNameChangeHandler} type="text" data-permid={item.id} value={item.name} placeholder="Permission Name/Code" className="form-control1 no-input"  />
                                                         </Tooltip>
-                                                        <i className={"fa fa-check edit-perm-btn "+(item.edited ? 'show': 'hide')} onClick={()=>this.savePermName(item.id, item.name)}/>
+                                                        <i className={"fa fa-check edit-perm-btn "+(item.edited ? 'showInline': 'hide')} onClick={()=>this.savePermName(item.id, item.name)}/>
                                                         
+                                                    </td>
+                                                    <td>
+                                                        {item.clientName}
                                                     </td>
                                                     <td>
                                                         <Popconfirm title="Are you sure to delete this Permission?" onConfirm={ (event)=>{this.confirm(event)} } onCancel={ (event)=>{this.cancel(event)} } okText="Yes" cancelText="No">
@@ -212,8 +221,10 @@ class Permission extends Component {
                             </table> 
                         </div> 
                     </div>  
-                    <div className="pagination" style={{'width':'57.5%'}}>
-                        <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                    <div className=" col-lg-7 col-md-7 col-sm-12 col-xs-12" >
+                        <div className="pull-right">            
+                            <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                        </div>            
                     </div> 
                 </div>
             )    

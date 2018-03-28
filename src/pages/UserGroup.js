@@ -1,88 +1,72 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUserGroups, getUsers, editGroup,removeUserGroup, openTransferUserGroup, openModal, closeModal, selectUser, sortUser, searchGroupUsers } from '../store/actions';
-import UserGroupRow from '../components/UserGroupRow.jsx';
-import { Popconfirm, message ,notification, Tooltip} from 'antd';
-//import EditUserModal from '../components/EditUserModal';
+import { getUserGroups, getPagination, setPageNumber, searchFromUserGroup, getUsers, editGroup, removeUserGroup, getRoles, createNewGroup, openTransferUserGroup, openModal, closeModal, selectUser, sortUser, searchGroupUsers } from '../store/actions';
+import UserGroupTable from '../components/UserGroupTable.jsx';
+import { Popconfirm, message ,notification, Tooltip, Pagination} from 'antd';
 import TransferUserToGroup from '../components/TransferUserToGroup';
-import { getRoles, createNewGroup } from '../store/actions';
-import AutoSuggestionRoles from '../components/AutoSuggestionRoles';
 import LineSeparator from '../components/LineSeparator';
 import SelectTags from '../components/SelectTags';
 import EditUserGroupModal from '../components/EditUserGroupModal';
-
-
-var userGroupTableShow = true;
-var editmode = false;
-var userGroup = { targetKeys: [], GroupName: "" };
+import AutoSuggestion from '../components/AutoSuggestion';
 
 
 class UserGroup extends Component {
     constructor(props) {
         super(props);
-        this.setDataId = this.setDataId.bind(this);
-        this.selectRole = this.selectRole.bind(this);
+
+        this.openCreateUserGroupForm = this.openCreateUserGroupForm.bind(this);
+        this.closeCreateUserGroupForm = this.closeCreateUserGroupForm.bind(this);        
+        this.renderCreateUserGroupBtn = this.renderCreateUserGroupBtn.bind(this);
+        this.renderCreateUserGroupForm = this.renderCreateUserGroupForm.bind(this);
+        this.renderEditableUserGroupModal = this.renderEditableUserGroupModal.bind(this);        
+        this.confirmUserGroupDelete = this.confirmUserGroupDelete.bind(this);
+        this.cancelUserGroupDelete  = this.cancelUserGroupDelete.bind(this);
+        this.setUserGroupIdToDelete = this.setUserGroupIdToDelete.bind(this);
+        this.childInputEditHandler  = this.childInputEditHandler.bind(this);
+        this.openEditUserGroupModal = this.openEditUserGroupModal.bind(this);
+        this.closeEditUserGroupModal= this.closeEditUserGroupModal.bind(this);
+        this.updateEditedUserGroup  = this.updateEditedUserGroup.bind(this);
         this.groupNameHandler = this.groupNameHandler.bind(this);
-        this.removeFromRoleList = this.removeFromRoleList.bind(this);
-        this.submitGroupHandler = this.submitGroupHandler.bind(this);
-        this.renderTransferCOmp = this.renderTransferCOmp.bind(this);
-        this.showCreateUGBox = this.showCreateUGBox.bind(this);
-        this.closeCreateUGBox = this.closeCreateUGBox.bind(this);
-        this.getMockData = this.getMockData.bind(this);
-        this.processRolesData = this.processRolesData.bind(this);
+        this.selectUserFromAutoComplete = this.selectUserFromAutoComplete.bind(this);
+        this.selectUserFromEditAutoComplete = this.selectUserFromEditAutoComplete.bind(this);
+        this.getStringArrayOfUsers = this.getStringArrayOfUsers.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.renderCreateUGForm = this.renderCreateUGForm.bind(this);
-        this.renderUserGrpTable = this.renderUserGrpTable.bind(this);
-        this.renderCreateUgBtn = this.renderCreateUgBtn.bind(this);
-        this.openNotificationWithIcon = this.openNotificationWithIcon.bind(this);
-        this.transferHandleChange = this.transferHandleChange.bind(this);
-        this.closeEditableUGModal = this.closeEditableUGModal.bind(this);
-        this.handleEditableRoleChange = this.handleEditableRoleChange.bind(this);
-        this.updateEditedUG = this.updateEditedUG.bind(this);
-        this.childInputChangehandler = this.childInputChangehandler.bind(this);
-        this.cancelUGDelete = this.cancelUGDelete.bind(this);
-        this.confirmUGDelete = this.confirmUGDelete.bind(this);
+        this.submitGroupForm = this.submitGroupForm.bind(this);
+        this.getPaginatedLocalUsers = this.getPaginatedLocalUsers.bind(this);
+        this.onPagination = this.onPagination.bind(this);
+        this.prev = this.prev.bind(this);
+        this.next = this.next.bind(this);
+        this.removeUserFromUserGroupForm = this.removeUserFromUserGroupForm.bind(this);
+        this.removeUserFromEditUserGroupForm = this.removeUserFromEditUserGroupForm.bind(this);
+        this.searchInputHandler = this.searchInputHandler.bind(this);
+        
+        this.clearCreateUserGroupForm = this.clearCreateUserGroupForm.bind(this);
 
-        this.toggleOpen = false;
-        this.UG = this.props.usergroups;
-        this.user =[];
-        this.UgToDelte = null;
-        this.state = { id: 0, 
-                       group: { 'name': '', 'role': [], 'user': [] }, 
-                       isTransferCompOpen: false, 
-                       userGroupName: "", 
-                       userGroupRow: {},
-                       isUgEditModalOpen: false,
-                       user: [] 
-                    }
+        this.state= { isUserGroupFormOpen: false, 
+                      isEditUserGroupModalOpen: false, 
+                      selectedUserGroup: {}, 
+                      newUserGroup: {name: '', user: [], role: []},
+                      paging: {current: 1, totalPage: 1},
+                      usersChunk: [],
+                      roles: []
+                    };
+        this.groupId = null;
+        this.newUserGroup = {name: '', user: [], role: []};
+        //{ 
+            //"name":"UG2", 
+            //"user":[{"id":"5aacb553d4c6ce2fde66fdfa", "firstName":"Rajeev", "lastName":"Sharma"}], 
+            //"role":[{"id":"5aacb402d4c6ce2fde66fdf7","name":"Role-1"}]
+        //}
     }
+    
     componentDidMount() {
-
-        this.props.getUserGroups();
         this.props.getUsers();
-        this.removeUserGroup = this.removeUserGroup.bind(this);
-        this.editUser = this.editUser.bind(this);
-        this.props.getRoles();
+        this.props.getRoles();   
+        this.props.getUserGroups();
     }
 
-    getMockData() {
 
-        var mockData = [];
-        if (this.props.userlist != undefined) {
-            this.props.userlist.map((item, i) => {
-
-
-                mockData.push({
-                    key: item._id.toString(),
-                    title: item.firstName + " " + item.lastName
-                });
-
-            })
-        }
-        console.log("mockData.lengthhhhhhhhhhhhhhhhhhhggggggggggggg", mockData);
-        return mockData;
-    }
     
     openNotificationWithIcon(type){
         notification[type]({
@@ -90,36 +74,10 @@ class UserGroup extends Component {
           description: 'UserGroup name  is mandatory.',
         });
     }
-    submitGroupHandler() {
-        if(this.refs.groupname.value==='')
-        {
-            this.openNotificationWithIcon('error');
-            
-        }else{
-            
-           // this.user ko set karo
-        var group = { ...this.state.group }
-        group.user = this.user;
-        //this.setState({ group });
-        this.props.createNewGroup(group);
-        //this.props.getUserGroups();
-        this.setState({group, isTransferCompOpen:false})
-        } 
-        
-    }
     
-    editUser(userGroup) {
-            let group = {...this.state.group};
-            
-            group  = userGroup;
-            this.setState({group, isUgEditModalOpen: true});
-    }
-
-    closeEditableUGModal(){
-            this.setState({ isUgEditModalOpen: false });
-    }
 
     childInputChangehandler(event){
+        
             let value = event.target.value;
             console.log('user Group name', value);
             let group = {...this.state.group};
@@ -128,273 +86,325 @@ class UserGroup extends Component {
     }
 
     handleEditableRoleChange(value, option){
-            console.log('selected value ', value);
-
-
+            
+            //handleChange(value, option);
             event.preventDefault();
             
-            var group = {...this.state.group};
+            var {selectedUserGroup} = {...this};
             let roles=[];
             for (let i = 0; i < value.length; i++) {
-                var  roleIdName=this.props.roles.roles.find((item)=>{
-                        if (item.name===value[i])
+                var  roleIdName=this.roles.find((item)=>{
+                    if (item.name===value[i])
                         roles.push({id: item._id, name: item.name});
-                        })   
+                })   
             }    
-            group.role=roles;
-            this.setState({group});
-        
-            
+            selectedUserGroup.role=roles;
+            this.selectedUserGroup=selectedUserGroup;
+             
     }
 
-    updateEditedUG(){
+    childInputEditHandler(event){
         
-        this.props.editGroup(this.state.group);
-        this.setState({ isUgEditModalOpen: false });
+        let value = event.target.value;
+        let name  = event.target.name;
+        var {selectedUserGroup} = {...this.state};
+        selectedUserGroup.name = value;
+        this.setState({selectedUserGroup});        
+    }
+
+    openEditUserGroupModal(item){
+        let usersChunk = item.user;
+        this.setState({ selectedUserGroup: item, usersChunk, isEditUserGroupModalOpen: true});
     }
     
-    renderEditableUGModal(){
-        return this.state.isUgEditModalOpen ? 
-                            <EditUserGroupModal 
-                                closeEditableUGModal = { this.closeEditableUGModal }
-                                childInputChangehandler = { this.childInputChangehandler }
-                                handleEditableRoleChange = { this.handleEditableRoleChange }
-                                updateEditedUG = { this.updateEditedUG }
-                                usergroup = {this.state.group}
-                                roles = {this.props.roles.roles}
-                                transferHandleChange={this.transferHandleChange} 
-                                isTransferOpen={true} 
-                                mockdataa={this.getMockData()} 
-                                userGroupName={this.state.userGroupName} 
-                                userGroupRow={this.state.group} 
-                            
-                            />
-                            : null
+    closeEditUserGroupModal(){
+        this.setState({isEditUserGroupModalOpen: false, usersChunk:[]});
     }
 
-    confirmUGDelete(event){
-        this.props.removeUserGroup(this.UgToDelte);
-        message.success('User Group Deleted Succesfully');
+    
+
+    updateEditedUserGroup(){
+        
+        this.props.editGroup(this.state.selectedUserGroup);
+        this.setState({isEditUserGroupModalOpen: false, usersChunk:[]});
     }
 
-    cancelUGDelete(event){
+    confirmUserGroupDelete(event){
+        this.props.removeUserGroup(this.groupId);
+    }
+
+    cancelUserGroupDelete(event){
         message.error('Delete Operation cancelled');
     }
 
-    setDataId(e, id) {
-        //set rowIdentifier
-        e.preventDefault();
-        this.setState({ id: id });
+    setUserGroupIdToDelete(id){
+        this.groupId = id;    
     }
 
-    removeUserGroup(id, index) {
-        this.UgToDelte = id;
-        /*var c = confirm("Are you sure to delete the usergroup?");
-        this.setState({ isTransferCompOpen: false });
-        if (c) {
-            this.props.removeUserGroup(id);
-            this.setState({ isTransferCompOpen: true, userGroupRow: {}, userGroupName: "" });
-            this.closeTransfer();
-        }
-        */
+    openCreateUserGroupForm(){
+        this.setState({ isUserGroupFormOpen: true });
     }
 
-    selectRole(value, option) {
-        console.log('selected from parent: ', value, option);
-        event.preventDefault();
-        var group = { ...this.state.group };
-        var roleOfUG = group.role;
-        var roleIds = group.role.map((item) => {
-            if (item.name != '')
-                return item.name;
-        })
-        roleIds.includes(value) !== true ? roleOfUG.push({ id: "11111", name: value }) : null;
-        this.setState({ group });
+    closeCreateUserGroupForm(){
+        this.setState({ isUserGroupFormOpen: false, usersChunk: [], newUserGroup: {name: '', user: [], role: []} });
     }
 
-    removeFromRoleList(event, item) {
-        event.preventDefault();
-        console.log(event, item, event.target.dataset.itemname);
-        var group = { ...this.state.group };
-        let newroles = group.role;
-        newroles = newroles.filter((val) => {
-            return event.target.dataset.itemname === val.name ? false : true;
+    onPagination(page){
+        this.setState({
+          current: page,
         });
-        group.role = newroles;
-        console.log('new perms: ', newroles);
-        this.setState({ group });
-    }
-    groupNameHandler() {
-        let groupname = this.refs.groupname.value;
-        console.log('- ', groupname)
-        var group = { ...this.state.group }
-        group.name = groupname;
-        this.setState({ group });
+        this.props.setPageNumber(page);
+        this.props.getUserGroups();    
     }
 
-    renderTransferCOmp() {
-        
-        return (
-            <TransferUserToGroup 
-                transferHandleChange={this.transferHandleChange} 
-                isTransferOpen={true} 
-                mockdataa={this.getMockData()} 
-                userGroupName={this.state.userGroupName} 
-                targetKeys={this.state.group.user} 
-                userGroupRow={[]}
-                type="create"
-            />
-        )
-    }
-
-    transferHandleChange(nextTargetKeys, direction, moveKeys) {
-        
-        console.log('targetKeys: ', nextTargetKeys);
-        let users = [];
-        for (let i = 0; i < nextTargetKeys.length; i++) {
-            let a=this.props.userlist.find((item) => {
-                if(item._id==nextTargetKeys[i])
-                return item;
-            });
-            users.push({
-                id: nextTargetKeys[i],
-                firstName: a.firstName,
-                lastName: a.lastName
-            });
-        }
-        this.user = users;
-        let group = {...this.state.group};
-        group.user = this.user;
-        this.setState({group});
-      }
-
-
-    handleChange(value, option) {
-        //select role callback from CreateUserForm component
-        
-        //let roles = this.props.roles.roles;
-
-        //
-            console.log('selected from parent: ', value, option);
-            
-            event.preventDefault();
-            
-            var group = {...this.state.group};
-           // var roleOfUG=group.role;
-     
-     let roles=[];
-        for (let i = 0; i < value.length; i++) {
-               var  roleIdName=this.props.roles.roles.find((item)=>{
-                    if (item.name===value[i])
-                    roles.push({id: item._id, name: item.name});
-                    //  return item;
-                    })    
-          //  const roleIds = {...group.roles.name};
-           // roleIdName.includes(value) !== true ? roleOfUG.push({id:"11111",name:value}) : null;
-        }    
-        group.role=roles;
-            this.setState({group});
-        //
-        //this.user.roles = getRoleArray(roles, value);
-
-    }
-
-    showCreateUGBox() {
-        
-        var group = { ...this.state.group }
-        group.user = [];
-       // this.setState({ group });
-        this.setState({ isTransferCompOpen: true, group});
-
-    }
-
-    closeCreateUGBox() {
-
-        this.setState({ isTransferCompOpen: false });
-    }
-
-    processRolesData(roles) {
-       
-        let perms = [];
-        if (this.props.roles.roles !== undefined) {
-            perms = this.props.roles.roles.map((item) => {
-                return item.name;
-            })
-            return perms;
-        }
-        return [];
-    }
-
-    renderCreateUGForm() {
-        return this.state.isTransferCompOpen ?
+    renderCreateUserGroupForm() {
+        return this.state.isUserGroupFormOpen ?
             <div id="collapsible-container-create-usergroup" className="collapsible-container create-usergroup">
-                <h5 className="heading" style={{'padding':'8px 0 0 35px'}}>Create New User Group</h5>
-                <i className="fa fa-close close-bx-icn" onClick={this.closeCreateUGBox} />
-                <div className="create-role-container row" style={{'padding':'10px 0'}}>
-                    <div className="col-md-7 row" style={{'marginLeft':'20px'}}>
-                        <div className="col-md-12" style={{ 'height': '40px' }}>
-                            <input type="text" style={{'width': '97%'}} placeholder="New User Group" onChange={this.groupNameHandler} ref="groupname" className="form-control" />
+                <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12 pad20 border-light">
+                    <h5 className="heading">Create New User Group</h5>
+                    <i className="fa fa-close close-bx-icn" onClick={this.closeCreateUserGroupForm} />
+                    <div className="create-role-container row" style={{'padding':'10px 0'}}>
+                        <div className="row" style={{'marginLeft':'0px'}}>
+                            <div className="col-md-12 col-sm-12 col-xs-12" style={{ 'height': '40px' }}>
+                                <input type="text" style={{'width': '97%'}} placeholder="UserGroup Name" onChange={this.groupNameHandler} ref="groupname" className="form-control" />
+                            </div>
+                            <div className="col-md-12  col-sm-12 col-xs-12 ant-select-container" style={{ 'position': 'relative', 'height': '40px' }}>
+                                <SelectTags 
+                                    placeholder="Roles" 
+                                    data={this.props.roles.roles ? this.props.roles.roles : []} 
+                                    defaultData={this.newUserGroup.role} 
+                                    handleChange={this.handleChange} 
+                                />
+                            </div>
+                            <div className="col-md-12  col-sm-12 col-xs-12 assign_usr_blk" style={{'width': '97%'}}>
+                                <h5>Assign Users to User Group</h5>
+                                <AutoSuggestion 
+                                    placeholder="Select User" 
+                                    data={ this.getStringArrayOfUsers(this.props.userlist) }
+                                    selectRole={this.selectUserFromAutoComplete} 
+                                />
+                                <div className="top-margin10">
+                                {
+                                    this.state.usersChunk.length ? 
+                                    <table className="table table-condensed">
+                                        <thead style={{'background':'rgb(142, 204, 245)'}}>
+                                            <tr>
+                                                <th>FirstName</th>
+                                                <th>LastName</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                 
+                                                this.state.usersChunk.map((item, i)=>{
+                                                    return(
+                                                        <tr key={i}>
+                                                            <td>{item.firstName}</td>
+                                                            <td>{item.lastName}</td>
+                                                            <td>
+                                                                <i className="fa fa-close" style={{'color':'red'}} 
+                                                                   onClick={()=>this.removeUserFromUserGroupForm(item)}/>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                                
+                                            }
+                                            
+                                        </tbody>
+                                    </table>
+                                    : null 
+                                }                                   
+                                </div>
+                            </div>
+                            <div className="clearfix" />
+                            
+                            <div className="createRoleBox-row top-margin10" style={{ 'padding': '5px 10px' }}>
+                                <button id="createEdit-Group" style={{'marginRight': '20px'}} onClick={this.submitGroupForm} className="btn btn-primary btn-sm pull-right">
+                                    Create Group
+                                </button>
+                                <button id="createEdit-Group" style={{'marginRight': '10px'}} onClick={this.closeCreateUserGroupForm} className="btn btn-default btn-sm pull-right">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div className="clearfix" />
                         </div>
-                        <div className="col-md-12 ant-select-container" style={{ 'position': 'relative', 'height': '40px' }}>
-                            <SelectTags placeholder="Please select Roles" data={this.props.roles.roles ? this.props.roles.roles : []} defaultData={[]} handleChange={this.handleChange} />
-                        </div>
-                        <div className="clearfix" />
-                        <div className="col-md-12">
-                            <h5>Assign Users to User Group</h5>
-                            {this.renderTransferCOmp()}
-                        </div>
-                        <div className="createRoleBox-row" style={{ 'padding': '5px 10px' }}>
-                            <button id="createEdit-Group" onClick={this.submitGroupHandler} className="btn btn-sm btn-primary">
-                                Create Group <i className="fa fa-plus" />
-                            </button>
-                        </div>
-                        <div className="clearfix" />
                     </div>
                 </div>
             </div>
             : null
     }
 
-    renderUserGrpTable() {
-        return !this.state.isTransferCompOpen ?
-        <div className="row">
-            <div className="col-md-7 col-sm-12 col-xs-12">
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                <span>GroupName</span>
-                            </th>
-                            <th>Role</th>
-                            <th>Permissions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.props.usergroups.length !== 0 ?
-                                this.props.usergroups.map((item, i) => {
-                                    return (
-                                        <UserGroupRow key={i}
-                                            editUser={(ug) => this.editUser(ug)} 
-                                            usergroups={item} key={i} index={i} 
-                                            removeUserGroup={this.removeUserGroup}
-                                            confirmUGDelete = { this.confirmUGDelete }
-                                            cancelUGDelete  = { this.cancelUGDelete }
-                                        />
-                                    )
-                                }) : null
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>    
-            : null
+    
+
+    prev(){
+        let paging = {...this.state.paging};
+        paging.current >= 1 ? --paging.current : paging.current;
+        this.setState({paging});
     }
 
-    renderCreateUgBtn(){
-        return !this.state.isTransferCompOpen ? 
+    next(){
+        let paging = {...this.state.paging};
+        paging.totalPage < paging.current ? ++paging.current : paging.current;
+        this.setState({paging});
+    }
+
+    removeUserFromEditUserGroupForm(user){
+        console.log(user);
+        
+        let newUser = [];
+        let selectedUserGroup = {...this.state.selectedUserGroup};
+        newUser = selectedUserGroup.user.filter(item=>{
+            return item.id !== user.id;
+        });
+        selectedUserGroup.user = newUser;
+        let usr = JSON.stringify(selectedUserGroup.user);
+        let usersChunk = this.getPaginatedLocalUsers(JSON.parse(usr));
+        this.setState({selectedUserGroup, usersChunk});
+        
+    }
+
+    removeUserFromUserGroupForm(user){
+        console.log(user);
+        
+        let newUser = [];
+        let newUserGroup = {...this.state.newUserGroup};
+        newUser = newUserGroup.user.filter(item=>{
+            return item.id !== user.id;
+        });
+        newUserGroup.user = newUser;
+        let usr = JSON.stringify(newUserGroup.user);
+        let usersChunk = this.getPaginatedLocalUsers(JSON.parse(usr));
+        this.setState({newUserGroup, usersChunk});
+        
+    }
+
+    
+
+    handleChange(value, option){
+        let newUserGroup = {...this.state.newUserGroup};
+        newUserGroup.role = []; //init with empty 
+        value.forEach(item=>{
+            this.props.roles.roles.filter(role=>{
+                if(item === role.name){
+                    let foundrole = newUserGroup.role.find(role=>role.name===item); //chk if role already thr in array
+                    if(!foundrole) //if role nt found in array then push it
+                        newUserGroup.role.push({id: role._id, name: role.name});
+                }               
+            });
+        });
+        this.setState({newUserGroup});        
+    }
+
+    getPaginatedLocalUsers(users){
+        
+        let recordStartIndex = ((this.state.paging.current-1) * 10);
+        let recordEndIndex = ((this.state.paging.current-1) * 10) + 10;
+        let usersChunk = users.splice(recordStartIndex, recordEndIndex);
+        
+        // for(var i = recordStartIndex; i<=recordEndIndex && i<=users.length; i++){
+        //     usersChunk.push(users[i-1]);
+        // } 
+
+        //console.log('paginated Local User ' ,usersChunk);
+        //this.setState({usersChunk});
+        return usersChunk;
+    }
+
+    selectUserFromEditAutoComplete(value, option){  
+            
+        let usr = this.props.userlist.find(item=> item.email === value);    
+        
+        let {selectedUserGroup, paging} = {...this.state};
+        //newUserGroup.user = [];
+
+        let foundUser = selectedUserGroup.user.find(item=> item.id===usr._id); //chk if role already thr in array
+        if(!foundUser)
+            selectedUserGroup.user.push({id: usr._id, firstName: usr.firstName, lastName: usr.lastName});
+        let user = JSON.stringify(selectedUserGroup.user);
+        let usersChunk = this.getPaginatedLocalUsers(JSON.parse(user));
+            
+        this.setState({selectedUserGroup, usersChunk});
+
+        let userinput = document.querySelector('.assign_usr_blk .ant-select-search__field');
+        setTimeout(()=>{
+            userinput.select();
+        }, 100);
+
+    }
+
+    selectUserFromAutoComplete(value, option){  
+            
+        let usr = this.props.userlist.find(item=> item.email === value);    
+        
+        let {newUserGroup, paging} = {...this.state};
+        //newUserGroup.user = [];
+
+        let foundUser = newUserGroup.user.find(item=> item.id===usr._id); //chk if role already thr in array
+        if(!foundUser)
+            newUserGroup.user.push({id: usr._id, firstName: usr.firstName, lastName: usr.lastName});
+        let user = JSON.stringify(newUserGroup.user);
+        let usersChunk = this.getPaginatedLocalUsers(JSON.parse(user));
+            
+        this.setState({newUserGroup, usersChunk});
+
+        let userinput = document.querySelector('.assign_usr_blk .ant-select-search__field');
+        setTimeout(()=>{
+            userinput.select();
+        }, 100);
+
+    }
+
+    groupNameHandler(event){
+        let groupName = event.target.value;
+        let newUserGroup = {...this.state.newUserGroup};
+        newUserGroup.name = groupName;
+        this.setState({newUserGroup});                
+    }
+
+    getStringArrayOfUsers(data){
+        let users = [];
+        data.forEach(item=>{
+            users.push(item.email);
+        })
+        return users;
+    }
+
+    submitGroupForm(){
+        if(this.state.newUserGroup.name===''){
+            this.openNotificationWithIcon('error');
+        }
+        else{
+            this.props.createNewGroup(this.state.newUserGroup);
+            this.closeCreateUserGroupForm();
+            this.clearCreateUserGroupForm();
+            
+        }
+        
+        
+
+    }
+
+    clearCreateUserGroupForm(){
+        
+        setTimeout(()=>{
+            this.openCreateUserGroupForm();
+        }, 10); 
+    }
+
+    openNotificationWithIcon(type){
+        notification[type]({
+          message: 'Invalid UserGroup Form',
+          description: 'Please fill mandatory fields.',
+        });
+    }
+    //createNewGroup
+
+    renderCreateUserGroupBtn(){
+        return !this.state.isUserGroupFormOpen ? 
             <Tooltip title="Create New UserGroup" placement="right">
-                <button onClick={this.showCreateUGBox} className="create-ug-btn btn btn-sm btn-primary top-margin15"> 
+                <button onClick={this.openCreateUserGroupForm} className="pull-left create-ug-btn btn btn-sm btn-primary"> 
                     <i className="fa fa-users" /> <i className="fa fa-plus" /> 
                 </button>
             </Tooltip> 
@@ -402,27 +412,68 @@ class UserGroup extends Component {
          
     }
 
+    renderEditableUserGroupModal(){
+        return this.state.isEditUserGroupModalOpen ? 
+                <EditUserGroupModal 
+                    closeEditUserGroupModal = { this.closeEditUserGroupModal }
+                    childInputEditHandler = { this.childInputEditHandler }
+                    handleEditableRoleChange = { this.handleEditableRoleChange }
+                    updateEditedUserGroup = { this.updateEditedUserGroup }
+                    selectedUserGroup = {this.state.selectedUserGroup}
+                    roles = {this.props.roles.roles ? this.props.roles.roles : []}   
+                    userData={ this.getStringArrayOfUsers(this.props.userlist) }
+                    users = {this.state.usersChunk} 
+                    removeUserFromUserGroupForm = {this.removeUserFromEditUserGroupForm}    
+                    selectRole={this.selectUserFromEditAutoComplete}  
+                />
+                : null
+    }
+
+    searchInputHandler(event){
+        this.props.searchFromUserGroup(event.target.value);
+    }
+
+
+
     render() {
         return (
             <div className="userGroup-container">
                 
-                { this.renderCreateUgBtn() }
-                {this.renderCreateUGForm()}
-
-                <LineSeparator />
+                { this.renderCreateUserGroupForm() }
 
                 <div className="clearfix" />
+                    
+                    <div>
+                        <div style={{'paddingLeft': '0'}} className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                            { this.renderCreateUserGroupBtn() }
+                            {
+                                !this.state.isUserGroupFormOpen ?
+                                <input type="text" onKeyUp = {this.searchInputHandler} className="form-control1 pull-right"/>
+                                :null
+                            }
+                        </div>
+                        {
+                        !this.state.isUserGroupFormOpen ?
+                        <div>
+                            <UserGroupTable
+                                usergroups={this.props.usergroups} 
+                                openEditUserGroupModal = {this.openEditUserGroupModal}
+                                confirmUserGroupDelete = {this.confirmUserGroupDelete}
+                                cancelUserGroupDelete = {this.cancelUserGroupDelete}
+                                setUserGroupIdToDelete = {this.setUserGroupIdToDelete}
+                            />
+                            <div className="pagination col-lg-7 col-md-7 col-sm-12 col-xs-12" >
+                                <div className="pull-right">            
+                                    <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                                </div>            
+                            </div> 
+                        </div>
+                        :null
+                        }
+                    </div>
+                
+                { this.renderEditableUserGroupModal() }
 
-                {
-                    this.renderUserGrpTable()
-                }
-
-                <div className="col-md-5">
-
-                </div>
-                {
-                    this.renderEditableUGModal()
-                }
             </div>
         )
     }
@@ -439,40 +490,22 @@ function mapDispatchToProps(dispatch) {
         openTransferUserGroup: bindActionCreators(openTransferUserGroup, dispatch),
         getRoles: bindActionCreators(getRoles, dispatch),
         createNewGroup: bindActionCreators(createNewGroup, dispatch),
-        editGroup:bindActionCreators(editGroup, dispatch)
-
-
+        editGroup:bindActionCreators(editGroup, dispatch),
+        getPagination: bindActionCreators(getPagination, dispatch),
+        setPageNumber: bindActionCreators(setPageNumber, dispatch),
+        searchFromUserGroup: bindActionCreators(searchFromUserGroup, dispatch)
     }
 }
 
 function mapStateToProps(state) {
-    console.log('mapStateToProps in UserGroup>>>>>>>>>>>>', state.usergroupslist);
-
     return {
-        usergroups: state.usergroupslist.usergroups,
         roles: state.roles,
-        userlist: state.userlist.users
-
+        userlist: state.userlist.originalUsers,
+        usergroups: state.usergroupslist.usergroups,
+        pagination: state.pagination
+        
     }
 }
 
 const _UsersGroup = connect(mapStateToProps, mapDispatchToProps)(UserGroup);
 export default _UsersGroup;
-
-//<AutoSuggestionRoles data={this.processRolesData(this.props.roles.roles)}  selectRole={this.selectRole}/>
-/* <div className="createRoleBox-row">
-                                        <div className="col-md-2 label"> Roless: </div>
-                                        <div className="col-md-10">
-                                            {
-                                                this.state.group.role.map( (item, i)=> {
-                                                    return(
-                                                        <span key={'role-'+i} className='delete-perm-badge'>
-                                                            {item.name}&nbsp;
-                                                            <i className="fa fa-close delete-perm" data-itemname={item.name}  onClick={ (event, item)=>{this.removeFromRoleList(event, item)} } />
-                                                        </span> 
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                        <div className="clearfix" />
-                                    </div> */

@@ -129,9 +129,13 @@ class Roles extends Component {
         event.preventDefault();
         
         this.props.createNewRoles(this.state.newRole);
-        this.setState({
-            newRole: {'name': '', 'pIds': []}
-        })
+        this.closeCreateRoleForm();
+        setTimeout(()=>{
+            this.openCreateRoleForm()
+        },10)
+        // this.setState({
+        //     newRole: {'name': '', 'pIds': []}
+        // })
 
         message.success('New Role added succesfully');
     }
@@ -198,11 +202,12 @@ class Roles extends Component {
     }
    
     handleChange(value, option){
+        debugger
         let { selectedRole } = {...this.state};
         let newPermission = [];
         for(let i = 0; i < value.length; i++){
             let temp = this.props.permissions.find((item)=>item.name === value[i]);
-            newPermission.push(temp);
+            newPermission.push({id: temp.id, name: temp.name});
         }
         selectedRole.permission = newPermission;
         this.setState({selectedRole});
@@ -262,7 +267,7 @@ class Roles extends Component {
                     </div>
                     <div className="col-md-6 col-sm-6 col-xs-12 top-margin10" style={{'position':'relative'}}>
                         <SelectTags 
-                            placeholder="Please select Roles" 
+                            placeholder="Select Permissions" 
                             data={this.processPermissionData(this.props.permissions)}
                             defaultData={[]} 
                             handleChange={this.handlePermissionChange} 

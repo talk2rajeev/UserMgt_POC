@@ -16,7 +16,9 @@
     outline: none;
     outline-color: transparent;
 }
-
+.showInline{
+    display: inline-block !important;
+}
 hr{
     border: 0;
     border-top: 1px solid #0c5269;
@@ -128,6 +130,9 @@ div[class*='col-']{
 .hide{
     display: none;
 }
+.modal-lg{
+    width: 750px!important;
+}
 
 @media (max-width:992px){
     .sidebar-navLink{
@@ -149,6 +154,9 @@ div[class*='col-']{
     .dropdown-bx{
         width: 100!important;
         right: 20 !important;
+    }
+    .modal-lg{
+        width: 100%!important;
     }
     
 }

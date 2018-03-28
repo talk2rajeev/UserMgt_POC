@@ -415,11 +415,12 @@ Modal
     position: absolute;
     top: 5px;
     right: 5px;
-    color: red;
+    font-size: 1.2em;
+    color: #d43f3a;
+    cursor: pointer;
  }
  .collapsible-container.create-usergroup{
     position: relative;
-    background: #ecfbfb;
  }
  button.create-ug-btn:focus{
     outline: none;
@@ -447,6 +448,15 @@ Modal
  .pagination .ant-pagination{
      float: right;
  } 
+
+ .inline-div{
+     display: inline-block;
+     padding: 4px 10px;
+ }
+ .cpoy-icon-btn{
+     background: #cdcdcd;
+     border: 1px solid #dedede;
+ }
 /*
   Bootstrap
 */

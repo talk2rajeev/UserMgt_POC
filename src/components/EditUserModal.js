@@ -35,7 +35,7 @@ const EditUserModal = (props) => {
                 <div className={ "modal" }>
                     
                 
-                    <i className="fa fa-close close-modal-icon" onClick={props.closeUserEditModal}/>
+                    <i className="fa fa-close close-modal-icon" style={{'color':'red'}} onClick={props.closeUserEditModal}/>
                     <div className="modal-header"><h3 className="modal-title">Edit User</h3><hr className="hr"/></div>
                     <div className="modal-body">
                     

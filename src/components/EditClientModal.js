@@ -1,10 +1,9 @@
 import React, {Component}  from 'react';
 import { Popconfirm, Tooltip } from 'antd';
 
-
 const EditClientModal = (props) => {
-    let {name, redirectUrl, logoutURI, refreshToken, accessToken, clientId} = props.client;
-
+    let {name, redirectUrl, logoutURI, refreshTokenHr,refreshTokenMin, accessTokenHr, accessTokenMin,clientId, clientSecret} = props.client;
+     
     return(
         <div className={"modal-container show "}>
             <div className="backdrop"></div>
@@ -18,6 +17,20 @@ const EditClientModal = (props) => {
                     
                         <div className="row top-margin10">
                             <div className="col-md-12">
+                                <div style={{'background':'#f1f1f1', 'padding':'5px 15px'}}>
+                                    <div className="inline-div" style={{'width':'105px', 'fontSize': '1.1em'}}><b>Client Id:    </b></div> 
+                                    <div className="inline-div"> <input type="text" value={clientId} id="id" className="no-input" readOnly/>  </div>   
+                                    <Tooltip title="Copy" placement="right">
+                                        <div className="inline-div btn btn-default btn-sm" onClick={()=>props.copyToClipboard(clientId, 'id')}><i className="fa fa-copy" /></div>
+                                    </Tooltip>    
+                                    <div className="cleardix" />
+                                    <div className="inline-div" style={{'width':'105px', 'fontSize': '1.1em'}}><b>Client Secret:</b></div> 
+                                    <div className="inline-div"> <input type="text" value={clientSecret} id="secret" className="no-input" readOnly/> </div>  
+                                    <Tooltip title="Copy" placement="right">                                    
+                                        <div className="inline-div btn btn-default btn-sm" onClick={()=>props.copyToClipboard(clientSecret, 'secret')}><i className="fa fa-copy" /></div>                                   
+                                    </Tooltip> 
+                                </div>
+                                <br />
                                 <div>
                                     <div>Client Name</div>
                                     <input type="text" id="cname" name="name" value={name} placeholder="Client Name" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required"/>
@@ -33,13 +46,13 @@ const EditClientModal = (props) => {
                                 <div className="top-margin10 row">
                                     <div className="col-md-6">
                                         <div>Access Token Life Time</div>
-                                        <input type="number" id="at_h" style={{'width':'70px'}} value={accessToken.split('-')[0]} min="0" name="AccessTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
-                                        &nbsp;<input type="number" id="at_m" style={{'width':'70px'}} value={accessToken.split('-')[1]} min="0" name="AccessTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
+                                        <input type="number" id="at_h" style={{'width':'70px'}} value={accessTokenHr} min="0" name="AccessTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
+                                        &nbsp;<input type="number" id="at_m" style={{'width':'70px'}} value={accessTokenMin} min="0" name="AccessTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
                                     </div>
                                     <div className="col-md-6 ">
                                         <div>Refresh Toke Life Time</div>
-                                        <input type="number" id="rt_h" style={{'width':'70px'}} value={refreshToken.split('-')[0]} min="0" name="refreshTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
-                                        &nbsp;<input type="number" id="rt_m" style={{'width':'70px'}} value={refreshToken.split('-')[1]} min="0" name="refreshTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>                    
+                                        <input type="number" id="rt_h" style={{'width':'70px'}} value={refreshTokenHr} min="0" name="refreshTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
+                                        &nbsp;<input type="number" id="rt_m" style={{'width':'70px'}} value={refreshTokenMin} min="0" name="refreshTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>                    
                                     </div>
                                 </div>
                                 <div>

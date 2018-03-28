@@ -363,7 +363,7 @@ class UsersTable extends Component {
                         this.renderEditUserModal()
                     }  
                     
-                    <div className="pagination">
+                    <div className="pagination pull-right">
                         <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
                     </div>    
                 </div>

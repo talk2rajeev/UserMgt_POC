@@ -39,7 +39,7 @@ let initialClient = [];
 export const getClientList = (state=initialClient, action) => {
     switch(action.type){
         case GET_CLIENT_LIST:
-            return { clients: action.client }             
+            return { clients: action.client, originalClient: action.originalClient }             
         default: 
             return state;
     }

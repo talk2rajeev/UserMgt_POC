@@ -30,6 +30,20 @@ let defaultStore = {
     "userlist": {"users": []}
 };
 
+let a = {
+    "authentication": {"authentication": {}},  
+    "clients": [], 
+    "modal": {"editUserModal": false}, 
+    "pagination": {"pagination": {"curPage": 1, "pageSize": 10, "totalPage": 1}}, 
+    "permissions": [], 
+    "roles": [], 
+    "selectedUser": {"users": []}, 
+    "selectedUserGroup": {}, 
+    "transfer": {"AssignUserToGroupTransfer": false, "groupedUsers": [], "groupname": ""}, 
+    "usergroupslist": {"usergroups": []}, 
+    "userlist": {"originalUsers": undefined, "users": undefined }
+};
+
 describe('Get User Reducer', ()=>{
     it('It has default state', ()=>{
         expect(getUserList(undefined, {type: 'unexpected'})).toEqual(
@@ -49,11 +63,8 @@ describe('Get User Reducer', ()=>{
     })
     
     it('sortUser :: It has all default states', ()=>{
-        defaultStore.selectedUser.originalUsers = undefined;
-        defaultStore.selectedUser.users = undefined;
-        expect(getUserList(undefined, {type: 'SORT_USER' })).toEqual(
-            {"authentication": {"authentication": {}}, "modal": {"editUserModal": false}, "pagination": {"pagination": {"curPage": 1, "pageSize": 10, "totalPage": 1}}, "permissions": [], "roles": [], "selectedUser": {"originalUsers": [], "users": []}, "selectedUserGroup": {}, "transfer": {"AssignUserToGroupTransfer": false, "groupedUsers": [], "groupname": ""}, "usergroupslist": {"usergroups": []}, "userlist": {"users": []}}  
-        )
+
+        expect(getUserList(undefined, {type: 'SORT_USER' })).toEqual(a)
     })
 
 })

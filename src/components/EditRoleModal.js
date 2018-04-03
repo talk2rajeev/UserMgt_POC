@@ -36,21 +36,12 @@ export const EditRoleModal = (props) =>  {
                     
                         <div className="form-group">
                             <label className="form-label">Role Name</label>
-                            <input type="text" className="form-control" value={props.role.name} onChange={props.childInputChangehandler} id="rolename"/>
+                            <input type="text" className="form-control input1" value={props.role.name} onChange={props.childInputChangehandler} id="rolename"/>
                         </div>
                         
                         <div className="form-group">
                             <div className="form-label">Permissions</div>
-                            <SelectTags handleChange={props.handleChange} data={props.permissions} defaultData={getDefaultPermissions(props.role.permission)} />
-                            {
-                                [].map((item, i)=>{
-                                    return(
-                                        <span key={i} className="delete-perm-badge">{item.name} &nbsp;
-                                            <i className="fa fa-close delete-perm" /> &nbsp;
-                                        </span>
-                                    )
-                                })
-                            }                            
+                            <SelectTags handleChange={props.handleChange} data={props.permissions} defaultData={getDefaultPermissions(props.role.permission)} />                          
                         </div>
 
                     </div>

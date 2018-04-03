@@ -10,7 +10,8 @@ import {
     saveEditedPermissionName,
     getPagination,
     setPageNumber,
-    getClients  
+    getClients,
+    searchPermission  
 } from '../store/actions';
 
 import { Popconfirm, message, Tooltip, notification, Pagination } from 'antd';
@@ -39,6 +40,7 @@ class Permission extends Component {
         this.closePermissionForm = this.closePermissionForm.bind(this);
         this.renderCreatePermissionForm = this.renderCreatePermissionForm.bind(this);
         this.renderCreatePermissionButton = this.renderCreatePermissionButton.bind(this);
+        this.searchInputHandler = this.searchInputHandler.bind(this);
 
         this.state = { permissionToDlete: {id: null, name: ''}, pagination: {current: 1}, isCreatePermissionFormOpen: false };
         this.permission = {};
@@ -174,16 +176,27 @@ class Permission extends Component {
                     </div>
                     : null
     }
+
+    searchInputHandler(event){
+        console.log(event.target.value);
+        this.props.searchPermission(event.target.value);
+    }
     
 
     render() {
-        return(  
+        return(
+              
                 <div className="userRole-container">
                     { this.renderCreatePermissionButton() }
                     { this.renderCreatePermissionForm() }
                     <div className="row">
+                    {
+
+                    !this.state.isCreatePermissionFormOpen ?
                         <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                            <h5 className="top-margin25">Permission List</h5>
+                            <div className="">
+                                <input type="text" onKeyUp={this.searchInputHandler} className="form-control1 pull-right"/>
+                            </div>
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
@@ -219,13 +232,17 @@ class Permission extends Component {
                                     }
                                 </tbody> 
                             </table> 
-                        </div> 
-                    </div>  
-                    <div className=" col-lg-7 col-md-7 col-sm-12 col-xs-12" >
-                        <div className="pull-right">            
-                            <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
-                        </div>            
+
+                            <div className="" >
+                                <div className="pull-right">            
+                                    <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                                </div>            
+                            </div>
+                        </div>
+                        :null 
+                    }    
                     </div> 
+                    
                 </div>
             )    
     }
@@ -242,7 +259,8 @@ function mapDispatchToProps(dispatch){
         saveEditedPermissionName: bindActionCreators(saveEditedPermissionName, dispatch),
         getPagination: bindActionCreators(getPagination, dispatch),
         setPageNumber: bindActionCreators(setPageNumber, dispatch),
-        getClients: bindActionCreators(getClients, dispatch)        
+        getClients: bindActionCreators(getClients, dispatch),
+        searchPermission: bindActionCreators(searchPermission, dispatch)        
     }
 }
   

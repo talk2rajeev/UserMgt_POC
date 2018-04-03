@@ -19,6 +19,9 @@
 .showInline{
     display: inline-block !important;
 }
+table.table{
+    margin-bottom: 0px;
+}
 hr{
     border: 0;
     border-top: 1px solid #0c5269;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sortDesc, sortAsc, getPageTotal, getpageChunk } from '../../utility/helper';
+import { sortDesc, sortAsc, getPageTotal, getpageChunk, searchInPermission, searchInUserGroup, searchInClient } from '../../utility/helper';
 import {  message, notification } from 'antd';
 
 
@@ -45,9 +45,20 @@ const clientSuccessNotification = (type, secret) => {
  };
 
 
- export const getClients = () => dispatch => {
+ export const getClients = () => (dispatch, getState) => {
+    let pagination = getState().pagination;
+
     reLoadClients().then(result => {
-        dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );          
+        
+        //debugger
+        let pageTotal = getPageTotal(result.data);
+        var res = JSON.stringify(result.data);
+        dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
+        let pageChunk = getpageChunk(result.data, pagination); 
+        dispatch( ({type: GET_CLIENT_LIST, client: pageChunk, originalClient: JSON.parse(res) }) );
+        //console.log(pageChunk);
+        //dispatch( ({type: GET_CLIENT_LIST, client: result.data}) );
+
     }).catch((err) => {
         console.error.bind(err);
     });
@@ -106,8 +117,12 @@ const clientSuccessNotification = (type, secret) => {
     });
  }
 
-
-
+ export const searchClient = (pattern) => (dispatch, getState) => {
+     
+    let clients = getState().clients;    
+    let searchedResult = searchInClient(pattern, clients.originalClient);
+    dispatch( ({type: GET_CLIENT_LIST, client: searchedResult, originalClient: clients.originalClient }) )        
+ }
 
 
 
@@ -309,14 +324,6 @@ export const getUserGroups = () => (dispatch, getState) => {
     }).catch((err) => {
         console.error.bind(err);
     })
-
-    // reloadUserGroup()
-    //   .then((response) => {
-    //     dispatch( ({type: GET_USERGROUPLIST, userGroups: response.data, originalUserGroups: response.data}) )
-    //   })
-    //   .catch((err) => {
-    //     console.error.bind(err);
-    // })
 };
 
 
@@ -329,7 +336,6 @@ export const getUserGroups = () => (dispatch, getState) => {
 
 
  export function editGroup(group){
-    //debugger
     return function(dispatch){
         let url = `${PATH.BASE_PATH}${PATH.API_PATH.usergroup.update}${group._id}`;  
         axios.put(url, group)
@@ -367,7 +373,6 @@ export const getUserGroups = () => (dispatch, getState) => {
     .catch((err) => {
             console.error.bind(err);
     }); 
-
     
  }
 
@@ -409,17 +414,6 @@ export const searchFromUserGroup = (pattern) => (dispatch, getState) => {
     let userGroups = getState().usergroupslist;    
     let searchedResult = searchInUserGroup(pattern, userGroups.originalUsergroups);
     dispatch( ({type: GET_USERGROUPLIST, userGroups: searchedResult, originalUserGroups: userGroups.originalUsergroups }) )        
-}
-
-function searchInUserGroup(pattern, usergroups){
-    let result = [];
-    result = usergroups.filter((item)=>{
-        return item.name.toLowerCase().includes(pattern.toLowerCase()) ||
-        item.role.find((role)=>{
-            return role.name.toLowerCase().includes(pattern.toLowerCase())
-        })
-    });
-    return result;
 }
 
 
@@ -541,28 +535,6 @@ function reLoadPermission(){
     return axios.get(url);
 };
 
-/*export const createNewPermission = (name) => (dispatch, getState) => {
-
-    let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.create}`;
-    
-    axios.post(url, {name: name, clientId: "", clientName: ""})
-      .then((response) => {
-            reLoadPermission().then((result)=>{
-                let pagination = getState().pagination;
-                let pageTotal = getPageTotal(result.data);
-                var res = JSON.stringify(result.data);
-                dispatch( ({type: SET_PAGE_TOTAL, total: pageTotal}) );
-                let pageChunk = getpageChunk(result.data, pagination); 
-                dispatch( ({type: GET_PERMISSIONS, permissions: pageChunk, originalPermissions: JSON.parse(res) }) );
-            })
-      })
-      .catch((err) => {
-        console.error.bind(err);
-      })
-
-      window.location.reload;
-};*/
-
 export const createNewPermission = (permission) => (dispatch, getState) => {
 
     let url = `${PATH.BASE_PATH}${PATH.API_PATH.permission.create}`;
@@ -647,7 +619,17 @@ export const deletePermission = (id) => (dispatch, getState) => {
     })   
 }
 
+export const searchPermission = (pattern) => (dispatch, getState) => {
+    let permission = getState().permissions;    
+    //permissions: pageChunk, originalPermissions: JSON.parse(res)
+    let searchedResult = searchInPermission(pattern, permission.originalPermissions);
+    dispatch( ({type: GET_PERMISSIONS, permissions: searchedResult, originalPermissions: permission.originalPermissions }) );    
+}
 
+
+/*
+Paginatiopn
+*/
 export const setPageNumber = (page) => (dispatch, getState) =>{
     dispatch( ({type: SET_PAGE_NUMBER, page: page}) );
 }

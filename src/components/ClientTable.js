@@ -6,7 +6,7 @@ import { Popconfirm, Tooltip } from 'antd';
 const ClientTable = (props) => {
   
     return(
-        <div className="top-margin10 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        
            <table className="table table-striped">
                 <thead>
                     <tr>
@@ -34,7 +34,7 @@ const ClientTable = (props) => {
                     }
                 </tbody>
            </table>
-        </div>
+        
     )
 
 }

@@ -40,3 +40,31 @@ export function getpageChunk(arr, pagination){
     return arr.splice((pagination.pagination.curPage-1)*pagination.pagination.pageSize, pagination.pagination.pageSize);
 }
 
+export function searchInPermission(pattern, permissions){
+    let result = [];
+    result = permissions.filter((item)=>{
+        return item.name.toLowerCase().includes(pattern.toLowerCase()) || 
+        item.clientName.toLowerCase().includes(pattern.toLowerCase());
+    });
+    return result;
+}
+
+export function searchInUserGroup(pattern, usergroups){
+    let result = [];
+    result = usergroups.filter((item)=>{
+        return item.name.toLowerCase().includes(pattern.toLowerCase()) ||
+        item.role.find((role)=>{
+            return role.name.toLowerCase().includes(pattern.toLowerCase())
+        })
+    });
+    return result;
+}
+
+export function searchInClient(pattern, clients){
+    let result = [];
+    result = clients.filter((item)=>{
+        return item.name.toLowerCase().includes(pattern.toLowerCase());
+    });
+    return result;
+}
+

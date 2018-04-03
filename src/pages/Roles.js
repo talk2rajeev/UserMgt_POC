@@ -202,7 +202,7 @@ class Roles extends Component {
     }
    
     handleChange(value, option){
-        debugger
+        
         let { selectedRole } = {...this.state};
         let newPermission = [];
         for(let i = 0; i < value.length; i++){
@@ -214,7 +214,7 @@ class Roles extends Component {
     }
 
     handlePermissionChange(value, option){
-        debugger
+        
         let { newRole } = {...this.state};
         let newPermission = [];
         for(let i = 0; i < value.length; i++){
@@ -297,6 +297,8 @@ class Roles extends Component {
                     { this.renderCreateRoleForm() }
                     
                     <div className="row top-margin20">
+                        {
+                        !this.state.isCreateRoleFormOpen ?
                         <div className="col-lg-7 col-md-7 col-sm-12 col-xs-12">
                             <h5>Existing Roles</h5>
                             <table className="table table-striped">
@@ -338,10 +340,10 @@ class Roles extends Component {
                                     
                                 </tbody>
                             </table>
-                        </div>
-                        {
-                        this.renderEditRoleModal()
-                    } 
+                        </div> : null
+                        }
+                        
+                        {  this.renderEditRoleModal() } 
                     </div>
                        
                            

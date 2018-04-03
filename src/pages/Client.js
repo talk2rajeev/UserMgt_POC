@@ -10,7 +10,10 @@ import {
     getClients, 
     createClient, 
     deleteClient, 
-    updateClient 
+    updateClient,
+    getPagination,
+    setPageNumber, 
+    searchClient
 } from '../store/actions';
 
 class Client extends Component {
@@ -38,6 +41,8 @@ class Client extends Component {
         this.getHr = this.getHr.bind(this);
         this.getMin = this.getMin.bind(this);
         this.copyToClipboard = this.copyToClipboard.bind(this);
+        this.onPagination = this.onPagination.bind(this);
+        this.searchInputHandler = this.searchInputHandler.bind(this);
             
         this.state = {isCreateClientFormOpen: false, isEditClientModalOpen: false};
         this.client = {};
@@ -107,7 +112,6 @@ class Client extends Component {
     }
 
     copyToClipboard(value, type){
-        debugger
         if(type === 'id'){
             document.getElementById('id').select();
             document.execCommand("Copy");
@@ -203,7 +207,15 @@ class Client extends Component {
     }
 
     cancelClientDelete(event){
-        
+        message.error('Delet opration cancelled');
+    }
+
+    onPagination(page){
+        this.setState({
+          current: page,
+        });
+        this.props.setPageNumber(page);
+        this.props.getClients();      
     }
 
     renderCreateUserButton(){
@@ -257,11 +269,13 @@ class Client extends Component {
         }
         return hrMins;
     }
+
+    searchInputHandler(event){
+        console.log(event.target.value);
+        this.props.searchClient(event.target.value);
+    }
+
     renderEditClientForm(){
-       // let {name, redirectUrl, logoutURI, refreshToken, accessToken, clientId} = this.state.client;
-     
-        //accessToken=HrMin(accessToken);
-        //{parseInt(accessToken.split('-')[0])}
         return this.state.isEditClientModalOpen ? 
             <EditClientModal 
                 client={this.state.client}
@@ -284,14 +298,25 @@ class Client extends Component {
                 </div>
                 <div className="row">
                     { 
-                        this.props.clients.length !== 0 ? 
-                        <ClientTable 
-                            clients={this.props.clients.clients } 
-                            setClientId = {this.setClientId}
-                            confirmClientDelete = {this.confirmClientDelete}
-                            cancelClientDelete = {this.cancelClientDelete}
-                            openEditClientModal = {this.openEditClientModal}                         
-                        /> 
+                        this.props.clients.length !== 0 && 
+                        !this.state.isCreateClientFormOpen ? 
+                        <div className="top-margin10 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                            <div>
+                                <input type="text" onKeyUp={this.searchInputHandler} 
+                                        className="form-control1 pull-right" 
+                                />                                
+                            </div>
+                            <ClientTable 
+                                clients={this.props.clients.clients } 
+                                setClientId = {this.setClientId}
+                                confirmClientDelete = {this.confirmClientDelete}
+                                cancelClientDelete = {this.cancelClientDelete}
+                                openEditClientModal = {this.openEditClientModal}                         
+                            /> 
+                            <div className="pull-right">            
+                                <Pagination defaultCurrent={1} total={this.props.pagination.pagination.totalPage} onChange={this.onPagination}  />
+                            </div>
+                        </div>
                         : null
                     }
                 </div>
@@ -310,13 +335,18 @@ function mapDispatchToProps(dispatch) {
         getClients: bindActionCreators(getClients, dispatch),
         createClient: bindActionCreators(createClient, dispatch),
         deleteClient: bindActionCreators(deleteClient, dispatch),
-        updateClient: bindActionCreators(updateClient, dispatch)
+        updateClient: bindActionCreators(updateClient, dispatch),
+        getPagination: bindActionCreators(getPagination, dispatch),
+        setPageNumber: bindActionCreators(setPageNumber, dispatch),
+        searchClient: bindActionCreators(searchClient, dispatch)
     }
 }
 
 function mapStateToProps(state) {
     return {
-        clients: state.clients
+        clients: state.clients,
+        pagination: state.pagination
+        
     }
 }
 

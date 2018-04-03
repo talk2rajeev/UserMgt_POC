@@ -16,48 +16,48 @@ const EditClientModal = (props) => {
                     <div className="modal-body">
                     
                         <div className="row top-margin10">
-                            <div className="col-md-12">
+                            <div className="col-md-12 col-sm-10 col-xs-10">
                                 <div style={{'background':'#f1f1f1', 'padding':'5px 15px'}}>
                                     <div className="inline-div" style={{'width':'105px', 'fontSize': '1.1em'}}><b>Client Id:    </b></div> 
                                     <div className="inline-div"> <input type="text" value={clientId} id="id" className="no-input" readOnly/>  </div>   
                                     <Tooltip title="Copy" placement="right">
-                                        <div className="inline-div btn btn-default btn-sm" onClick={()=>props.copyToClipboard(clientId, 'id')}><i className="fa fa-copy" /></div>
+                                        <div className="inline-div btn btn-default btn-sm copy1" onClick={()=>props.copyToClipboard(clientId, 'id')}><i className="fa fa-copy" /></div>
                                     </Tooltip>    
                                     <div className="cleardix" />
                                     <div className="inline-div" style={{'width':'105px', 'fontSize': '1.1em'}}><b>Client Secret:</b></div> 
                                     <div className="inline-div"> <input type="text" value={clientSecret} id="secret" className="no-input" readOnly/> </div>  
                                     <Tooltip title="Copy" placement="right">                                    
-                                        <div className="inline-div btn btn-default btn-sm" onClick={()=>props.copyToClipboard(clientSecret, 'secret')}><i className="fa fa-copy" /></div>                                   
+                                        <div className="inline-div btn btn-default btn-sm copy2" onClick={()=>props.copyToClipboard(clientSecret, 'secret')}><i className="fa fa-copy" /></div>                                   
                                     </Tooltip> 
                                 </div>
                                 <br />
                                 <div>
                                     <div>Client Name</div>
-                                    <input type="text" id="cname" name="name" value={name} placeholder="Client Name" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required"/>
+                                    <input type="text" id="cname" name="name" value={name} placeholder="Client Name" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required input1"/>
                                 </div>
-                                <div>
+                                <div className="top-margin10">
                                     <div>Redirect URI</div>
-                                    <input type="text" id="redirectUrl" name="redirectUrl" value={redirectUrl} placeholder="Redirect url" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required"/>
+                                    <input type="text" id="redirectUrl" name="redirectUrl" value={redirectUrl} placeholder="Redirect url" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required input2"/>
                                 </div>
-                                <div>
+                                <div className="top-margin10">
                                     <div>Logout URI</div>
-                                    <input type="text" id="logoutUrl" value={logoutURI} name="logoutURI" placeholder="logout url" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required"/>
+                                    <input type="text" id="logoutUrl" value={logoutURI} name="logoutURI" placeholder="logout url" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control required input3"/>
                                 </div>
                                 <div className="top-margin10 row">
                                     <div className="col-md-6">
                                         <div>Access Token Life Time</div>
-                                        <input type="number" id="at_h" style={{'width':'70px'}} value={accessTokenHr} min="0" name="AccessTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
-                                        &nbsp;<input type="number" id="at_m" style={{'width':'70px'}} value={accessTokenMin} min="0" name="AccessTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
+                                        <input type="number" id="at_h" style={{'width':'70px'}} value={accessTokenHr} min="0" name="AccessTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required input4"/>
+                                        &nbsp;<input type="number" id="at_m" style={{'width':'70px'}} value={accessTokenMin} min="0" name="AccessTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required input5"/>
                                     </div>
                                     <div className="col-md-6 ">
                                         <div>Refresh Toke Life Time</div>
-                                        <input type="number" id="rt_h" style={{'width':'70px'}} value={refreshTokenHr} min="0" name="refreshTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>
-                                        &nbsp;<input type="number" id="rt_m" style={{'width':'70px'}} value={refreshTokenMin} min="0" name="refreshTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required"/>                    
+                                        <input type="number" id="rt_h" style={{'width':'70px'}} value={refreshTokenHr} min="0" name="refreshTokenLifeTime_hh" placeholder="hh" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required input6"/>
+                                        &nbsp;<input type="number" id="rt_m" style={{'width':'70px'}} value={refreshTokenMin} min="0" name="refreshTokenLifeTime_mm" placeholder="mm" onChange={(event)=>props.inputEditClientChangeHandler(event)} className="form-control1 required input7"/>                    
                                     </div>
                                 </div>
-                                <div>
+                                <div className="top-margin10">
                                     <div>Description</div>
-                                    <textarea name="description" id="desc" style={{"height": "120px"}} className="form-control required" placeholder="Description" onChange={(event)=>props.inputEditClientChangeHandler(event)}></textarea>
+                                    <textarea name="description" id="desc" style={{"height": "120px"}} className="form-control required input8" placeholder="Description" onChange={(event)=>props.inputEditClientChangeHandler(event)}></textarea>
                                 </div>
                             </div>
                                 

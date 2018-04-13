@@ -1,3 +1,5 @@
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 var config = {
     entry: './src/main.js',
      
@@ -27,7 +29,11 @@ var config = {
           },
           {
              test: /\.scss$/,
-             loaders: ['style-loader', 'css-loader', 'sass-loader']
+             use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: ['css-loader', 'sass-loader']
+              })
+             
           },
           {
             test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
@@ -35,12 +41,17 @@ var config = {
                 loader: 'file-loader',
                 options: {
                     name: '[name].[ext]',
-                    outputPath: './dist/fonts/',    // where the fonts will go
+                    outputPath: './dist/fonts/',    // fonts will go
                 }
             }]
           }
        ]
-    }
+    },
+    plugins: [
+        new ExtractTextPlugin('style.css')
+    ]
  }
  
  module.exports = config;
+
+ //loaders: ['style-loader', 'css-loader', 'sass-loader']

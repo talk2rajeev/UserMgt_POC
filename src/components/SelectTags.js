@@ -11,12 +11,12 @@ for (let i = 10; i < 36; i++) {
 
 class SelectTags extends React.Component {
     
-    processData(data){
-        let newdata =  data.map((item)=>{
-            return item.name;
-        })
-        return newdata;
-    }
+    // processData(data){
+    //     let newdata =  data.map((item)=>{
+    //         return item.name;
+    //     })
+    //     return newdata;
+    // }
 
     dataSource(data){
         let children = [];
@@ -26,16 +26,18 @@ class SelectTags extends React.Component {
         return children;
     }
 
+    getPlaceholder(placeholder){
+        return placeholder || "Please select";
+    }
+
 
     render() {
-        let placeholder = this.props.placeholder || "Please select";
-        
         return (
             <div>
                 <Select
                     mode="multiple"
                     size="default"
-                    placeholder={ placeholder }
+                    placeholder={ this.getPlaceholder(this.props.placeholder) }
                     defaultValue={ this.props.defaultData }
                     onChange={this.props.handleChange}
                     style={{ width: '100%' }}

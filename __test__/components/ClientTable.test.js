@@ -25,28 +25,22 @@ const props = {
 //let openEditClientModal = function openEditClientModal(){}
 
 describe('Cleint Table has length 1', ()=>{
-    it('It .table class', ()=>{
+    it('shallow render with length 1', ()=>{
         const wrapper = shallow(<ClientTable {...props}/>);
         expect(wrapper).toHaveLength(1);
     })
 })  
 
-describe('Cleint Table has cleint props', ()=>{
-    it('It has id and name', ()=>{
+describe('Cleint Table .table class', ()=>{
+    it('It has .table class with length 1', ()=>{
         const wrapper = shallow(<ClientTable {...props}/>);
         expect(wrapper.find('.table')).toHaveLength(1);
     })
 })
 
-describe('Cleint Table has cleint props', ()=>{
-    it('It has id and name', ()=>{
-        const wrapper = shallow(<ClientTable {...props}/>);
-        expect(wrapper.find('.table')).toHaveLength(1);
-    })
-})
 
-describe('Cleint Table has cleint props', ()=>{
-    it('It has id and name', ()=>{
+describe('Cleint Table has tr elements', ()=>{
+    it('It has length === client.length ', ()=>{
         const wrapper = shallow(<ClientTable {...props}/>);
         expect(wrapper.find('tr').children()).toHaveLength(5+1);
 

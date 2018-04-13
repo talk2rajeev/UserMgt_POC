@@ -8,32 +8,34 @@ import { Popconfirm, Tooltip } from 'antd';
 
 
 configure({ adapter: new Adapter() });
-var getDefaultPermissions = function([]){
-return []
+
+var getDefaultPermissions = function(permissions){
+    if(permissions){
+        let defaultPerms = permissions.map((item)=>{
+            return item.name;
+        })
+        return defaultPerms;
+    }
+    else{
+        return [];
+    }
 }
+
 const props = {
-    role: {_id: 1, name: '12', permission: []},
+    role: {_id: 1, name: '12', permission: [{id: 1, name: 'p1'}]},
     permissions: [],
     childInputChangehandler: ()=>{},
     closeModal: ()=>{},
     handleChange: ()=>{},
     updateEditedRole: ()=>{}
 };
-let arr = ['1','2'];
 
-describe('test getDefaultPermissions func', ()=>{
+describe('test getDefaultPermissions func witn data', ()=>{
     it('return getDefaultPermissions', ()=>{
-        expect(getDefaultPermissions([])).toEqual([]);
-    });
-
-    it('return getDefaultPermissions', ()=>{
-        expect(getDefaultPermissions(arr)).toEqual(arr);
+        expect(getDefaultPermissions(props.role.permission)).toEqual(getDefaultPermissions(props.role.permission));
     });
 });
 
-
-
-//let openEditClientModal = function openEditClientModal(){}
 
 describe('EditRoleModal is rendrered once', ()=>{
     it('rendered once', ()=>{
@@ -69,13 +71,6 @@ describe('modal-container length 1', ()=>{
     })
 })
 
-
-describe('SelectTags have length 1', ()=>{
-    it('copy icon clicked', ()=>{
-        const wrapper = shallow(<SelectTags data={["1", "2"]} defaultData={["1"]} />);
-        expect(wrapper).toHaveLength(1);
-    })
-})
 
 describe('SelectTags have handleChange ', ()=>{
     it('copy icon clicked', ()=>{

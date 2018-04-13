@@ -56,11 +56,7 @@ describe('Get User Reducer', ()=>{
             defaultStore  
         )
     })
-    it('removeUser :: It has all default states', ()=>{
-        expect(getUserList(undefined, {type: 'REMOVE_USER' })).toEqual(
-            defaultStore  
-        )
-    })
+    
     
     it('sortUser :: It has all default states', ()=>{
 
